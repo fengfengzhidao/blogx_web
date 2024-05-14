@@ -1,6 +1,4 @@
 <script setup lang="ts">
-
-
 import F_theme from "@/components/common/f_theme.vue";
 </script>
 
@@ -17,7 +15,7 @@ import F_theme from "@/components/common/f_theme.vue";
     <div class="f_main">
       <div class="f_head">
         <div class="f_breadcrumbs">
-          <a-button type="primary">你好</a-button>
+
         </div>
         <div class="f_actions">
           <icon-home/>
