@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+
+import F_theme from "@/components/common/f_theme.vue";
 </script>
 
 <template>
@@ -19,8 +21,7 @@
         </div>
         <div class="f_actions">
           <icon-home/>
-          <icon-sun-fill/>
-          <icon-moon-fill/>
+          <f_theme></f_theme>
           <icon-fullscreen/>
           <icon-fullscreen-exit/>
           <div class="f_user_info_action">
@@ -41,6 +42,8 @@
 <style lang="less">
 .f_admin {
   display: flex;
+  background-color: @color-fill-1;
+  color: @color-text-1;
 
   .f_aside {
     width: 240px;
