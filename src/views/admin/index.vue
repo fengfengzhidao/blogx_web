@@ -3,5 +3,9 @@
 </script>
 
 <template>
-  <router-view></router-view>
+  <div>admin</div>
 </template>
+
+<style scoped>
+
+</style>

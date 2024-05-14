@@ -3,5 +3,9 @@
 </script>
 
 <template>
-  <router-view></router-view>
+<div>web</div>
 </template>
+
+<style scoped>
+
+</style>
