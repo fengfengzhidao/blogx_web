@@ -14,7 +14,9 @@
     </div>
     <div class="f_main">
       <div class="f_head">
-        <div class="f_breadcrumbs"></div>
+        <div class="f_breadcrumbs">
+          <a-button type="primary">你好</a-button>
+        </div>
         <div class="f_actions">
           <icon-home/>
           <icon-sun-fill/>
@@ -45,11 +47,12 @@
     height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
-    border-right: 1px solid var(--color-neutral-2);
-    .f_logo{
+    border-right: @f_border;
+
+    .f_logo {
       width: 100%;
       height: 90px;
-      border-bottom: 1px solid var(--color-neutral-2);
+      border-bottom: @f_border;
     }
   }
 
@@ -59,7 +62,7 @@
     .f_head {
       width: 100%;
       height: 60px;
-      border-bottom: 1px solid var(--color-neutral-2);
+      border-bottom: @f_border;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -69,7 +72,7 @@
     .f_tabs {
       width: 100%;
       height: 30px;
-      border-bottom: 1px solid var(--color-neutral-2);
+      border-bottom: @f_border;
     }
 
     .f_container {
