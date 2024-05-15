@@ -4,6 +4,11 @@ import {IconHome, IconUser, IconSettings} from "@arco-design/web-vue/es/icon";
 import F_component from "@/components/common/f_component.vue";
 import {ref} from "vue";
 import {collapsed} from "@/components/admin/f_menu";
+import router from "@/router";
+import {useRoute} from "vue-router";
+
+
+const route = useRoute()
 
 interface MenuType {
   title: string
@@ -14,7 +19,7 @@ interface MenuType {
 
 
 const menuList: MenuType[] = [
-  {title: "首页", name: "admin", icon: IconHome},
+  {title: "首页", name: "home", icon: IconHome},
   {
     title: "个人中心", name: "userCenter", icon: IconUser, children: [
       {title: "用户信息", name: "userInfo",}
@@ -22,7 +27,7 @@ const menuList: MenuType[] = [
   },
   {
     title: "用户管理", name: "userManage", icon: IconUser, children: [
-      {title: "用户列表", name: "userList",}
+    {title: "用户列表", name: "userManage",}
     ]
   },
   {
@@ -32,11 +37,18 @@ const menuList: MenuType[] = [
   },
   {
     title: "系统设置", name: "settingsManage", icon: IconSettings, children: [
-      {title: "系统信息", name: "settingsInfo",}
+      {title: "系统信息", name: "settingsManage",}
     ]
   },
 ]
 
+function menuItemClick(key: string) {
+  router.push({
+    name: key
+  })
+}
+
+console.log(route)
 
 </script>
 
@@ -44,7 +56,9 @@ const menuList: MenuType[] = [
   <div class="f_menu" :class="{collapsed: collapsed}">
     <div class="f_menu_inner scrollbar">
       <a-menu
+          @menu-item-click="menuItemClick"
           v-model:collapsed="collapsed"
+          :default-selected-keys="[route.name]"
           show-collapse-button>
         <template v-for="menu in menuList">
           <a-menu-item :key="menu.name" v-if="!menu.children">
