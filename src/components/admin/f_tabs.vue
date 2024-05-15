@@ -22,6 +22,11 @@ function check(item: TabType) {
   router.push({
     name: item.name,
   })
+  saveTabs()
+}
+
+function saveTabs() {
+  localStorage.setItem("f_tabs", JSON.stringify(tabs.value))
 }
 
 function removeItem(item: TabType) {
@@ -39,12 +44,28 @@ function removeItem(item: TabType) {
     }
     tabs.value.splice(index, 1)
   }
+  saveTabs()
 }
 
 function removeAllItem() {
   tabs.value = [{title: "首页", name: "home"}]
   router.push({name: "home"})
+  saveTabs()
 }
+
+
+function loadTabs() {
+  const f_tabs = localStorage.getItem("f_tabs")
+  if (f_tabs) {
+    try {
+      tabs.value = JSON.parse(f_tabs)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+}
+
+loadTabs()
 
 
 </script>
