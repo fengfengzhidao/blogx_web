@@ -2,6 +2,8 @@
 import type {Component} from "vue";
 import {IconHome, IconUser, IconSettings} from "@arco-design/web-vue/es/icon";
 import F_component from "@/components/common/f_component.vue";
+import {ref} from "vue";
+import {collapsed} from "@/components/admin/f_menu";
 
 interface MenuType {
   title: string
@@ -39,9 +41,10 @@ const menuList: MenuType[] = [
 </script>
 
 <template>
-  <div class="f_menu">
+  <div class="f_menu" :class="{collapsed: collapsed}">
     <div class="f_menu_inner scrollbar">
       <a-menu
+          v-model:collapsed="collapsed"
           show-collapse-button>
         <template v-for="menu in menuList">
           <a-menu-item :key="menu.name" v-if="!menu.children">
@@ -73,7 +76,13 @@ const menuList: MenuType[] = [
   height: calc(100vh - 90px);
   position: relative;
 
-  &:hover{
+  &.collapsed {
+    .arco-menu-collapse-button {
+      left: 48px !important;
+    }
+  }
+
+  &:hover {
     .arco-menu-collapse-button {
       opacity: 1 !important;
     }
@@ -86,7 +95,6 @@ const menuList: MenuType[] = [
 
     .arco-menu {
       position: inherit;
-      height: 100%;
 
       .arco-menu-collapse-button {
         top: 50%;
