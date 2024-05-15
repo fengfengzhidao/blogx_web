@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import F_theme from "@/components/common/f_theme.vue";
+import F_screen from "@/components/common/f_screen.vue";
 </script>
 
 <template>
@@ -20,8 +21,7 @@ import F_theme from "@/components/common/f_theme.vue";
         <div class="f_actions">
           <icon-home/>
           <f_theme></f_theme>
-          <icon-fullscreen/>
-          <icon-fullscreen-exit/>
+          <f_screen></f_screen>
           <div class="f_user_info_action">
 
           </div>
