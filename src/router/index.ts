@@ -41,7 +41,7 @@ const router = createRouter({
                             name: "userInfo",
                             path: "user_info",
                             meta: {
-                                title: "用户信息"
+                                title: "个人信息"
                             },
                             component: () => import("@/views/admin/user_center/index.vue"),
                         }
