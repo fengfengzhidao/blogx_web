@@ -38,12 +38,24 @@ const router = createRouter({
                 {
                     name: "userManage",
                     path: "user_manage",
-                    component: () => import("@/views/admin/user_manage/index.vue"),
+                    children: [
+                        {
+                            name: "userList",
+                            path: "user_list",
+                            component: () => import("@/views/admin/user_manage/index.vue"),
+                        }
+                    ]
                 },
                 {
                     name: "settingsManage",
-                    path: "settings",
-                    component: () => import("@/views/admin/settings_manage/index.vue"),
+                    path: "settings_manage",
+                    children: [
+                        {
+                            name: "settings",
+                            path: "settings",
+                            component: () => import("@/views/admin/settings_manage/index.vue"),
+                        }
+                    ]
                 }
             ]
         }

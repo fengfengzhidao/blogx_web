@@ -27,17 +27,12 @@ const menuList: MenuType[] = [
   },
   {
     title: "用户管理", name: "userManage", icon: IconUser, children: [
-    {title: "用户列表", name: "userManage",}
-    ]
-  },
-  {
-    title: "组件管理", name: "componentManage", icon: "iconfont xxx", children: [
-      {title: "组件列表", name: "componentList",}
+      {title: "用户列表", name: "userList",}
     ]
   },
   {
     title: "系统设置", name: "settingsManage", icon: IconSettings, children: [
-      {title: "系统信息", name: "settingsManage",}
+      {title: "系统信息", name: "settings",}
     ]
   },
 ]
@@ -48,7 +43,15 @@ function menuItemClick(key: string) {
   })
 }
 
-console.log(route)
+const openKeys = ref<string[]>([])
+
+function initRoute() {
+  if (route.matched.length === 3) {
+    openKeys.value = [route.matched[1].name as string]
+  }
+}
+
+initRoute()
 
 </script>
 
@@ -58,6 +61,7 @@ console.log(route)
       <a-menu
           @menu-item-click="menuItemClick"
           v-model:collapsed="collapsed"
+          v-model:open-keys="openKeys"
           :default-selected-keys="[route.name]"
           show-collapse-button>
         <template v-for="menu in menuList">
