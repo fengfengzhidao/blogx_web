@@ -45,8 +45,7 @@ import F_menu from "@/components/admin/f_menu.vue";
   .f_aside {
     width: 240px;
     height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     border-right: @f_border;
 
     .f_logo {

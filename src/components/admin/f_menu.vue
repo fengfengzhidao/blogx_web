@@ -31,7 +31,7 @@ const menuList : MenuType[] = [
 </script>
 
 <template>
-<div class="f_menu">
+<div class="f_menu scrollbar">
   <a-menu
       show-collapse-button>
     <template v-for="menu in menuList">
@@ -57,6 +57,10 @@ const menuList : MenuType[] = [
 </div>
 </template>
 
-<style scoped>
-
+<style lang="less">
+.f_menu{
+  height: calc(100vh - 90px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 </style>
