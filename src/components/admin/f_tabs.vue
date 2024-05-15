@@ -2,7 +2,7 @@
 import {IconClose} from "@arco-design/web-vue/es/icon";
 import {useRoute} from "vue-router";
 import router from "@/router";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 
 const route = useRoute()
 
@@ -13,9 +13,6 @@ interface TabType {
 
 const tabs = ref<TabType[]>([
   {title: "首页", name: "home"},
-  {title: "个人信息", name: "userInfo"},
-  {title: "用户列表", name: "userList"},
-  {title: "系统信息", name: "settings"},
 ])
 
 function check(item: TabType) {
@@ -68,6 +65,18 @@ function loadTabs() {
 loadTabs()
 
 
+watch(() => route.name, () => {
+  // 判断当前路由的名称，在不在tabs里面，如果不在就加入进去
+  const index = tabs.value.findIndex((value) => route.name === value.name)
+  if (index === -1) {
+    tabs.value.push({
+      name: route.name as string,
+      title: route.meta.title,
+    })
+  }
+}, {immediate: true})
+
+
 </script>
 
 <template>
@@ -95,7 +104,10 @@ loadTabs()
   justify-content: space-between;
 
   .swiper {
+    width: calc(100% - 100px);
     display: flex;
+    overflow-y: hidden;
+    overflow-x: auto;
   }
 
   .item {
@@ -105,6 +117,7 @@ loadTabs()
     margin-right: 10px;
     cursor: pointer;
     border-radius: 5px;
+    flex-shrink: 0;
 
     &:hover {
       background-color: var(--color-fill-1);
