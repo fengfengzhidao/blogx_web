@@ -22,17 +22,17 @@ const menuList: MenuType[] = [
   {title: "首页", name: "home", icon: IconHome},
   {
     title: "个人中心", name: "userCenter", icon: IconUser, children: [
-      {title: "用户信息", name: "userInfo",}
+      {title: "用户信息", name: "userInfo", icon: "iconfont icon-yonghuxinxi-"}
     ]
   },
   {
-    title: "用户管理", name: "userManage", icon: IconUser, children: [
-      {title: "用户列表", name: "userList",}
+    title: "用户管理", name: "userManage", icon: "iconfont icon-yonghuguanli", children: [
+      {title: "用户列表", name: "userList", icon: "iconfont icon-yonghuguanli_huaban"}
     ]
   },
   {
-    title: "系统设置", name: "settingsManage", icon: IconSettings, children: [
-      {title: "系统信息", name: "settings",}
+    title: "系统设置", name: "settingsManage", icon: "iconfont icon-xitongpeizhi", children: [
+      {title: "系统信息", name: "settings", icon: IconSettings}
     ]
   },
 ]
@@ -78,7 +78,7 @@ initRoute()
             <a-menu-item :key="sub.name" v-for="sub in menu.children">
               {{ sub.title }}
               <template #icon>
-                <f_component :is="menu.icon"></f_component>
+                <f_component :is="sub.icon"></f_component>
               </template>
             </a-menu-item>
           </a-sub-menu>
