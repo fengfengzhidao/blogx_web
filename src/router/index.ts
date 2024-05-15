@@ -18,19 +18,31 @@ const router = createRouter({
             name: "admin",
             path: "/admin",
             component: () => import("@/views/admin/index.vue"),
+            meta: {
+                title: "首页"
+            },
             children: [
                 {
                     name: "home",
                     path: "",
                     component: () => import("@/views/admin/home/index.vue"),
+                    meta: {
+                        title: "首页"
+                    }
                 },
                 {
                     name: "userCenter",
                     path: "user_center",
+                    meta: {
+                        title: "个人中心"
+                    },
                     children: [
                         {
                             name: "userInfo",
                             path: "user_info",
+                            meta: {
+                                title: "用户信息"
+                            },
                             component: () => import("@/views/admin/user_center/index.vue"),
                         }
                     ]
@@ -38,10 +50,16 @@ const router = createRouter({
                 {
                     name: "userManage",
                     path: "user_manage",
+                    meta: {
+                        title: "用户管理"
+                    },
                     children: [
                         {
                             name: "userList",
                             path: "user_list",
+                            meta: {
+                                title: "用户信息"
+                            },
                             component: () => import("@/views/admin/user_manage/index.vue"),
                         }
                     ]
@@ -49,10 +67,16 @@ const router = createRouter({
                 {
                     name: "settingsManage",
                     path: "settings_manage",
+                    meta: {
+                        title: "系统配置"
+                    },
                     children: [
                         {
                             name: "settings",
                             path: "settings",
+                            meta: {
+                                title: "系统信息"
+                            },
                             component: () => import("@/views/admin/settings_manage/index.vue"),
                         }
                     ]

@@ -3,6 +3,7 @@ import F_theme from "@/components/common/f_theme.vue";
 import F_screen from "@/components/common/f_screen.vue";
 import F_menu from "@/components/admin/f_menu.vue";
 import {collapsed} from "@/components/admin/f_menu";
+import F_breadcrumb from "@/components/admin/f_breadcrumb.vue";
 
 </script>
 
@@ -16,9 +17,7 @@ import {collapsed} from "@/components/admin/f_menu";
     </div>
     <div class="f_main">
       <div class="f_head">
-        <div class="f_breadcrumbs">
-
-        </div>
+        <f_breadcrumb></f_breadcrumb>
         <div class="f_actions">
           <icon-home/>
           <f_theme></f_theme>
@@ -57,10 +56,10 @@ import {collapsed} from "@/components/admin/f_menu";
     }
 
 
-    &.collapsed{
+    &.collapsed {
       width: 48px;
 
-      &~.f_main{
+      & ~ .f_main {
         width: calc(100% - 48px);
       }
     }
