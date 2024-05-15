@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import F_theme from "@/components/common/f_theme.vue";
 import F_screen from "@/components/common/f_screen.vue";
+import F_menu from "@/components/admin/f_menu.vue";
 </script>
 
 <template>
@@ -9,9 +10,7 @@ import F_screen from "@/components/common/f_screen.vue";
       <div class="f_logo">
 
       </div>
-      <div class="f_menu">
-
-      </div>
+      <f_menu></f_menu>
     </div>
     <div class="f_main">
       <div class="f_head">
@@ -40,7 +39,7 @@ import F_screen from "@/components/common/f_screen.vue";
 <style lang="less">
 .f_admin {
   display: flex;
-  background-color: @color-fill-1;
+  background-color: var(--color-bg-1);
   color: @color-text-1;
 
   .f_aside {
@@ -81,6 +80,7 @@ import F_screen from "@/components/common/f_screen.vue";
       height: calc(100vh - 90px);
       overflow-y: auto;
       overflow-x: hidden;
+      background-color: @color-fill-2;
     }
   }
 }
