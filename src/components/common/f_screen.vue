@@ -5,13 +5,13 @@ import {ref} from "vue";
 const isFullScreen = ref(false)
 
 // 全屏
-function fullScreen(){
+function fullScreen() {
   document.documentElement?.requestFullscreen()
   isFullScreen.value = true
 }
 
 // 退出全屏
-function exitFullScreen(){
+function exitFullScreen() {
   document?.exitFullscreen()
   isFullScreen.value = false
 }
@@ -21,8 +21,8 @@ function exitFullScreen(){
 </script>
 
 <template>
-  <icon-fullscreen v-if="!isFullScreen" title="全屏" @click="fullScreen"/>
-  <icon-fullscreen-exit title="退出全屏" v-else @click="exitFullScreen"/>
+  <span title="全屏" v-if="!isFullScreen"><icon-fullscreen @click="fullScreen"/></span>
+  <span title="退出全屏" v-else> <icon-fullscreen-exit @click="exitFullScreen"/></span>
 </template>
 
 <style scoped>

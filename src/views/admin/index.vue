@@ -4,6 +4,13 @@ import F_screen from "@/components/common/f_screen.vue";
 import F_menu from "@/components/admin/f_menu.vue";
 import {collapsed} from "@/components/admin/f_menu";
 import F_breadcrumb from "@/components/admin/f_breadcrumb.vue";
+import F_user_dropdown from "@/components/common/f_user_dropdown.vue";
+import router from "@/router";
+
+function goHome() {
+  router.push({name: "web"})
+}
+
 
 </script>
 
@@ -19,12 +26,10 @@ import F_breadcrumb from "@/components/admin/f_breadcrumb.vue";
       <div class="f_head">
         <f_breadcrumb></f_breadcrumb>
         <div class="f_actions">
-          <icon-home/>
+          <span title="去首页" @click="goHome"><icon-home/></span>
           <f_theme></f_theme>
           <f_screen></f_screen>
-          <div class="f_user_info_action">
-
-          </div>
+          <f_user_dropdown></f_user_dropdown>
         </div>
       </div>
       <div class="f_tabs">
@@ -78,6 +83,17 @@ import F_breadcrumb from "@/components/admin/f_breadcrumb.vue";
       justify-content: space-between;
       align-items: center;
       padding: 0 20px;
+
+      .f_actions {
+        display: flex;
+        align-items: center;
+
+        svg {
+          font-size: 18px;
+          cursor: pointer;
+          margin-right: 10px;
+        }
+      }
     }
 
     .f_tabs {

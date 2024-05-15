@@ -5,8 +5,8 @@ loadTheme()
 </script>
 
 <template>
-  <icon-sun-fill v-if="theme === 'dark'" @click="setTheme('')"/>
-  <icon-moon-fill v-if="theme === ''" @click="setTheme('dark')"/>
+  <span title="白天模式" v-if="theme === 'dark'"> <icon-sun-fill @click="setTheme('')"/></span>
+  <span title="黑夜模式" v-else> <icon-moon-fill @click="setTheme('dark')"/></span>
 </template>
 
 <style scoped>
