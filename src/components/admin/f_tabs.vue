@@ -4,6 +4,7 @@ import {useRoute} from "vue-router";
 import router from "@/router";
 import {ref, watch} from "vue";
 import {Swiper, SwiperSlide} from 'swiper/vue';
+import {onMounted} from "vue";
 
 const route = useRoute()
 
@@ -13,7 +14,7 @@ interface TabType {
 }
 
 const tabs = ref<TabType[]>([
-  {title: "首页", name: "home"},
+  {title: "首页很好", name: "home"},
   {title: "首页", name: "home"},
   {title: "首页", name: "home"},
   {title: "首页", name: "home"},
@@ -108,12 +109,40 @@ watch(() => route.name, () => {
   }
 }, {immediate: true})
 
+const slidesCount = ref(100)
+onMounted(() => {
+  // 显示的总宽度
+  const swiperDom = document.querySelector(".f_tabs_swiper") as HTMLDivElement
+  const swiperWidth = swiperDom.clientWidth
+
+  // 实际的总宽度
+  const wrapperDom = document.querySelector(".f_tabs_swiper .swiper-wrapper") as HTMLDivElement
+  const wrapperWidth = wrapperDom.scrollWidth
+
+  if (swiperWidth > wrapperWidth){
+    return
+  }
+  // 如果实际总宽度大于了显示的总宽度
+  // 遍历swiper-slide，然后从前往后加
+  const slideList = document.querySelectorAll(".f_tabs_swiper .swiper-slide")
+  let allWith = 0
+  let index = 1
+
+  for (const slideListElement of slideList) {
+    allWith += (slideListElement.clientWidth + 20)
+    index ++
+    if (allWith >= swiperWidth){
+      break
+    }
+  }
+  slidesCount.value = index
+})
 
 </script>
 
 <template>
   <div class="f_tabs">
-    <swiper :slides-per-view="1">
+    <swiper class="f_tabs_swiper" :slides-per-view="slidesCount">
       <swiper-slide v-for="item in tabs">
         <div class="item" @click="check(item)" @mousedown.middle.stop="removeItem(item)"
              :class="{active: route.name === item.name}">
@@ -143,11 +172,11 @@ watch(() => route.name, () => {
     overflow-y: hidden;
     overflow-x: hidden;
 
-    .swiper-wrapper{
+    .swiper-wrapper {
       display: flex;
       align-items: center;
 
-      .swiper-slide{
+      .swiper-slide {
         width: fit-content !important;
         flex-shrink: 0;
       }
