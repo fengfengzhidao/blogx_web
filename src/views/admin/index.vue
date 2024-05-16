@@ -7,6 +7,7 @@ import F_breadcrumb from "@/components/admin/f_breadcrumb.vue";
 import F_user_dropdown from "@/components/common/f_user_dropdown.vue";
 import router from "@/router";
 import F_tabs from "@/components/admin/f_tabs.vue";
+import F_logo from "@/components/admin/f_logo.vue";
 
 function goHome() {
   router.push({name: "web"})
@@ -18,9 +19,7 @@ function goHome() {
 <template>
   <div class="f_admin">
     <div class="f_aside" :class="{collapsed: collapsed}">
-      <div class="f_logo">
-
-      </div>
+      <f_logo></f_logo>
       <f_menu></f_menu>
     </div>
     <div class="f_main">
