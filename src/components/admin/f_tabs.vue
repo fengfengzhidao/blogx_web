@@ -3,6 +3,7 @@ import {IconClose} from "@arco-design/web-vue/es/icon";
 import {useRoute} from "vue-router";
 import router from "@/router";
 import {ref, watch} from "vue";
+import {Swiper, SwiperSlide} from 'swiper/vue';
 
 const route = useRoute()
 
@@ -12,6 +13,37 @@ interface TabType {
 }
 
 const tabs = ref<TabType[]>([
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
+  {title: "首页", name: "home"},
   {title: "首页", name: "home"},
 ])
 
@@ -62,7 +94,7 @@ function loadTabs() {
   }
 }
 
-loadTabs()
+// loadTabs()
 
 
 watch(() => route.name, () => {
@@ -81,15 +113,17 @@ watch(() => route.name, () => {
 
 <template>
   <div class="f_tabs">
-    <div class="swiper">
-      <div class="item" @click="check(item)" @mousedown.middle.stop="removeItem(item)"
-           :class="{active: route.name === item.name}" v-for="item in tabs">
-        {{ item.title }}
-        <span class="close" @click.stop="removeItem(item)" title="删除" v-if="item.name !== 'home'">
+    <swiper :slides-per-view="1">
+      <swiper-slide v-for="item in tabs">
+        <div class="item" @click="check(item)" @mousedown.middle.stop="removeItem(item)"
+             :class="{active: route.name === item.name}">
+          {{ item.title }}
+          <span class="close" @click.stop="removeItem(item)" title="删除" v-if="item.name !== 'home'">
           <IconClose></IconClose>
         </span>
-      </div>
-    </div>
+        </div>
+      </swiper-slide>
+    </swiper>
     <div class="item" @click="removeAllItem">
       删除全部
     </div>
@@ -107,7 +141,18 @@ watch(() => route.name, () => {
     width: calc(100% - 100px);
     display: flex;
     overflow-y: hidden;
-    overflow-x: auto;
+    overflow-x: hidden;
+
+    .swiper-wrapper{
+      display: flex;
+      align-items: center;
+
+      .swiper-slide{
+        width: fit-content !important;
+        flex-shrink: 0;
+      }
+    }
+
   }
 
   .item {
