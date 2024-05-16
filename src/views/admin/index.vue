@@ -33,8 +33,12 @@ function goHome() {
         </div>
       </div>
       <f_tabs></f_tabs>
-      <div class="f_container">
-        <router-view></router-view>
+      <div class="f_container scrollbar">
+        <router-view class="f_base_view" v-slot="{Component}">
+          <transition name="fade" mode="out-in">
+            <component :is="Component"></component>
+          </transition>
+        </router-view>
       </div>
     </div>
   </div>
@@ -106,7 +110,43 @@ function goHome() {
       overflow-y: auto;
       overflow-x: hidden;
       background-color: @color-fill-2;
+      padding: 20px;
+
+      .f_base_view {
+        background-color: var(--color-bg-1);
+        border-radius: 5px;
+        height: 1000px;
+      }
     }
   }
 }
+
+
+// 组件刚开始离开
+.fade-leave-active {
+}
+
+// 组件离开结束
+.fade-leave-to {
+  transform: translateX(30px);
+  opacity: 0;
+}
+
+// 组件刚开始进入
+.fade-enter-active {
+  transform: translateX(-30px);
+  opacity: 0;
+}
+
+// 组件进入完成
+.fade-enter-to {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+// 正在进入和离开
+.fade-leave-active, .fade-enter-active {
+  transition: all .3s ease-out;
+}
+
 </style>

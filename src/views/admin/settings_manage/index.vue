@@ -3,7 +3,9 @@
 </script>
 
 <template>
-  <div>系统配置</div>
+  <div class="settings_view">
+    <div>系统配置</div>
+  </div>
 </template>
 
 <style scoped>
