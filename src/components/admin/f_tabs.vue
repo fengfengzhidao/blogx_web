@@ -14,37 +14,6 @@ interface TabType {
 }
 
 const tabs = ref<TabType[]>([
-  {title: "首页很好", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
-  {title: "首页", name: "home"},
   {title: "首页", name: "home"},
 ])
 
@@ -95,7 +64,7 @@ function loadTabs() {
   }
 }
 
-// loadTabs()
+loadTabs()
 
 
 watch(() => route.name, () => {
@@ -119,7 +88,7 @@ onMounted(() => {
   const wrapperDom = document.querySelector(".f_tabs_swiper .swiper-wrapper") as HTMLDivElement
   const wrapperWidth = wrapperDom.scrollWidth
 
-  if (swiperWidth > wrapperWidth){
+  if (swiperWidth > wrapperWidth) {
     return
   }
   // 如果实际总宽度大于了显示的总宽度
@@ -130,12 +99,21 @@ onMounted(() => {
 
   for (const slideListElement of slideList) {
     allWith += (slideListElement.clientWidth + 20)
-    index ++
-    if (allWith >= swiperWidth){
+    index++
+    if (allWith >= swiperWidth) {
       break
     }
   }
   slidesCount.value = index
+
+  // 选中高亮的元素
+  const activeSlide = document.querySelector(".f_tabs_swiper .swiper-slide.active") as HTMLDivElement
+  if (activeSlide.offsetLeft > swiperWidth) {
+    const offsetLeft = swiperWidth - activeSlide.offsetLeft
+    setTimeout(()=>{
+      wrapperDom.style.transform = `translate3d(${offsetLeft}px, 0px, 0px)`
+    })
+  }
 })
 
 </script>
@@ -143,7 +121,7 @@ onMounted(() => {
 <template>
   <div class="f_tabs">
     <swiper class="f_tabs_swiper" :slides-per-view="slidesCount">
-      <swiper-slide v-for="item in tabs">
+      <swiper-slide v-for="item in tabs" :class="{active: route.name === item.name}">
         <div class="item" @click="check(item)" @mousedown.middle.stop="removeItem(item)"
              :class="{active: route.name === item.name}">
           {{ item.title }}
