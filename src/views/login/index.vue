@@ -1,28 +1,50 @@
 <script setup lang="ts">
+import {reactive, ref} from "vue";
+import type {emailLoginRequest} from "@/api/user_api";
+import {emailLoginApi} from "@/api/user_api";
+import {Message} from "@arco-design/web-vue";
+
+const form = reactive<emailLoginRequest>({
+  user_name: "",
+  password: ""
+})
+
+const formRef = ref()
+async function emailLogin() {
+  const val = await formRef.value.validate()
+  if (val)return
+  const res = await emailLoginApi(form)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success("登陆成功")
+  // 如何获取用户信息 1. 直接解析token   2. 调用户信息接口
+}
 
 </script>
 
 <template>
   <div class="login_view">
     <div class="login_mask">
-      <a-form :label-col-props="{span: 0}" :wrapper-col-props="{span:24}">
+      <a-form ref="formRef" :model="form" :label-col-props="{span: 0}" :wrapper-col-props="{span:24}">
         <div class="title">用户登陆</div>
-        <a-form-item label="用户名">
-          <a-input placeholder="用户名">
+        <a-form-item label="用户名" field="user_name" :rules="[{required:true,message:'请输入用户名'}]">
+          <a-input placeholder="请输入用户名" v-model="form.user_name">
             <template #prefix>
-              <icon-user />
+              <icon-user/>
             </template>
           </a-input>
         </a-form-item>
-        <a-form-item label="密码">
-          <a-input placeholder="密码">
+        <a-form-item label="密码" field="password" :rules="[{required:true,message:'请输入密码'}]">
+          <a-input placeholder="请输入密码" type="password" v-model="form.password">
             <template #prefix>
-              <icon-lock />
+              <icon-lock/>
             </template>
           </a-input>
         </a-form-item>
         <a-form-item>
-          <a-button type="primary" long>登陆</a-button>
+          <a-button type="primary" @click="emailLogin" long>登陆</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -46,9 +68,10 @@
     justify-content: center;
     align-items: center;
 
-    .arco-form{
+    .arco-form {
       padding: 40px;
     }
+
     .title {
       font-size: 26px;
       font-weight: 600;

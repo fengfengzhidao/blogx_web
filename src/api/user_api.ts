@@ -1,5 +1,11 @@
-import {useAxios} from "@/api/index";
+import {type baseResponse, useAxios} from "@/api/index";
 
-export function userListApi(){
-    return useAxios.get("/api/no_cors")
+
+export interface emailLoginRequest {
+    user_name: string
+    password: string
+}
+
+export function emailLoginApi(data: emailLoginRequest): Promise<baseResponse<string>>{
+    return useAxios.post("/api/email_login", data)
 }

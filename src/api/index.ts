@@ -1,6 +1,11 @@
 import axios from "axios";
 import {Message} from "@arco-design/web-vue";
 
+export interface baseResponse<T> {
+    code: number
+    msg: string
+    data: T
+}
 
 export const useAxios = axios.create({
     timeout: 6000,
