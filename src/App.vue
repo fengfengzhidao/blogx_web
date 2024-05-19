@@ -1,5 +1,12 @@
 <script setup lang="ts">
-console.log(import.meta.env)
+
+import axios from "axios";
+
+axios.get("/api/no_cors").then((res)=>{
+  console.log(res)
+})
+
+
 </script>
 
 <template>

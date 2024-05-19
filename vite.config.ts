@@ -30,7 +30,13 @@ export default defineConfig((config) => {
         },
         server: {
             host: "0.0.0.0",
-            port: 80
+            port: 80,
+            proxy: {
+                "/api": {
+                    target: "http://127.0.0.1:8080",
+                    rewrite: (path) => path.replace("/api", "")
+                }
+            }
         },
         envDir: envDir,
     }
