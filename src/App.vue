@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import axios from "axios";
+import {userListApi} from "@/api/user_api";
 
-axios.get("/api/no_cors").then((res)=>{
+userListApi().then(res=>{
   console.log(res)
 })
 
