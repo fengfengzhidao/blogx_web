@@ -7,3 +7,7 @@ declare module "vue-router" {
         title: string
     }
 }
+
+export interface EnvMeta extends Record<string, string> {
+    VITE_SERVER_URL: string
+}
