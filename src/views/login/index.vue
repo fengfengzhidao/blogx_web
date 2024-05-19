@@ -3,16 +3,20 @@ import {reactive, ref} from "vue";
 import type {emailLoginRequest} from "@/api/user_api";
 import {emailLoginApi} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
+import {userStorei} from "@/stores/user_store";
+import router from "@/router";
 
+const userStore = userStorei()
 const form = reactive<emailLoginRequest>({
   user_name: "",
   password: ""
 })
 
 const formRef = ref()
+
 async function emailLogin() {
   const val = await formRef.value.validate()
-  if (val)return
+  if (val) return
   const res = await emailLoginApi(form)
   if (res.code) {
     Message.error(res.msg)
@@ -20,6 +24,13 @@ async function emailLogin() {
   }
   Message.success("登陆成功")
   // 如何获取用户信息 1. 直接解析token   2. 调用户信息接口
+  userStore.saveUserInfo(res.data)
+
+  router.push({
+    name: "web"
+  })
+
+
 }
 
 </script>
