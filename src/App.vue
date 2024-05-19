@@ -1,12 +1,4 @@
 <script setup lang="ts">
-
-import {userListApi} from "@/api/user_api";
-
-userListApi().then(res=>{
-  console.log(res)
-})
-
-
 </script>
 
 <template>
