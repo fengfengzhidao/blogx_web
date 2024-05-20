@@ -3,6 +3,7 @@ import {defineStore} from 'pinia'
 import {userInfoApi} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import {parseToken} from "@/utils/parse_token";
+import router from "@/router";
 
 interface userInfoType {
     userID: number
@@ -11,7 +12,6 @@ interface userInfoType {
     avatar: string
     role: number
     token: string
-    exp: 0  // 过期时间
 }
 
 interface userStoreType {
@@ -29,7 +29,6 @@ export const userStorei = defineStore('userStore', {
                 avatar: "",
                 role: 0,
                 token: "",
-                exp: 0,
             },
         }
     },
@@ -51,11 +50,34 @@ export const userStorei = defineStore('userStore', {
                 avatar: res.data.avatar,
                 role: payLoad.role,
                 token: token,
-                exp: payLoad.exp,
             }
 
             // 持久化
             localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+        },
+        loadUserInfo(){
+            const val = localStorage.getItem("userInfo")
+            if (!val){
+                return
+            }
+            try {
+                this.userInfo = JSON.parse(val)
+            }catch (e){
+                console.log(e)
+                console.log(val)
+                return;
+            }
+
+            // 判断token有没有过期
+            const payLoad = parseToken(this.userInfo.token) // exp的时间是秒
+            const nowTime = new Date().getTime() // 单位是毫秒
+            if (payLoad.exp * 1000 - nowTime <= 0){
+                Message.warning("token已过期")
+                router.push({name: "web"})
+                return;
+            }
+
+            console.log(this.userInfo)
 
         }
 
