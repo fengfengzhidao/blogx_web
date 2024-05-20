@@ -1,6 +1,6 @@
 import {ref, computed} from 'vue'
 import {defineStore} from 'pinia'
-import {userInfoApi} from "@/api/user_api";
+import {userInfoApi, userLogoutApi} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import {parseToken} from "@/utils/parse_token";
 import router from "@/router";
@@ -55,14 +55,14 @@ export const userStorei = defineStore('userStore', {
             // 持久化
             localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
         },
-        loadUserInfo(){
+        loadUserInfo() {
             const val = localStorage.getItem("userInfo")
-            if (!val){
+            if (!val) {
                 return
             }
             try {
                 this.userInfo = JSON.parse(val)
-            }catch (e){
+            } catch (e) {
                 console.log(e)
                 console.log(val)
                 return;
@@ -71,22 +71,33 @@ export const userStorei = defineStore('userStore', {
             // 判断token有没有过期
             const payLoad = parseToken(this.userInfo.token) // exp的时间是秒
             const nowTime = new Date().getTime() // 单位是毫秒
-            if (payLoad.exp * 1000 - nowTime <= 0){
+            if (payLoad.exp * 1000 - nowTime <= 0) {
                 Message.warning("token已过期")
                 router.push({name: "web"})
                 return;
             }
-
-            console.log(this.userInfo)
-
+        },
+        async userLogout() {
+            const res = await userLogoutApi()
+            localStorage.removeItem("userInfo")
+            this.userInfo = {
+                userID: 0,
+                nickName: "",
+                userName: "",
+                avatar: "",
+                role: 0,
+                token: "",
+            }
+            Message.success("用户注销成功")
+            router.push({name: "web"})
         }
 
     },
     getters: {
-        isLogin(): boolean{
+        isLogin(): boolean {
             return this.userInfo.userID !== 0
         },
-        isAdmin(): boolean{
+        isAdmin(): boolean {
             return this.userInfo.role == 1
         }
     }

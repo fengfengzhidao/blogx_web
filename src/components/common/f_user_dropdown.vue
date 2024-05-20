@@ -8,6 +8,7 @@ const store = userStorei()
 function handleSelect(val: string) {
   if (val === "logout"){
     // 注销流程
+    store.userLogout()
     return
   }
   router.push({name: val})

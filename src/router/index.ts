@@ -8,8 +8,8 @@ const router = createRouter({
         {
             name: "web",
             path: "/",
-            // component: () => import("@/views/web/index.vue"),
-            redirect: "/admin",
+            component: () => import("@/views/web/index.vue"),
+            // redirect: "/admin",
         },
         {
             name: "login",

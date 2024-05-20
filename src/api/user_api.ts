@@ -32,3 +32,7 @@ export interface userInfoType {
 export function userInfoApi():Promise<baseResponse<userInfoType>>{
     return  useAxios.get("/api/user_info")
 }
+
+export function userLogoutApi():Promise<baseResponse<string>>{
+    return useAxios.post("/api/logout")
+}
