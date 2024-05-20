@@ -7,7 +7,10 @@ import {collapsed} from "@/components/admin/f_menu";
 import router from "@/router";
 import {useRoute} from "vue-router";
 import {watch} from "vue";
+import {userStorei} from "@/stores/user_store";
+import F_menu_item from "@/components/admin/f_menu_item.vue";
 
+const store = userStorei()
 const route = useRoute()
 
 interface MenuType {
@@ -15,6 +18,7 @@ interface MenuType {
   name: string
   icon?: string | Component
   children?: MenuType[]
+  role?: number
 }
 
 
@@ -26,17 +30,16 @@ const menuList: MenuType[] = [
     ]
   },
   {
-    title: "用户管理", name: "userManage", icon: "iconfont icon-yonghuguanli", children: [
+    title: "用户管理", role: 1, name: "userManage", icon: "iconfont icon-yonghuguanli", children: [
       {title: "用户列表", name: "userList", icon: "iconfont icon-yonghuguanli_huaban",}
     ]
   },
   {
-    title: "系统设置", name: "settingsManage", icon: "iconfont icon-xitongpeizhi", children: [
-      {title: "系统信息", name: "settings", icon: IconSettings}
+    title: "系统设置", role: 1, name: "settingsManage", icon: "iconfont icon-xitongpeizhi", children: [
+      {title: "系统信息", name: "settings", icon: IconSettings},
     ]
   },
 ]
-
 
 
 function menuItemClick(key: string) {
@@ -72,25 +75,7 @@ watch(() => route.name, () => {
           v-model:open-keys="openKeys"
           v-model:selected-keys="selectedKeys"
           show-collapse-button>
-        <template v-for="menu in menuList">
-          <a-menu-item :key="menu.name" v-if="!menu.children">
-            <template #icon>
-              <f_component :is="menu.icon"></f_component>
-            </template>
-            {{ menu.title }}
-          </a-menu-item>
-          <a-sub-menu :key="menu.name" v-else :title="menu.title">
-            <template #icon>
-              <f_component :is="menu.icon"></f_component>
-            </template>
-            <a-menu-item :key="sub.name" v-for="sub in menu.children">
-              {{ sub.title }}
-              <template #icon>
-                <f_component :is="sub.icon"></f_component>
-              </template>
-            </a-menu-item>
-          </a-sub-menu>
-        </template>
+        <f_menu_item :list="menuList"></f_menu_item>
       </a-menu>
     </div>
 
