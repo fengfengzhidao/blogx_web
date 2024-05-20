@@ -35,6 +35,9 @@ export default defineConfig((config) => {
                 "/api": {
                     target: env.VITE_SERVER_URL,
                     // rewrite: (path) => path.replace("/api", "")
+                },
+                "/uploads": {
+                    target: env.VITE_SERVER_URL,
                 }
             }
         },

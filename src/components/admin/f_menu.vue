@@ -27,7 +27,7 @@ const menuList: MenuType[] = [
   },
   {
     title: "用户管理", name: "userManage", icon: "iconfont icon-yonghuguanli", children: [
-      {title: "用户列表", name: "userList", icon: "iconfont icon-yonghuguanli_huaban"}
+      {title: "用户列表", name: "userList", icon: "iconfont icon-yonghuguanli_huaban",}
     ]
   },
   {
@@ -36,6 +36,8 @@ const menuList: MenuType[] = [
     ]
   },
 ]
+
+
 
 function menuItemClick(key: string) {
   router.push({

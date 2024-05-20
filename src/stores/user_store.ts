@@ -82,5 +82,12 @@ export const userStorei = defineStore('userStore', {
         }
 
     },
-    getters: {}
+    getters: {
+        isLogin(): boolean{
+            return this.userInfo.userID !== 0
+        },
+        isAdmin(): boolean{
+            return this.userInfo.role == 1
+        }
+    }
 })

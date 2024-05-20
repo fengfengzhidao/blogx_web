@@ -1,7 +1,10 @@
 <script setup lang="ts">
 
 import router from "@/router";
+import {userStorei} from "@/stores/user_store";
+import {ref} from "vue";
 
+const store = userStorei()
 function handleSelect(val: string) {
   if (val === "logout"){
     // 注销流程
@@ -15,13 +18,19 @@ interface OptionType {
   title: string
 }
 
-const options: OptionType[] = [
+const options = ref<OptionType[]>([
   {title: "个人信息", name: "userInfo"},
-  {title: "用户列表", name: "userList"},
-  {title: "系统信息", name: "settings"},
   {title: "注销退出", name: "logout"},
-]
+])
 
+if (store.isAdmin){
+  options.value = [
+    {title: "个人信息", name: "userInfo"},
+    {title: "用户列表", name: "userList"},
+    {title: "系统信息", name: "settings"},
+    {title: "注销退出", name: "logout"},
+  ]
+}
 
 </script>
 
@@ -29,8 +38,8 @@ const options: OptionType[] = [
   <a-dropdown @select="handleSelect" :popup-max-height="false">
     <div class="f_user_dropdown_com">
       <a-avatar :size="35"
-                image-url="https://img2.baidu.com/it/u=4194115798,4169726391&fm=253&app=120&size=w931&n=0&f=JPEG&fmt=auto?sec=1715878800&t=82357305157980f56d5dc312d7255f02"></a-avatar>
-      <span class="user_name">枫枫知道</span>
+                :image-url="store.userInfo.avatar"></a-avatar>
+      <span class="user_name">{{ store.userInfo.nickName }}</span>
       <icon-down/>
     </div>
 
