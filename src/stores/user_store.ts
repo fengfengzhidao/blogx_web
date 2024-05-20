@@ -33,27 +33,30 @@ export const userStorei = defineStore('userStore', {
         }
     },
     actions: {
-        async saveUserInfo(token: string) {
+         saveUserInfo(token: string) {
             // 传一个token过来，然后重新去调用户信息接口
             this.userInfo.token = token
-            const res = await userInfoApi()
-            if (res.code) {
-                Message.error(res.msg)
-                return
-            }
-
             const payLoad = parseToken(token)
-            this.userInfo = {
-                userID: res.data.id,
-                nickName: res.data.nick_name,
-                userName: res.data.user_name,
-                avatar: res.data.avatar,
-                role: payLoad.role,
-                token: token,
-            }
+            this.userInfo.userID = payLoad.user_id
+            this.userInfo.role = payLoad.role
 
-            // 持久化
-            localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+             userInfoApi().then(res=>{
+                if (res.code) {
+                    Message.error(res.msg)
+                    return
+                }
+
+                 this.userInfo = {
+                     userID: res.data.id,
+                     nickName: res.data.nick_name,
+                     userName: res.data.user_name,
+                     avatar: res.data.avatar,
+                     role: payLoad.role,
+                     token: token,
+                 }
+                 // 持久化
+                 localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+            })
         },
         loadUserInfo() {
             const val = localStorage.getItem("userInfo")

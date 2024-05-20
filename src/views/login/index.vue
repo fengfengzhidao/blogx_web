@@ -5,7 +5,9 @@ import {emailLoginApi} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import {userStorei} from "@/stores/user_store";
 import router from "@/router";
+import {useRoute} from "vue-router";
 
+const route = useRoute()
 const userStore = userStorei()
 const form = reactive<emailLoginRequest>({
   user_name: "",
@@ -23,12 +25,21 @@ async function emailLogin() {
     return
   }
   Message.success("登陆成功")
+
+
+
   // 如何获取用户信息 1. 直接解析token   2. 调用户信息接口
   userStore.saveUserInfo(res.data)
 
+  const redirect = route.query.redirect
+  if (redirect) {
+    router.push(redirect as string)
+    return
+  }
   router.push({
     name: "web"
   })
+
 
 
 }
