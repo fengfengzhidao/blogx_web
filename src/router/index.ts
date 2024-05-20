@@ -1,5 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import NProgress from "nprogress"; // 导入 nprogress模块
+import NProgress from "nprogress";
+import {userStorei} from "@/stores/user_store";
+import {Message} from "@arco-design/web-vue"; // 导入 nprogress模块
 
 
 const router = createRouter({
@@ -21,7 +23,8 @@ const router = createRouter({
             path: "/admin",
             component: () => import("@/views/admin/index.vue"),
             meta: {
-                title: "首页"
+                title: "首页",
+                role: [1, 2, 3]
             },
             children: [
                 {
@@ -29,14 +32,14 @@ const router = createRouter({
                     path: "",
                     component: () => import("@/views/admin/home/index.vue"),
                     meta: {
-                        title: "首页"
+                        title: "首页",
                     }
                 },
                 {
                     name: "userCenter",
                     path: "user_center",
                     meta: {
-                        title: "个人中心"
+                        title: "个人中心",
                     },
                     children: [
                         {
@@ -53,7 +56,8 @@ const router = createRouter({
                     name: "userManage",
                     path: "user_manage",
                     meta: {
-                        title: "用户管理"
+                        title: "用户管理",
+                        role: [1]
                     },
                     children: [
                         {
@@ -70,7 +74,8 @@ const router = createRouter({
                     name: "settingsManage",
                     path: "settings_manage",
                     meta: {
-                        title: "系统配置"
+                        title: "系统配置",
+                        role: [1]
                     },
                     children: [
                         {
@@ -89,6 +94,27 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+    if (to.meta.role) {
+        // 判断当前用户的角色，在不在列表里面
+        const store = userStorei()
+        if (!store.isLogin) {
+            // 没有登陆
+            Message.warning("需要登陆")
+            router.push({
+                name: "login", query: {
+                    redirect: to.path
+                }
+            })
+            return
+        }
+
+        if (!to.meta.role.includes(store.userInfo.role)) {
+            // 不在
+            Message.warning("鉴权失败")
+            router.push(from.path)
+            return
+        }
+    }
     NProgress.start();//开启进度条
     next()
 })
