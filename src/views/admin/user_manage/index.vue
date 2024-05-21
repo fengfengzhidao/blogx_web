@@ -1,9 +1,12 @@
 <script setup lang="ts">
 
+import F_list from "@/components/admin/f_list.vue";
 </script>
 
 <template>
-  <div>用户列表</div>
+  <div>
+    <f_list></f_list>
+  </div>
 </template>
 
 <style scoped>

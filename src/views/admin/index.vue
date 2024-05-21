@@ -115,7 +115,7 @@ function goHome() {
       .f_base_view {
         background-color: var(--color-bg-1);
         border-radius: 5px;
-        height: 1000px;
+        min-height: calc(100vh - 130px);
       }
     }
   }
