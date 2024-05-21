@@ -12,7 +12,7 @@ import "@/assets/iconfont.css"
 import {apiMock} from "@/mock";
 
 const app = createApp(App)
-// apiMock()
+apiMock()
 app.use(createPinia())
 app.use(router)
 app.use(ArcoVue)
