@@ -8,6 +8,18 @@ export interface baseResponse<T> {
     data: T
 }
 
+export interface listResponse<T> {
+    list: T[]
+    count: number
+}
+
+export interface paramsType {
+    key?: string
+    limit?: number
+    page?: number
+    sort?: string
+}
+
 export const useAxios = axios.create({
     timeout: 6000,
     baseURL: "", // 在使用前端代理的情况下，这里必须留空，不然会跨域

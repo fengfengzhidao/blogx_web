@@ -1,7 +1,39 @@
 <script setup lang="ts">
+import type {baseResponse, listResponse, paramsType} from "@/api";
+import {reactive} from "vue";
+import {Message} from "@arco-design/web-vue";
+
 const columns = [
   {title: "ID", dataIndex: 'id'}
 ]
+
+interface Props {
+  url: (params?: paramsType) => Promise<baseResponse<listResponse<any>>>
+}
+
+const props = defineProps<Props>()
+
+const data = reactive<listResponse<any>>({
+  list: [],
+  count: 0,
+})
+
+const params = reactive<paramsType>({})
+
+async function getList() {
+  const res = await props.url(params)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  data.list = res.data.list || []
+  data.count = res.data.count
+  console.log(data)
+}
+
+getList()
+
+
 </script>
 
 <template>
@@ -27,7 +59,7 @@ const columns = [
     <div class="f_list_body">
       <a-spin>
         <div class="f_list_table">
-          <a-table :columns="columns"></a-table>
+          <a-table :columns="columns" :data="data.list"></a-table>
         </div>
         <div class="f_list_page">
           <a-pagination :total="100"></a-pagination>
@@ -71,7 +103,8 @@ const columns = [
     > .arco-spin {
       width: 100%;
     }
-    .f_list_page{
+
+    .f_list_page {
       display: flex;
       justify-content: center;
       margin-top: 10px;
