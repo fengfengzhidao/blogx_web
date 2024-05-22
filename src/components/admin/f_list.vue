@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import type {baseResponse, listResponse, paramsType} from "@/api";
 import {reactive} from "vue";
-import {Message} from "@arco-design/web-vue";
+import {Message, type TableColumnData} from "@arco-design/web-vue";
 
-const columns = [
-  {title: "ID", dataIndex: 'id'}
-]
+
 
 interface Props {
   url: (params?: paramsType) => Promise<baseResponse<listResponse<any>>>
+  columns: TableColumnData[]
 }
 
 const props = defineProps<Props>()
@@ -59,7 +58,18 @@ getList()
     <div class="f_list_body">
       <a-spin>
         <div class="f_list_table">
-          <a-table :columns="columns" :data="data.list"></a-table>
+          <a-table :data="data.list">
+            <template #columns>
+              <template v-for="col in props.columns">
+                <a-table-column v-if="col.dataIndex" v-bind="col"></a-table-column>
+                <a-table-column v-else-if="col.slotName" v-bind="col">
+                  <template #cell="{ record }">
+                    <slot :name="col.slotName" :record="record"></slot>
+                  </template>
+                </a-table-column>
+              </template>
+            </template>
+          </a-table>
         </div>
         <div class="f_list_page">
           <a-pagination :total="100"></a-pagination>
