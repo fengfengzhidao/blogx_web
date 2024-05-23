@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {baseResponse, listResponse, paramsType} from "@/api";
 import {reactive, ref} from "vue";
-import {Message, type TableColumnData} from "@arco-design/web-vue";
+import {Message, type TableColumnData, type TableRowSelection} from "@arco-design/web-vue";
 import {dateTemFormat, type dateTemType} from "@/utils/date";
 import {defaultDeleteApi} from "@/api";
 
@@ -22,7 +22,13 @@ interface Props {
   editLabel?: string
   deleteLabel?: string
   noActionGroup?: boolean
+  noCheck?: boolean
 }
+
+const actionGroupOptions = [
+  {label: "批量删除", value: 1}
+]
+
 
 const props = defineProps<Props>()
 
@@ -68,9 +74,13 @@ const emits = defineEmits<{
 
 async function remove(record: any) {
   const key = record[rowKey]
+  baseDelete([key])
+}
+
+async function baseDelete(keyList: number[]) {
   if (noDefaultDelete) {
     // 不启用默认删除
-    emits("delete", [key])
+    emits("delete", keyList)
     return
   }
 
@@ -80,14 +90,16 @@ async function remove(record: any) {
   }
   const url = array[1]
 
-  const res = await defaultDeleteApi(url, [key])
+  const res = await defaultDeleteApi(url, keyList)
   if (res.code) {
     Message.error(res.msg)
     return
   }
   getList()
   Message.success(res.msg)
+
 }
+
 
 function update(record: any) {
   emits("edit", record)
@@ -110,6 +122,26 @@ function refresh() {
   Message.success("刷新成功")
 }
 
+
+const selectedKeys = ref([]);
+
+const rowSelection = reactive<TableRowSelection>({
+  type: 'checkbox',
+  showCheckedAll: true,
+  onlyCurrent: false,
+});
+const actionValue = ref()
+
+function actionGroupAction() {
+  if (actionValue.value === 1) {
+    // 批量删除
+    baseDelete(selectedKeys.value)
+    selectedKeys.value = []
+    return
+  }
+}
+
+
 </script>
 
 <template>
@@ -122,7 +154,8 @@ function refresh() {
       </slot>
 
       <div class="action_group" v-if="!noActionGroup">
-        <a-select placeholder="操作"></a-select>
+        <a-select style="width: 140px;" placeholder="操作" v-model="actionValue" :options="actionGroupOptions"></a-select>
+        <a-button type="primary" status="danger" @click="actionGroupAction" v-if="actionValue">执行</a-button>
       </div>
       <div class="action_search">
         <a-input-search :placeholder="searchPlaceholder" v-model="params.key" @search="search"></a-input-search>
@@ -138,7 +171,8 @@ function refresh() {
     <div class="f_list_body">
       <a-spin :loading="loading" tip="加载中...">
         <div class="f_list_table">
-          <a-table :data="data.list" :pagination="false">
+          <a-table :data="data.list" :row-key="rowKey" v-model:selectedKeys="selectedKeys"
+                   :row-selection="props.noCheck ? undefined : rowSelection " :pagination="false">
             <template #columns>
               <template v-for="col in props.columns">
                 <a-table-column v-if="col.dataIndex" v-bind="col"></a-table-column>
@@ -184,6 +218,17 @@ function refresh() {
     .action_create, .action_group, .action_search, .action_search_slot {
       margin-right: 10px;
     }
+
+    .action_group {
+      display: flex;
+      align-items: center;
+
+      button {
+        margin-left: 10px;
+      }
+
+    }
+
 
     .action_flush {
       position: absolute;
