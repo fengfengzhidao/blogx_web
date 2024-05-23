@@ -4,7 +4,6 @@ import {reactive} from "vue";
 import {Message, type TableColumnData} from "@arco-design/web-vue";
 
 
-
 interface Props {
   url: (params?: paramsType) => Promise<baseResponse<listResponse<any>>>
   columns: TableColumnData[]
@@ -31,6 +30,16 @@ async function getList() {
 }
 
 getList()
+
+
+function remove(){
+
+}
+
+function update(record: any){
+
+}
+
 
 
 </script>
@@ -63,8 +72,16 @@ getList()
               <template v-for="col in props.columns">
                 <a-table-column v-if="col.dataIndex" v-bind="col"></a-table-column>
                 <a-table-column v-else-if="col.slotName" v-bind="col">
-                  <template #cell="{ record }">
-                    <slot :name="col.slotName" :record="record"></slot>
+                  <template #cell="data">
+                    <div class="col_actions" v-if="col.slotName === 'action'">
+                      <slot v-bind="data" name="action_left"></slot>
+                      <a-button type="primary" @click="update(data.record)">编辑</a-button>
+                      <a-popconfirm @ok="remove" content="确定要删除该记录吗？">
+                        <a-button type="primary" status="danger">删除</a-button>
+                      </a-popconfirm>
+                      <slot v-bind="data" name="action_right"></slot>
+                    </div>
+                    <slot v-else :name="col.slotName" v-bind="data"></slot>
                   </template>
                 </a-table-column>
               </template>
@@ -118,6 +135,16 @@ getList()
       display: flex;
       justify-content: center;
       margin-top: 10px;
+    }
+
+    .col_actions {
+      button {
+        margin-right: 10px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
     }
   }
 }
