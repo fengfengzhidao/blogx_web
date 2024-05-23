@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {baseResponse, listResponse, paramsType} from "@/api";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import {Message, type TableColumnData} from "@arco-design/web-vue";
 import {dateTemFormat, type dateTemType} from "@/utils/date";
 
@@ -14,16 +14,21 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const loading = ref(false)
 
 const data = reactive<listResponse<any>>({
   list: [],
   count: 0,
 })
 
-const params = reactive<paramsType>({})
+const params = reactive<paramsType>({
+  limit: 10,
+})
 
 async function getList() {
+  loading.value = true
   const res = await props.url(params)
+  loading.value = false
   if (res.code) {
     Message.error(res.msg)
     return
@@ -45,6 +50,15 @@ function update(record: any) {
 }
 
 
+function pageChange(){
+  getList()
+}
+
+function search(){
+  getList()
+}
+
+
 </script>
 
 <template>
@@ -54,10 +68,10 @@ function update(record: any) {
         <a-button type="primary">创建</a-button>
       </div>
       <div class="action_group">
-        <a-select placeholder="操作"></a-select>
+        <a-select placeholder="操作" ></a-select>
       </div>
       <div class="action_search">
-        <a-input placeholder="搜索"></a-input>
+        <a-input-search placeholder="搜索" v-model="params.key" @search="search"></a-input-search>
       </div>
       <div class="action_search_slot">
 
@@ -68,9 +82,9 @@ function update(record: any) {
       </div>
     </div>
     <div class="f_list_body">
-      <a-spin>
+      <a-spin :loading="loading" tip="加载中...">
         <div class="f_list_table">
-          <a-table :data="data.list">
+          <a-table :data="data.list" :pagination="false">
             <template #columns>
               <template v-for="col in props.columns">
                 <a-table-column v-if="col.dataIndex" v-bind="col"></a-table-column>
@@ -95,7 +109,7 @@ function update(record: any) {
           </a-table>
         </div>
         <div class="f_list_page">
-          <a-pagination :total="100"></a-pagination>
+          <a-pagination show-total @change="pageChange" :total="data.count" v-model:current="params.page" :page-size="params.limit"></a-pagination>
         </div>
 
       </a-spin>
