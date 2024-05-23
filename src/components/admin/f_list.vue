@@ -3,6 +3,7 @@ import type {baseResponse, listResponse, paramsType} from "@/api";
 import {reactive, ref} from "vue";
 import {Message, type TableColumnData} from "@arco-design/web-vue";
 import {dateTemFormat, type dateTemType} from "@/utils/date";
+import {defaultDeleteApi} from "@/api";
 
 export interface columnType extends TableColumnData {
   dateFormat?: dateTemType
@@ -11,9 +12,15 @@ export interface columnType extends TableColumnData {
 interface Props {
   url: (params?: paramsType) => Promise<baseResponse<listResponse<any>>>
   columns: columnType[]
+  rowKey?: string
 }
 
 const props = defineProps<Props>()
+
+const {
+  rowKey = "id"
+} = props
+
 const loading = ref(false)
 
 const data = reactive<listResponse<any>>({
@@ -41,8 +48,20 @@ async function getList() {
 getList()
 
 
-function remove() {
-
+async function remove(record: any) {
+  const array = /\"(.*?)\"/.exec(props.url.toString())
+  if (array?.length !== 2) {
+    return
+  }
+  const url = array[1]
+  const key = record[rowKey]
+  const res = await defaultDeleteApi(url,[key])
+  if (res.code){
+    Message.error(res.msg)
+    return
+  }
+  getList()
+  Message.success(res.msg)
 }
 
 function update(record: any) {
@@ -50,11 +69,11 @@ function update(record: any) {
 }
 
 
-function pageChange(){
+function pageChange() {
   getList()
 }
 
-function search(){
+function search() {
   getList()
 }
 
@@ -68,7 +87,7 @@ function search(){
         <a-button type="primary">创建</a-button>
       </div>
       <div class="action_group">
-        <a-select placeholder="操作" ></a-select>
+        <a-select placeholder="操作"></a-select>
       </div>
       <div class="action_search">
         <a-input-search placeholder="搜索" v-model="params.key" @search="search"></a-input-search>
@@ -93,7 +112,7 @@ function search(){
                     <div class="col_actions" v-if="col.slotName === 'action'">
                       <slot v-bind="data" name="action_left"></slot>
                       <a-button type="primary" @click="update(data.record)">编辑</a-button>
-                      <a-popconfirm @ok="remove" content="确定要删除该记录吗？">
+                      <a-popconfirm @ok="remove(data.record)" content="确定要删除该记录吗？">
                         <a-button type="primary" status="danger">删除</a-button>
                       </a-popconfirm>
                       <slot v-bind="data" name="action_right"></slot>
@@ -109,7 +128,8 @@ function search(){
           </a-table>
         </div>
         <div class="f_list_page">
-          <a-pagination show-total @change="pageChange" :total="data.count" v-model:current="params.page" :page-size="params.limit"></a-pagination>
+          <a-pagination show-total @change="pageChange" :total="data.count" v-model:current="params.page"
+                        :page-size="params.limit"></a-pagination>
         </div>
 
       </a-spin>
