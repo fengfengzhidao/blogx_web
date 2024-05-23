@@ -9,6 +9,12 @@ export interface columnType extends TableColumnData {
   dateFormat?: dateTemType
 }
 
+export interface actionGroupType {
+  label: string
+  value?: number
+  callback: (keyList: number[]) => void
+}
+
 interface Props {
   url: (params?: paramsType) => Promise<baseResponse<listResponse<any>>>
   columns: columnType[]
@@ -17,18 +23,15 @@ interface Props {
   noAdd?: boolean
   noEdit?: boolean
   noDelete?: boolean
+  noBatchDelete?: boolean // 是否没有批量删除
   searchPlaceholder?: string
   addLabel?: string
   editLabel?: string
   deleteLabel?: string
   noActionGroup?: boolean
   noCheck?: boolean
+  actionGroup?: actionGroupType[]
 }
-
-const actionGroupOptions = [
-  {label: "批量删除", value: 1}
-]
-
 
 const props = defineProps<Props>()
 
@@ -40,6 +43,35 @@ const {
   editLabel = "编辑",
   deleteLabel = "删除",
 } = props
+const actionGroupOptions = ref<actionGroupType[]>([])
+
+
+function initActionGroup() {
+  let index = 0
+  if (!props.noBatchDelete) {
+    actionGroupOptions.value.push({
+      label: "批量删除",
+      value: 1,
+      callback: (keyList: number[]) => {
+        baseDelete(keyList)
+        selectedKeys.value = []
+      }
+    })
+    index = 1
+  }
+  index++
+  const actionGroup = props.actionGroup || []
+  for (const action of actionGroup) {
+    actionGroupOptions.value.push({
+      label: action.label,
+      value: index,
+      callback: action.callback,
+    })
+  }
+}
+
+initActionGroup()
+
 
 const loading = ref(false)
 
@@ -62,7 +94,6 @@ async function getList() {
   }
   data.list = res.data.list || []
   data.count = res.data.count
-  console.log(data)
 }
 
 getList()
@@ -133,11 +164,9 @@ const rowSelection = reactive<TableRowSelection>({
 const actionValue = ref()
 
 function actionGroupAction() {
-  if (actionValue.value === 1) {
-    // 批量删除
-    baseDelete(selectedKeys.value)
-    selectedKeys.value = []
-    return
+  const action = actionGroupOptions.value.find((value) => value.value === actionValue.value)
+  if (action) {
+    action.callback(selectedKeys.value)
   }
 }
 
@@ -154,7 +183,8 @@ function actionGroupAction() {
       </slot>
 
       <div class="action_group" v-if="!noActionGroup">
-        <a-select style="width: 140px;" placeholder="操作" v-model="actionValue" :options="actionGroupOptions"></a-select>
+        <a-select style="width: 140px;" placeholder="操作" v-model="actionValue"
+                  :options="actionGroupOptions"></a-select>
         <a-button type="primary" status="danger" @click="actionGroupAction" v-if="actionValue">执行</a-button>
       </div>
       <div class="action_search">
