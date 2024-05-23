@@ -2,11 +2,15 @@
 import type {baseResponse, listResponse, paramsType} from "@/api";
 import {reactive} from "vue";
 import {Message, type TableColumnData} from "@arco-design/web-vue";
+import {dateTemFormat, type dateTemType} from "@/utils/date";
 
+export interface columnType extends TableColumnData {
+  dateFormat?: dateTemType
+}
 
 interface Props {
   url: (params?: paramsType) => Promise<baseResponse<listResponse<any>>>
-  columns: TableColumnData[]
+  columns: columnType[]
 }
 
 const props = defineProps<Props>()
@@ -32,14 +36,13 @@ async function getList() {
 getList()
 
 
-function remove(){
+function remove() {
 
 }
 
-function update(record: any){
+function update(record: any) {
 
 }
-
 
 
 </script>
@@ -80,6 +83,9 @@ function update(record: any){
                         <a-button type="primary" status="danger">删除</a-button>
                       </a-popconfirm>
                       <slot v-bind="data" name="action_right"></slot>
+                    </div>
+                    <div v-if="col.slotName === 'created_at'">
+                      {{ dateTemFormat(data.record[col.slotName], col.dateFormat) }}
                     </div>
                     <slot v-else :name="col.slotName" v-bind="data"></slot>
                   </template>
