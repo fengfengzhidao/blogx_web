@@ -14,6 +14,14 @@ interface Props {
   columns: columnType[]
   rowKey?: string
   noDefaultDelete?: boolean // 不启用默认删除
+  noAdd?: boolean
+  noEdit?: boolean
+  noDelete?: boolean
+  searchPlaceholder?: string
+  addLabel?: string
+  editLabel?: string
+  deleteLabel?: string
+  noActionGroup?: boolean
 }
 
 const props = defineProps<Props>()
@@ -21,6 +29,10 @@ const props = defineProps<Props>()
 const {
   rowKey = "id",
   noDefaultDelete = false,
+  searchPlaceholder = "搜索",
+  addLabel = "添加",
+  editLabel = "编辑",
+  deleteLabel = "删除",
 } = props
 
 const loading = ref(false)
@@ -50,6 +62,8 @@ async function getList() {
 getList()
 const emits = defineEmits<{
   (e: 'delete', keyList: number[] | string[]): void
+  (e: 'add'): void
+  (e: 'edit', record: any): void
 }>()
 
 async function remove(record: any) {
@@ -76,9 +90,12 @@ async function remove(record: any) {
 }
 
 function update(record: any) {
-
+  emits("edit", record)
 }
 
+function add() {
+  emits("add")
+}
 
 function pageChange() {
   getList()
@@ -88,26 +105,33 @@ function search() {
   getList()
 }
 
+function refresh() {
+  getList()
+  Message.success("刷新成功")
+}
 
 </script>
 
 <template>
   <div class="f_list_com">
     <div class="f_list_head">
-      <div class="action_create">
-        <a-button type="primary">创建</a-button>
-      </div>
-      <div class="action_group">
+      <slot name="action_add">
+        <div class="action_create" v-if="!noAdd">
+          <a-button type="primary" @click="add">{{ addLabel }}</a-button>
+        </div>
+      </slot>
+
+      <div class="action_group" v-if="!noActionGroup">
         <a-select placeholder="操作"></a-select>
       </div>
       <div class="action_search">
-        <a-input-search placeholder="搜索" v-model="params.key" @search="search"></a-input-search>
+        <a-input-search :placeholder="searchPlaceholder" v-model="params.key" @search="search"></a-input-search>
       </div>
       <div class="action_search_slot">
-
+        <slot name="search_other"></slot>
       </div>
 
-      <div class="action_flush">
+      <div class="action_flush" @click="refresh">
         <icon-refresh></icon-refresh>
       </div>
     </div>
@@ -122,9 +146,9 @@ function search() {
                   <template #cell="data">
                     <div class="col_actions" v-if="col.slotName === 'action'">
                       <slot v-bind="data" name="action_left"></slot>
-                      <a-button type="primary" @click="update(data.record)">编辑</a-button>
-                      <a-popconfirm @ok="remove(data.record)" content="确定要删除该记录吗？">
-                        <a-button type="primary" status="danger">删除</a-button>
+                      <a-button v-if="!noEdit" type="primary" @click="update(data.record)">{{ editLabel }}</a-button>
+                      <a-popconfirm v-if="!noDelete" @ok="remove(data.record)" content="确定要删除该记录吗？">
+                        <a-button type="primary" status="danger">{{ deleteLabel }}</a-button>
                       </a-popconfirm>
                       <slot v-bind="data" name="action_right"></slot>
                     </div>

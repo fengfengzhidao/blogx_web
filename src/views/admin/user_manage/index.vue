@@ -19,12 +19,9 @@ function remove(keyList: number[]){
 
 <template>
   <div>
-    <f_list :url="userListApi" :columns="columns" no-default-delete @delete="remove">
+    <f_list :url="userListApi" :columns="columns">
       <template #avatar="{record}:{record: userListType}">
         <a-avatar :image-url="record.avatar"></a-avatar>
-      </template>
-      <template #action_left>
-        <a-button>预览</a-button>
       </template>
     </f_list>
   </div>
