@@ -13,12 +13,14 @@ interface Props {
   url: (params?: paramsType) => Promise<baseResponse<listResponse<any>>>
   columns: columnType[]
   rowKey?: string
+  noDefaultDelete?: boolean // 不启用默认删除
 }
 
 const props = defineProps<Props>()
 
 const {
-  rowKey = "id"
+  rowKey = "id",
+  noDefaultDelete = false,
 } = props
 
 const loading = ref(false)
@@ -46,17 +48,26 @@ async function getList() {
 }
 
 getList()
-
+const emits = defineEmits<{
+  (e: 'delete', keyList: number[] | string[]): void
+}>()
 
 async function remove(record: any) {
+  const key = record[rowKey]
+  if (noDefaultDelete) {
+    // 不启用默认删除
+    emits("delete", [key])
+    return
+  }
+
   const array = /\"(.*?)\"/.exec(props.url.toString())
   if (array?.length !== 2) {
     return
   }
   const url = array[1]
-  const key = record[rowKey]
-  const res = await defaultDeleteApi(url,[key])
-  if (res.code){
+
+  const res = await defaultDeleteApi(url, [key])
+  if (res.code) {
     Message.error(res.msg)
     return
   }
