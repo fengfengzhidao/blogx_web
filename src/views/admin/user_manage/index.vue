@@ -26,12 +26,28 @@ const actionGroup = [
 
 const filters: filterGroupType[] = [
   {
-    label:"角色过滤",
+    label: "角色过滤",
     source: [
       {label: "管理员", value: 1},
       {label: "用户", value: 2},
     ],
-    column: "role"
+    column: "role",
+    width: 140,
+    // callback: (value: number)=>{
+    //   console.log("父", value)
+    // }
+  },
+  {
+    label: "ip过滤",
+    source: [
+      {label: "外网", value: 3},
+      {label: "内网", value: 4},
+    ],
+    column: "ip",
+    width: 140,
+    // callback: (value: number)=>{
+    //   console.log("父", value)
+    // }
   }
 ]
 

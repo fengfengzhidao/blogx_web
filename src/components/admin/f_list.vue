@@ -22,6 +22,7 @@ export interface filterGroupType {
   column?: string
   params?: paramsType
   callback?: (value: number | string) => void
+  width?: number
 }
 
 
@@ -99,6 +100,15 @@ async function initFilterGroup() {
     } else {
       f.options = f.source
     }
+    if (!f.callback) {
+      // 如果没有callback，那就走默认行为
+      f.callback = (value) => {
+        const p = {}
+        p[f.column] = value
+        getList(p)
+      }
+    }
+
     filterGroups.value.push(f)
   }
 }
@@ -116,9 +126,14 @@ const params = reactive<paramsType>({
   limit: 10,
 })
 
-async function getList() {
+async function getList(newParams?: paramsType) {
   loading.value = true
-  const res = await props.url(params)
+  const p = {}
+  if (newParams) {
+    Object.assign(p, newParams)
+  }
+  Object.assign(p, params)
+  const res = await props.url(p)
   loading.value = false
   if (res.code) {
     Message.error(res.msg)
@@ -224,7 +239,9 @@ function actionGroupAction() {
       </div>
       <div class="action_filter">
 
-        <a-select v-for="item in filterGroups" :placeholder="item.label" :options="item.options as optionsType[]"></a-select>
+        <a-select v-for="item in filterGroups" :style="{width: item.width + 'px'}" allow-clear
+                  @change="item.callback as any" :placeholder="item.label"
+                  :options="item.options as optionsType[]"></a-select>
       </div>
       <div class="action_search_slot">
         <slot name="search_other"></slot>
@@ -293,6 +310,16 @@ function actionGroupAction() {
         margin-left: 10px;
       }
 
+    }
+
+    .action_filter {
+      .arco-select {
+        margin-right: 10px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
     }
 
 
