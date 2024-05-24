@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import F_list from "@/components/admin/f_list.vue";
+import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import {userListApi, type userListType} from "@/api/user_api";
 import type {columnType} from "@/components/admin/f_list.vue";
 
@@ -23,6 +23,18 @@ const actionGroup = [
   }
 ]
 
+
+const filters: filterGroupType[] = [
+  {
+    label:"角色过滤",
+    source: [
+      {label: "管理员", value: 1},
+      {label: "用户", value: 2},
+    ],
+    column: "role"
+  }
+]
+
 function remove(keyList: number[]) {
   console.log(keyList)
 }
@@ -30,7 +42,7 @@ function remove(keyList: number[]) {
 
 <template>
   <div>
-    <f_list :actionGroup="actionGroup" :url="userListApi" :columns="columns">
+    <f_list :actionGroup="actionGroup" :filter-group="filters" :url="userListApi" :columns="columns">
       <template #avatar="{record}:{record: userListType}">
         <a-avatar :image-url="record.avatar"></a-avatar>
       </template>

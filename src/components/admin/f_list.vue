@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {baseResponse, listResponse, paramsType} from "@/api";
+import type {baseResponse, listResponse, optionsFunc, optionsType, paramsType} from "@/api";
 import {reactive, ref} from "vue";
 import {Message, type TableColumnData, type TableRowSelection} from "@arco-design/web-vue";
 import {dateTemFormat, type dateTemType} from "@/utils/date";
@@ -14,6 +14,16 @@ export interface actionGroupType {
   value?: number
   callback: (keyList: number[]) => void
 }
+
+export interface filterGroupType {
+  label: string
+  source: optionsType[] | optionsFunc
+  options?: optionsType[]
+  column?: string
+  params?: paramsType
+  callback?: (value: number | string) => void
+}
+
 
 interface Props {
   url: (params?: paramsType) => Promise<baseResponse<listResponse<any>>>
@@ -31,6 +41,7 @@ interface Props {
   noActionGroup?: boolean
   noCheck?: boolean
   actionGroup?: actionGroupType[]
+  filterGroup?: filterGroupType[]
 }
 
 const props = defineProps<Props>()
@@ -72,6 +83,27 @@ function initActionGroup() {
 
 initActionGroup()
 
+
+const filterGroups = ref<filterGroupType[]>([])
+
+async function initFilterGroup() {
+  filterGroups.value = []
+  for (const f of props.filterGroup || []) {
+    if (typeof f.source === 'function') {
+      const res = await f.source(f.params)
+      if (res.code) {
+        Message.error(res.msg)
+        continue
+      }
+      f.options = res.data
+    } else {
+      f.options = f.source
+    }
+    filterGroups.value.push(f)
+  }
+}
+
+initFilterGroup()
 
 const loading = ref(false)
 
@@ -189,6 +221,10 @@ function actionGroupAction() {
       </div>
       <div class="action_search">
         <a-input-search :placeholder="searchPlaceholder" v-model="params.key" @search="search"></a-input-search>
+      </div>
+      <div class="action_filter">
+
+        <a-select v-for="item in filterGroups" :placeholder="item.label" :options="item.options as optionsType[]"></a-select>
       </div>
       <div class="action_search_slot">
         <slot name="search_other"></slot>

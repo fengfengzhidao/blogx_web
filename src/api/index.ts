@@ -32,14 +32,21 @@ useAxios.interceptors.request.use((config) => {
 })
 
 useAxios.interceptors.response.use((res) => {
-    if (res.status === 200){
+    if (res.status === 200) {
         return res.data
     }
     return res
-}, (res)=>{
+}, (res) => {
     Message.error(res.message)
 })
 
-export function defaultDeleteApi(url: string, id_list: number[]):Promise<baseResponse<string>>{
-    return  useAxios.delete(url, {data: {id_list}})
+export function defaultDeleteApi(url: string, id_list: number[]): Promise<baseResponse<string>> {
+    return useAxios.delete(url, {data: {id_list}})
 }
+
+export interface optionsType {
+    label: string
+    value: number | string
+}
+
+export type optionsFunc = (params?: paramsType) => Promise<baseResponse<optionsType[]>>
