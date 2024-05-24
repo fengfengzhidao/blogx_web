@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {baseResponse, listResponse, optionsFunc, optionsType, paramsType} from "@/api";
 import {reactive, ref} from "vue";
-import {Message, type TableColumnData, type TableRowSelection} from "@arco-design/web-vue";
+import {Message, type TableColumnData, type TableData, type TableRowSelection} from "@arco-design/web-vue";
 import {dateTemFormat, type dateTemType} from "@/utils/date";
 import {defaultDeleteApi} from "@/api";
 
@@ -43,6 +43,8 @@ interface Props {
   noCheck?: boolean
   actionGroup?: actionGroupType[]
   filterGroup?: filterGroupType[]
+  noPage?: boolean
+  limit?: number
 }
 
 const props = defineProps<Props>()
@@ -54,6 +56,7 @@ const {
   addLabel = "添加",
   editLabel = "编辑",
   deleteLabel = "删除",
+  limit = 10,
 } = props
 const actionGroupOptions = ref<actionGroupType[]>([])
 
@@ -125,7 +128,7 @@ const data = reactive<listResponse<any>>({
 })
 
 const params = reactive<paramsType>({
-  limit: 10,
+  limit: props.noPage ? -1 : limit,
 })
 
 async function getList(newParams?: paramsType) {
@@ -148,6 +151,7 @@ const emits = defineEmits<{
   (e: 'delete', keyList: number[] | string[]): void
   (e: 'add'): void
   (e: 'edit', record: any): void
+  (e: "row-click", record: any): void
 }>()
 
 async function remove(record: any) {
@@ -217,6 +221,16 @@ function actionGroupAction() {
   }
 }
 
+function rowClick(record: TableData, ev: Event) {
+  emits("row-click", record)
+}
+
+
+defineExpose({
+  getList,
+  data,
+})
+
 
 </script>
 
@@ -254,7 +268,7 @@ function actionGroupAction() {
     <div class="f_list_body">
       <a-spin :loading="loading" tip="加载中...">
         <div class="f_list_table">
-          <a-table :data="data.list" :row-key="rowKey" v-model:selectedKeys="selectedKeys"
+          <a-table @row-click="rowClick" :data="data.list" :row-key="rowKey" v-model:selectedKeys="selectedKeys"
                    :row-selection="props.noCheck ? undefined : rowSelection " :pagination="false">
             <template #columns>
               <template v-for="col in props.columns">
@@ -279,7 +293,7 @@ function actionGroupAction() {
             </template>
           </a-table>
         </div>
-        <div class="f_list_page">
+        <div class="f_list_page" v-if="!props.noPage">
           <a-pagination show-total @change="pageChange" :total="data.count" v-model:current="params.page"
                         :page-size="params.limit"></a-pagination>
         </div>
