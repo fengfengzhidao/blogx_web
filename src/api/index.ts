@@ -18,6 +18,7 @@ export interface paramsType {
     limit?: number
     page?: number
     sort?: string
+    [key: string]: any
 }
 
 export const useAxios = axios.create({

@@ -103,9 +103,11 @@ async function initFilterGroup() {
     if (!f.callback) {
       // 如果没有callback，那就走默认行为
       f.callback = (value) => {
-        const p = {}
-        p[f.column] = value
-        getList(p)
+        if (f.column) {
+          const p: { [key: string]: any } = {}
+          p[f.column] = value
+          getList(p)
+        }
       }
     }
 
@@ -128,12 +130,10 @@ const params = reactive<paramsType>({
 
 async function getList(newParams?: paramsType) {
   loading.value = true
-  const p = {}
   if (newParams) {
-    Object.assign(p, newParams)
+    Object.assign(params, newParams)
   }
-  Object.assign(p, params)
-  const res = await props.url(p)
+  const res = await props.url(params)
   loading.value = false
   if (res.code) {
     Message.error(res.msg)

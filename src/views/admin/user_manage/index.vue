@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
-import {userListApi, type userListType} from "@/api/user_api";
+import {articleCategoryOptionsApi, userListApi, type userListType} from "@/api/user_api";
 import type {columnType} from "@/components/admin/f_list.vue";
 
 const columns = [
@@ -38,12 +38,9 @@ const filters: filterGroupType[] = [
     // }
   },
   {
-    label: "ip过滤",
-    source: [
-      {label: "外网", value: 3},
-      {label: "内网", value: 4},
-    ],
-    column: "ip",
+    label: "文章分类",
+    source: articleCategoryOptionsApi,
+    column: "category",
     width: 140,
     // callback: (value: number)=>{
     //   console.log("父", value)
