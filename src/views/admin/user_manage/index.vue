@@ -15,10 +15,10 @@ const columns = [
 
 const formList: formListType[] = [
   {
-    label: "用户名", field: "user_name", type: "input", rules: {required: true}, validateTrigger: "blur",
+    label: "用户名", field: "user_name", type: "input", editDisable: true, rules: {required: true}, validateTrigger: "blur",
   },
   {
-    label: "密码", field: "password", type: "input", rules: {required: true}, validateTrigger: "blur",
+    label: "密码", field: "password", type: "password", editDisable: true, rules: {required: true}, validateTrigger: "blur",
   },
   {
     label: "昵称", field: "nick_name", type: "input", rules: {required: true}, validateTrigger: "blur",

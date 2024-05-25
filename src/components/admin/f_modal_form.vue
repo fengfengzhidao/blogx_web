@@ -8,7 +8,7 @@ import {Message} from "@arco-design/web-vue";
 export interface formListType {
   label: string
   field: string
-  type?: "input" | "textarea" | "select" | "switch" | "radio"
+  type?: "input" | "textarea" | "select" | "switch" | "radio" | "password"
   validateTrigger?: "focus" | "input" | "blur" | "change" | ("focus" | "input" | "blur" | "change")[];
   rules?: FieldRule<any> | FieldRule<any>[]
   source?: optionsType[] | optionsFunc
@@ -18,6 +18,7 @@ export interface formListType {
     maxRows?: number | undefined;
   }
   multiple?: boolean
+  editDisable?: boolean // 是否编辑不可见
 
 }
 
@@ -106,33 +107,36 @@ defineExpose({
   <a-modal :title="isEdit ? editLabel ? editLabel : addLabel : addLabel" :visible="props.visible" @cancel="cancel"
            :on-before-ok="beforeOk">
     <a-form ref="formRef" :model="form">
-      <a-form-item v-for="item in formList" :field="item.field" :label="item.label" :rules="item.rules"
-                   :validate-trigger="item.validateTrigger as 'blur'"
-                   validate-trigger="blur">
-        <template v-if="item.type === 'input'">
-          <a-input v-model="form[item.field]" :placeholder="item.label"></a-input>
-        </template>
-        <template v-else-if="item.type === 'select'">
-          <a-select :multiple="item.multiple as boolean" v-model="form[item.field]" :placeholder="item.label"
-                    :options="item.options as optionsType[]" allow-clear></a-select>
-        </template>
-        <template v-else-if="item.type === 'switch'">
-          <a-switch v-model="form[item.field]"></a-switch>
-        </template>
-        <template v-else-if="item.type === 'radio'">
-          <a-radio-group v-model="form[item.field]" :options="item.options as optionsType[]"></a-radio-group>
-        </template>
-        <template v-else-if="item.type === 'textarea'">
-          <a-textarea v-model="form[item.field]" :placeholder="item.label" allow-clear
-                      :auto-size="item.autoSize as boolean"></a-textarea>
-        </template>
-        <template v-else>
-          <slot :name="item.field" :form="form"></slot>
-        </template>
-        <template #help>
-          <slot :name="`${item.field}_help`" :value="form[item.field]"></slot>
-        </template>
-      </a-form-item>
+      <template v-for="item in formList" >
+        <a-form-item v-if="!isEdit || (isEdit && !item.editDisable)" :field="item.field" :label="item.label" :rules="item.rules"
+                     :validate-trigger="item.validateTrigger as 'blur'"
+                     validate-trigger="blur">
+          <template v-if="item.type === 'input' || item.type === 'password' ">
+            <a-input v-model="form[item.field]" :type="item.type === 'input' ? 'text' : 'password'" :placeholder="item.label"></a-input>
+          </template>
+          <template v-else-if="item.type === 'select'">
+            <a-select :multiple="item.multiple as boolean" v-model="form[item.field]" :placeholder="item.label"
+                      :options="item.options as optionsType[]" allow-clear></a-select>
+          </template>
+          <template v-else-if="item.type === 'switch'">
+            <a-switch v-model="form[item.field]"></a-switch>
+          </template>
+          <template v-else-if="item.type === 'radio'">
+            <a-radio-group v-model="form[item.field]" :options="item.options as optionsType[]"></a-radio-group>
+          </template>
+          <template v-else-if="item.type === 'textarea'">
+            <a-textarea v-model="form[item.field]" :placeholder="item.label" allow-clear
+                        :auto-size="item.autoSize as boolean"></a-textarea>
+          </template>
+          <template v-else>
+            <slot :name="item.field" :form="form"></slot>
+          </template>
+          <template #help>
+            <slot :name="`${item.field}_help`" :value="form[item.field]"></slot>
+          </template>
+        </a-form-item>
+      </template>
+
     </a-form>
     <template #footer>
       <slot name="footer" :form="form"></slot>
