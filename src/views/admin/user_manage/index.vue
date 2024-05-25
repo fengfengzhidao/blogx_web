@@ -5,6 +5,7 @@ import {userListApi, type userListType} from "@/api/user_api";
 import type {columnType} from "@/components/admin/f_list.vue";
 import {reactive, ref} from "vue";
 import F_modal_form, {type formListType} from "@/components/admin/f_modal_form.vue";
+import {articleCategoryOptionsApi} from "@/api/user_api";
 
 const columns = [
   {title: "ID", dataIndex: 'id'},
@@ -18,6 +19,9 @@ const columns = [
 const formList: formListType[] = [
   {
     label: "昵称", field: "nick_name", type: "input", rules: {required: true}, validateTrigger: "blur"
+  },
+  {
+    label: "角色", field: "role", type: "select", rules: {required: true}, validateTrigger: "blur", source: articleCategoryOptionsApi,
   }
 ]
 const form = reactive({})
