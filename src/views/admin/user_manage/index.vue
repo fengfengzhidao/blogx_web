@@ -21,18 +21,18 @@ const formList: formListType[] = [
     label: "昵称", field: "nick_name", type: "input", rules: {required: true}, validateTrigger: "blur"
   },
   {
-    label: "角色", field: "role", type: "textarea", rules: {required: true}, validateTrigger: "blur", source: [
-      {label : "管理员", value: 1},
-      {label : "用户", value: 2},
+    label: "角色", field: "role", rules: {required: true}, validateTrigger: "blur", source: [
+      {label: "管理员", value: 1},
+      {label: "用户", value: 2},
     ],
-    autoSize: {minRows: 3, maxRows: 5}
+    multiple: true,
   }
 ]
 const form = reactive({})
 const visible = ref(false)
 
-function ok(form: object, fn: (val: boolean) => void) {
-  // console.log(form)
+function ok(form: object, fn?: (val: boolean) => void) {
+  console.log(form)
   // fn(false)
 }
 </script>
@@ -40,6 +40,11 @@ function ok(form: object, fn: (val: boolean) => void) {
 <template>
   <div>
     <f_modal_form @ok="ok" v-model:visible="visible" title="创建用户" :form-list="formList">
+      <template #role="{form}">
+        <a-select v-model="form['role']" placeholder="自定义role" :options="[   {label: '管理员', value: 1},]">
+        </a-select>
+      </template>
+      <template #footer="{form}"><a-button @click="ok(form)">ok</a-button></template>
     </f_modal_form>
     <f_list @add="visible=true" ref="fListRef" :url="userListApi" :columns="columns">
       <template #avatar="{record}:{record: userListType}">
