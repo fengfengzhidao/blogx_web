@@ -24,7 +24,8 @@ export interface formListType {
 interface Props {
   visible: boolean
   formList: formListType[]
-  title: string
+  addLabel: string // 添加的时候，显示的名字
+  editLabel?: string // 编辑的时候，显示的名字，如果没有就用添加的
 }
 
 
@@ -59,6 +60,9 @@ const emits = defineEmits<{
 
 
 function cancel() {
+  formRef.value.clearValidate()
+  formRef.value.resetFields()
+  isEdit.value = false
   emits("update:visible", false)
 }
 
@@ -77,10 +81,21 @@ async function beforeOk() {
   })
 }
 
+const isEdit = ref(false)
+function setForm(formObj: any){
+  isEdit.value = true
+  Object.assign(form, formObj)
+}
+
+defineExpose({
+  setForm
+})
+
+
 </script>
 
 <template>
-  <a-modal :title="props.title" :visible="props.visible" @cancel="cancel" :on-before-ok="beforeOk">
+  <a-modal :title="isEdit ? editLabel ? editLabel : addLabel : addLabel" :visible="props.visible" @cancel="cancel" :on-before-ok="beforeOk">
     <a-form ref="formRef" :model="form">
       <a-form-item v-for="item in formList" :field="item.field" :label="item.label" :rules="item.rules"
                    :validate-trigger="item.validateTrigger as 'blur'"
