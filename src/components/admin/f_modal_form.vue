@@ -13,6 +13,11 @@ export interface formListType {
   rules?: FieldRule<any> | FieldRule<any>[]
   source?: optionsType[] | optionsFunc
   options?: optionsType[]
+  autoSize?: boolean | {
+    minRows?: number | undefined;
+    maxRows?: number | undefined;
+  }
+
 }
 
 interface Props {
@@ -84,6 +89,18 @@ async function beforeOk() {
         </template>
         <template v-else-if="item.type === 'select'">
           <a-select v-model="form[item.field]" :placeholder="item.label" :options="item.options as optionsType[]" allow-clear></a-select>
+        </template>
+        <template v-else-if="item.type === 'switch'">
+          <a-switch v-model="form[item.field]"></a-switch>
+        </template>
+        <template v-else-if="item.type === 'radio'">
+          <a-radio-group v-model="form[item.field]" :options="item.options as optionsType[]"></a-radio-group>
+        </template>
+        <template v-else-if="item.type === 'textarea'">
+          <a-textarea v-model="form[item.field]" :placeholder="item.label" allow-clear :auto-size="item.autoSize as boolean"></a-textarea>
+        </template>
+        <template #help>
+          <slot :name="`${item.field}_help`" :value="form[item.field]"></slot>
         </template>
       </a-form-item>
     </a-form>

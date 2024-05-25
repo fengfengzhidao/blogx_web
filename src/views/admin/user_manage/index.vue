@@ -21,7 +21,11 @@ const formList: formListType[] = [
     label: "昵称", field: "nick_name", type: "input", rules: {required: true}, validateTrigger: "blur"
   },
   {
-    label: "角色", field: "role", type: "select", rules: {required: true}, validateTrigger: "blur", source: articleCategoryOptionsApi,
+    label: "角色", field: "role", type: "textarea", rules: {required: true}, validateTrigger: "blur", source: [
+      {label : "管理员", value: 1},
+      {label : "用户", value: 2},
+    ],
+    autoSize: {minRows: 3, maxRows: 5}
   }
 ]
 const form = reactive({})
@@ -35,7 +39,8 @@ function ok(form: object, fn: (val: boolean) => void) {
 
 <template>
   <div>
-    <f_modal_form @ok="ok" v-model:visible="visible" title="创建用户" :form-list="formList"></f_modal_form>
+    <f_modal_form @ok="ok" v-model:visible="visible" title="创建用户" :form-list="formList">
+    </f_modal_form>
     <f_list @add="visible=true" ref="fListRef" :url="userListApi" :columns="columns">
       <template #avatar="{record}:{record: userListType}">
         <a-avatar :image-url="record.avatar"></a-avatar>
