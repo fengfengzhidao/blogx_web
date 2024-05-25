@@ -44,7 +44,13 @@ useAxios.interceptors.response.use((res) => {
 export function defaultDeleteApi(url: string, id_list: number[]): Promise<baseResponse<string>> {
     return useAxios.delete(url, {data: {id_list}})
 }
+export function defaultPostApi(url: string, data: any): Promise<baseResponse<string>> {
+    return useAxios.post(url, data)
+}
 
+export function defaultPutApi(url: string, data: any): Promise<baseResponse<string>> {
+    return useAxios.put(url, data)
+}
 export interface optionsType {
     label: string
     value: number | string

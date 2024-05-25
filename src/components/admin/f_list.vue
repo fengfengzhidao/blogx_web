@@ -3,8 +3,8 @@ import type {baseResponse, listResponse, optionsFunc, optionsType, paramsType} f
 import {reactive, ref} from "vue";
 import {Message, type TableColumnData, type TableData, type TableRowSelection} from "@arco-design/web-vue";
 import {dateTemFormat, type dateTemType} from "@/utils/date";
-import {defaultDeleteApi} from "@/api";
-import type {formListType} from "@/components/admin/f_modal_form.vue";
+import {defaultDeleteApi, defaultPostApi, defaultPutApi} from "@/api";
+import type {emitFnType, formListType} from "@/components/admin/f_modal_form.vue";
 import F_modal_form from "@/components/admin/f_modal_form.vue";
 
 export interface columnType extends TableColumnData {
@@ -188,8 +188,9 @@ async function baseDelete(keyList: number[]) {
 }
 
 const modalFormRef = ref()
-function update(record: any) {
-  if (props.formList?.length){
+
+function edit(record: any) {
+  if (props.formList?.length) {
     modalFormRef.value.setForm(record)
     visible.value = true
     return
@@ -198,7 +199,7 @@ function update(record: any) {
 }
 
 function add() {
-  if (props.formList?.length){
+  if (props.formList?.length) {
     visible.value = true
     return
   }
@@ -244,6 +245,39 @@ function rowClick(record: TableData, ev: Event) {
 const visible = ref(false)
 
 
+async function create(form: any, fn?: emitFnType) {
+  const array = /\"(.*?)\"/.exec(props.url.toString())
+  if (array?.length !== 2) {
+    return
+  }
+  const url = array[1]
+
+  const res = await defaultPostApi(url, form)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  getList()
+  fn(true)
+}
+
+async function update(form: any, fn?: emitFnType) {
+  const array = /\"(.*?)\"/.exec(props.url.toString())
+  if (array?.length !== 2) {
+    return
+  }
+  const url = array[1]
+
+  const res = await defaultPutApi(url, form)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  getList()
+  fn(true)
+}
+
+
 defineExpose({
   getList,
   data,
@@ -257,6 +291,8 @@ defineExpose({
 
     <f_modal_form
         ref="modalFormRef"
+        @create="create"
+        @update="update"
         v-if="props.formList?.length"
         :add-label="props.addFormLabel"
         :edit-label="props.editFormLabel"
@@ -303,7 +339,7 @@ defineExpose({
                   <template #cell="data">
                     <div class="col_actions" v-if="col.slotName === 'action'">
                       <slot v-bind="data" name="action_left"></slot>
-                      <a-button v-if="!noEdit" type="primary" @click="update(data.record)">{{ editLabel }}</a-button>
+                      <a-button v-if="!noEdit" type="primary" @click="edit(data.record)">{{ editLabel }}</a-button>
                       <a-popconfirm v-if="!noDelete" @ok="remove(data.record)" content="确定要删除该记录吗？">
                         <a-button type="primary" status="danger">{{ deleteLabel }}</a-button>
                       </a-popconfirm>

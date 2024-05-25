@@ -21,6 +21,8 @@ export interface formListType {
 
 }
 
+export type emitFnType = (val: boolean) => void
+
 interface Props {
   visible: boolean
   formList: formListType[]
@@ -55,8 +57,8 @@ initForm()
 
 const emits = defineEmits<{
   (e: "update:visible", visible: boolean): void
-  (e: "create", form: object, fn?: (val: boolean) => void): void
-  (e: "update", form: object, fn?: (val: boolean) => void): void
+  (e: "create", form: object, fn?: emitFnType): void
+  (e: "update", form: object, fn?: emitFnType): void
 }>()
 
 
