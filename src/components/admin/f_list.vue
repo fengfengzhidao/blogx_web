@@ -4,6 +4,8 @@ import {reactive, ref} from "vue";
 import {Message, type TableColumnData, type TableData, type TableRowSelection} from "@arco-design/web-vue";
 import {dateTemFormat, type dateTemType} from "@/utils/date";
 import {defaultDeleteApi} from "@/api";
+import type {formListType} from "@/components/admin/f_modal_form.vue";
+import F_modal_form from "@/components/admin/f_modal_form.vue";
 
 export interface columnType extends TableColumnData {
   dateFormat?: dateTemType
@@ -45,6 +47,9 @@ interface Props {
   filterGroup?: filterGroupType[]
   noPage?: boolean
   limit?: number
+  formList?: formListType[]
+  addFormLabel?: string
+  editFormLabel?: string
 }
 
 const props = defineProps<Props>()
@@ -182,12 +187,22 @@ async function baseDelete(keyList: number[]) {
 
 }
 
-
+const modalFormRef = ref()
 function update(record: any) {
+  if (props.formList?.length){
+    modalFormRef.value.setForm(record)
+    visible.value = true
+    return
+  }
   emits("edit", record)
 }
 
 function add() {
+  if (props.formList?.length){
+    visible.value = true
+    return
+  }
+
   emits("add")
 }
 
@@ -226,6 +241,9 @@ function rowClick(record: TableData, ev: Event) {
 }
 
 
+const visible = ref(false)
+
+
 defineExpose({
   getList,
   data,
@@ -236,6 +254,14 @@ defineExpose({
 
 <template>
   <div class="f_list_com">
+
+    <f_modal_form
+        ref="modalFormRef"
+        v-if="props.formList?.length"
+        :add-label="props.addFormLabel"
+        :edit-label="props.editFormLabel"
+        v-model:visible="visible"
+        :form-list="props.formList"></f_modal_form>
     <div class="f_list_head">
       <slot name="action_add">
         <div class="action_create" v-if="!noAdd">

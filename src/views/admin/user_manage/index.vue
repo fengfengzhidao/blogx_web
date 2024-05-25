@@ -1,11 +1,8 @@
 <script setup lang="ts">
-
 import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import {userListApi, type userListType} from "@/api/user_api";
 import type {columnType} from "@/components/admin/f_list.vue";
-import {reactive, ref} from "vue";
-import F_modal_form, {type formListType} from "@/components/admin/f_modal_form.vue";
-import {articleCategoryOptionsApi} from "@/api/user_api";
+import {type formListType} from "@/components/admin/f_modal_form.vue";
 
 const columns = [
   {title: "ID", dataIndex: 'id'},
@@ -27,30 +24,18 @@ const formList: formListType[] = [
     ],
   }
 ]
-const visible = ref(false)
-
-function create(form: object, fn?: (val: boolean) => void) {
-  console.log("create", form)
-  // fn(false)
-}
-function update(form: object, fn?: (val: boolean) => void) {
-  console.log("update", form)
-  // fn(false)
-}
-
-const modalFormRef = ref()
-
-function edit(record: userListType) {
-  modalFormRef.value.setForm(record)
-  visible.value = true
-}
 
 </script>
 
 <template>
   <div>
-    <f_modal_form ref="modalFormRef" @create="create" @update="update" v-model:visible="visible" add-label="创建用户" edit-label="编辑用户" :form-list="formList"></f_modal_form>
-    <f_list @edit="edit" @add="visible=true" ref="fListRef" :url="userListApi" :columns="columns">
+    <f_list
+        ref="fListRef"
+        :url="userListApi"
+        add-form-label="创建用户"
+        edit-form-label="编辑用户"
+        :form-list="formList"
+        :columns="columns">
       <template #avatar="{record}:{record: userListType}">
         <a-avatar :image-url="record.avatar"></a-avatar>
       </template>
