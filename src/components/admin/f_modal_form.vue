@@ -55,7 +55,8 @@ initForm()
 
 const emits = defineEmits<{
   (e: "update:visible", visible: boolean): void
-  (e: "ok", form: object, fn?: (val: boolean) => void): void
+  (e: "create", form: object, fn?: (val: boolean) => void): void
+  (e: "update", form: object, fn?: (val: boolean) => void): void
 }>()
 
 
@@ -72,17 +73,22 @@ const formRef = ref()
 async function beforeOk() {
   const val = await formRef.value.validate()
   if (val) return false
-  emits("ok", form, (val: boolean) => {
+  const emitFn = (val: boolean) => {
     if (val) {
       cancel()
       return
     }
-    return false;
-  })
+  }
+  if (isEdit.value) {
+    emits("update", form, emitFn)
+  } else {
+    emits("create", form, emitFn)
+  }
 }
 
 const isEdit = ref(false)
-function setForm(formObj: any){
+
+function setForm(formObj: any) {
   isEdit.value = true
   Object.assign(form, formObj)
 }
@@ -95,7 +101,8 @@ defineExpose({
 </script>
 
 <template>
-  <a-modal :title="isEdit ? editLabel ? editLabel : addLabel : addLabel" :visible="props.visible" @cancel="cancel" :on-before-ok="beforeOk">
+  <a-modal :title="isEdit ? editLabel ? editLabel : addLabel : addLabel" :visible="props.visible" @cancel="cancel"
+           :on-before-ok="beforeOk">
     <a-form ref="formRef" :model="form">
       <a-form-item v-for="item in formList" :field="item.field" :label="item.label" :rules="item.rules"
                    :validate-trigger="item.validateTrigger as 'blur'"
@@ -104,7 +111,8 @@ defineExpose({
           <a-input v-model="form[item.field]" :placeholder="item.label"></a-input>
         </template>
         <template v-else-if="item.type === 'select'">
-          <a-select :multiple="item.multiple as boolean" v-model="form[item.field]" :placeholder="item.label" :options="item.options as optionsType[]" allow-clear></a-select>
+          <a-select :multiple="item.multiple as boolean" v-model="form[item.field]" :placeholder="item.label"
+                    :options="item.options as optionsType[]" allow-clear></a-select>
         </template>
         <template v-else-if="item.type === 'switch'">
           <a-switch v-model="form[item.field]"></a-switch>
@@ -113,7 +121,8 @@ defineExpose({
           <a-radio-group v-model="form[item.field]" :options="item.options as optionsType[]"></a-radio-group>
         </template>
         <template v-else-if="item.type === 'textarea'">
-          <a-textarea v-model="form[item.field]" :placeholder="item.label" allow-clear :auto-size="item.autoSize as boolean"></a-textarea>
+          <a-textarea v-model="form[item.field]" :placeholder="item.label" allow-clear
+                      :auto-size="item.autoSize as boolean"></a-textarea>
         </template>
         <template v-else>
           <slot :name="item.field" :form="form"></slot>

@@ -18,7 +18,7 @@ const columns = [
 
 const formList: formListType[] = [
   {
-    label: "昵称", field: "nick_name", type: "input", rules: {required: true}, validateTrigger: "blur"
+    label: "昵称", field: "nick_name", type: "input", rules: {required: true}, validateTrigger: "blur",
   },
   {
     label: "角色", field: "role", type:"select", rules: {required: true}, validateTrigger: "blur", source: [
@@ -29,8 +29,12 @@ const formList: formListType[] = [
 ]
 const visible = ref(false)
 
-function ok(form: object, fn?: (val: boolean) => void) {
-  console.log(form)
+function create(form: object, fn?: (val: boolean) => void) {
+  console.log("create", form)
+  // fn(false)
+}
+function update(form: object, fn?: (val: boolean) => void) {
+  console.log("update", form)
   // fn(false)
 }
 
@@ -45,7 +49,7 @@ function edit(record: userListType) {
 
 <template>
   <div>
-    <f_modal_form ref="modalFormRef" @ok="ok" v-model:visible="visible" add-label="创建用户" edit-label="编辑用户" :form-list="formList"></f_modal_form>
+    <f_modal_form ref="modalFormRef" @create="create" @update="update" v-model:visible="visible" add-label="创建用户" edit-label="编辑用户" :form-list="formList"></f_modal_form>
     <f_list @edit="edit" @add="visible=true" ref="fListRef" :url="userListApi" :columns="columns">
       <template #avatar="{record}:{record: userListType}">
         <a-avatar :image-url="record.avatar"></a-avatar>
