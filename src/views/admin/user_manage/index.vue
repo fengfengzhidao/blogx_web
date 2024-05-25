@@ -4,6 +4,7 @@ import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import {userListApi, type userListType} from "@/api/user_api";
 import type {columnType} from "@/components/admin/f_list.vue";
 import {reactive, ref} from "vue";
+import F_modal_form from "@/components/admin/f_modal_form.vue";
 
 const columns = [
   {title: "ID", dataIndex: 'id'},
@@ -26,6 +27,7 @@ const visible = ref(false)
 
 <template>
   <div>
+    <f_modal_form v-model:visible="visible"></f_modal_form>
     <a-modal v-model:visible="visible" title="创建用户">
       <a-form :model="form">
         <a-form-item v-for="item in formList" :field="item.field" :label="item.label" :rules="{required: true}" validate-trigger="blur">
