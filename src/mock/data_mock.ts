@@ -30,4 +30,25 @@ export function dataMock() {
         })
     })
 
+
+    mock(/.*?\/api\/data\/weather/, function (){
+        return mock({
+                "code": 0,
+                "data": {
+                    "province": "湖南",
+                    "city": "长沙市",
+                    "adcode": "430100",
+                    "weather": "晴",
+                    "temperature": "34",
+                    "winddirection": "西南",
+                    "windpower": "≤3",
+                    "humidity": "55",
+                    "reporttime": "2024-05-26 14:01:47",
+                    "temperature_float": "34.0",
+                    "humidity_float": "55.0"
+                },
+                "msg": "成功"
+            })
+    })
+
 }
