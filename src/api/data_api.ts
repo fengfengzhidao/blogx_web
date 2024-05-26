@@ -22,3 +22,12 @@ export interface weatherType {
 export function dataWeatherApi(): Promise<baseResponse<weatherType>> {
     return useAxios.get("/api/data/weather")
 }
+
+export interface dataLoginStatisticType{
+    date_list: string[]
+    login_data: number[]
+    sign_data: number[]
+}
+export function dataLoginStatisticApi():Promise<baseResponse<dataLoginStatisticType>>{
+    return  useAxios.get("/api/data/login_statistic")
+}

@@ -1,10 +1,30 @@
 <script setup lang="ts">
 import * as echarts from 'echarts';
-import {onMounted, ref, watch} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import {theme} from "@/components/common/f_theme";
+import type {dataLoginStatisticType} from "@/api/data_api";
+import {dataLoginStatisticApi} from "@/api/data_api";
+import {Message} from "@arco-design/web-vue";
 
 type EChartsOption = echarts.EChartsOption;
 let myChart: echarts.ECharts | null = null
+
+const data = reactive<dataLoginStatisticType>({
+  date_list: [],
+  login_data: [],
+  sign_data: [],
+})
+
+async function getData() {
+  const res = await dataLoginStatisticApi()
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Object.assign(data, res.data)
+}
+
+
 
 function initEcharts() {
   let option: EChartsOption;
@@ -56,7 +76,7 @@ function initEcharts() {
       {
         type: 'category',
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: data.date_list
       }
     ],
     yAxis: [
@@ -73,31 +93,32 @@ function initEcharts() {
       {
         name: '登录',
         type: 'line',
-        stack: 'Total',
+        // stack: 'Total',
         areaStyle: {},
         emphasis: {
           focus: 'series'
         },
-        data: [120, 132, 101, 134, 90, 230, 210],
+        data: data.login_data,
         smooth: true,
       },
       {
         name: '注册',
         type: 'line',
-        stack: 'Total',
+        // stack: 'Total',
         areaStyle: {},
         emphasis: {
           focus: 'series'
         },
         smooth: true,
-        data: [220, 182, 191, 234, 290, 330, 310]
+        data: data.sign_data,
       },
     ]
   };
   option && myChart?.setOption(option);
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await getData()
   const chartDom = document.querySelector('.user_login_echarts') as HTMLDivElement;
   myChart = echarts.init(chartDom);
   initEcharts()
