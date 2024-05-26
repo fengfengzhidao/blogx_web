@@ -4,8 +4,9 @@ import {onMounted, ref, watch} from "vue";
 import {theme} from "@/components/common/f_theme";
 
 type EChartsOption = echarts.EChartsOption;
-const myChart = ref<echarts.ECharts>()
-function initEcharts(){
+let myChart: echarts.ECharts | null = null
+
+function initEcharts() {
   let option: EChartsOption;
 
   const textColor = getComputedStyle(document.body).getPropertyValue("--color-text-1")
@@ -93,16 +94,16 @@ function initEcharts(){
       },
     ]
   };
-  option && myChart.value?.setOption(option);
+  option && myChart?.setOption(option);
 }
 
 onMounted(() => {
   const chartDom = document.querySelector('.user_login_echarts') as HTMLDivElement;
-  myChart.value = echarts.init(chartDom);
+  myChart = echarts.init(chartDom);
   initEcharts()
 })
 
-watch(()=>theme.value, ()=>{
+watch(() => theme.value, () => {
   initEcharts()
 })
 
