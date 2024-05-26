@@ -4,6 +4,7 @@ import F_card from "@/components/common/f_card.vue";
 import F_welcome from "@/components/admin/f_welcome.vue";
 import F_quick_entrance from "@/components/admin/f_quick_entrance.vue";
 import F_version from "@/components/common/f_version.vue";
+import User_login_echarts from "@/components/echarts/user_login_echarts.vue";
 </script>
 
 <template>
@@ -13,7 +14,7 @@ import F_version from "@/components/common/f_version.vue";
       <div class="left">
         <f_quick_entrance></f_quick_entrance>
         <f_card title="数据统计" class="statistics">
-
+          <user_login_echarts></user_login_echarts>
         </f_card>
       </div>
       <div class="right">
