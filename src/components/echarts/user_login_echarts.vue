@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import * as echarts from 'echarts';
-import {onMounted} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {theme} from "@/components/common/f_theme";
 
 type EChartsOption = echarts.EChartsOption;
-
-
-onMounted(() => {
-  const chartDom = document.querySelector('.user_login_echarts') as HTMLDivElement;
-  const myChart = echarts.init(chartDom);
+const myChart = ref<echarts.ECharts>()
+function initEcharts(){
   let option: EChartsOption;
 
   const textColor = getComputedStyle(document.body).getPropertyValue("--color-text-1")
@@ -96,7 +93,17 @@ onMounted(() => {
       },
     ]
   };
-  option && myChart.setOption(option);
+  option && myChart.value?.setOption(option);
+}
+
+onMounted(() => {
+  const chartDom = document.querySelector('.user_login_echarts') as HTMLDivElement;
+  myChart.value = echarts.init(chartDom);
+  initEcharts()
+})
+
+watch(()=>theme.value, ()=>{
+  initEcharts()
 })
 
 
