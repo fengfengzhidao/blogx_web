@@ -1,20 +1,37 @@
 <script setup lang="ts">
 import * as echarts from 'echarts';
 import {onMounted} from "vue";
+import {theme} from "@/components/common/f_theme";
 
 type EChartsOption = echarts.EChartsOption;
 
 
-
-
-onMounted(()=>{
+onMounted(() => {
   const chartDom = document.querySelector('.user_login_echarts') as HTMLDivElement;
   const myChart = echarts.init(chartDom);
   let option: EChartsOption;
 
+  const textColor = getComputedStyle(document.body).getPropertyValue("--color-text-1")
+  const lineColor = getComputedStyle(document.body).getPropertyValue("--color-neutral-2")
+
+  let themeColor = [
+    '#1c5ae0',
+    '#15c5be'
+  ]
+  if (theme.value === "dark") {
+    themeColor = [
+      '#1c5ae0',
+      '#15c5be'
+    ]
+  }
+
   option = {
+    color: themeColor,
     title: {
-      text: '用户登录数据'
+      text: '用户登录数据',
+      textStyle: {
+        color: textColor
+      }
     },
     tooltip: {
       trigger: 'axis',
@@ -26,7 +43,10 @@ onMounted(()=>{
       }
     },
     legend: {
-      data: ['登录', '注册',]
+      data: ['登录', '注册',],
+      textStyle: {
+        color: textColor
+      }
     },
     grid: {
       left: '3%',
@@ -43,7 +63,12 @@ onMounted(()=>{
     ],
     yAxis: [
       {
-        type: 'value'
+        type: 'value',
+        splitLine: {
+          lineStyle: {
+            color: lineColor
+          }
+        }
       }
     ],
     series: [
@@ -75,18 +100,17 @@ onMounted(()=>{
 })
 
 
-
 </script>
 
 <template>
-  <div class="user_login_echarts" ></div>
+  <div class="user_login_echarts"></div>
 </template>
 
 <style lang="less">
-.user_login_echarts{
+.user_login_echarts {
   width: 100%;
   height: 300px;
-  background-color: white;
+  background-color: var(--color-bg-1);
   border-radius: 5px;
 }
 </style>
