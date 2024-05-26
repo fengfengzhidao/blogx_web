@@ -2,6 +2,7 @@
 
 import F_card from "@/components/common/f_card.vue";
 import F_welcome from "@/components/admin/f_welcome.vue";
+import F_quick_entrance from "@/components/admin/f_quick_entrance.vue";
 </script>
 
 <template>
@@ -9,9 +10,7 @@ import F_welcome from "@/components/admin/f_welcome.vue";
     <f_welcome></f_welcome>
     <div class="bottom">
       <div class="left">
-        <f_card title="快捷入口" class="quick_room">
-
-        </f_card>
+        <f_quick_entrance></f_quick_entrance>
         <f_card title="数据统计" class="statistics">
 
         </f_card>
