@@ -1,4 +1,5 @@
 import {userMock} from "@/mock/user_mock";
+import {dataMock} from "@/mock/data_mock";
 
 
 export function apiMock(){
@@ -7,4 +8,5 @@ export function apiMock(){
         return
     }
     userMock()
+    dataMock()
 }

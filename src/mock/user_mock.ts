@@ -11,7 +11,7 @@ export function userMock(){
 
 
     mock(/.*?\/api\/user_info/, function (options: MockjsRequestOptions){
-        return {
+        return mock({
             "code": 0,
             "data": {
                 "id": 1,
@@ -31,7 +31,7 @@ export function userMock(){
                 "link": "http://www.fengfengzhidao.com"
             },
             "msg": "成功"
-        }
+        })
     })
 
     mock(/.*?\/api\/users/, function (){
