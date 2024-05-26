@@ -3,6 +3,7 @@
 import F_card from "@/components/common/f_card.vue";
 import F_welcome from "@/components/admin/f_welcome.vue";
 import F_quick_entrance from "@/components/admin/f_quick_entrance.vue";
+import F_version from "@/components/common/f_version.vue";
 </script>
 
 <template>
@@ -16,9 +17,7 @@ import F_quick_entrance from "@/components/admin/f_quick_entrance.vue";
         </f_card>
       </div>
       <div class="right">
-        <f_card title="更新日志" class="version">
-
-        </f_card>
+        <f_version></f_version>
       </div>
     </div>
   </div>
