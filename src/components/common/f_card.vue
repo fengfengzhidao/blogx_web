@@ -26,7 +26,7 @@ const props = defineProps<Props>()
     padding: 20px;
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: @f_border;
+    border-bottom: @f_border;
   }
   .body{
     padding: 20px;
