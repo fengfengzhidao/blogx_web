@@ -2,15 +2,28 @@
 import {slogan, enSlogan} from "@/conf/global";
 import F_theme from "@/components/common/f_theme.vue";
 import {ref} from "vue";
+import F_user_dropdown from "@/components/common/f_user_dropdown.vue";
+import {userStorei} from "@/stores/user_store";
 
-const isShow = ref(false)
+const store = userStorei()
+interface Props {
+  noScroll?: boolean
+  scrollTop?: number
+}
 
-window.onscroll = function () {
-  const top = document.documentElement.scrollTop
-  if (top >= 200) {
-    isShow.value = true
-  } else {
-    isShow.value = false
+const props = defineProps<Props>()
+const {noScroll = false, scrollTop = 200} = props
+
+const isShow = ref(noScroll)
+
+if (!noScroll) {
+  window.onscroll = function () {
+    const top = document.documentElement.scrollTop
+    if (top >= scrollTop) {
+      isShow.value = true
+    } else {
+      isShow.value = false
+    }
   }
 }
 
@@ -28,7 +41,8 @@ window.onscroll = function () {
         <router-link to="/">首页</router-link>
       </div>
       <div class="right">
-        <router-link to="/admin">登录</router-link>
+        <f_user_dropdown v-if="store.isLogin"></f_user_dropdown>
+        <router-link v-else :to="{name: 'login'}">登录</router-link>
         <f_theme class="theme"></f_theme>
       </div>
     </div>
@@ -60,9 +74,11 @@ window.onscroll = function () {
     .n2 {
       color: var(--color-text-2);
     }
-    a{
+
+    a {
       color: var(--color-text-2) !important;
     }
+
     .theme {
       color: var(--color-text-2) !important;
     }
@@ -96,6 +112,8 @@ window.onscroll = function () {
 
     .right {
       width: 20%;
+      display: flex;
+      align-items: center;
 
       .theme {
         margin-left: 20px;
@@ -110,7 +128,7 @@ window.onscroll = function () {
     }
 
     a.router-link-exact-active {
-      color: @primary-6!important;
+      color: @primary-6 !important;
     }
   }
 }
