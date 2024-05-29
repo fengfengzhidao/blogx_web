@@ -118,6 +118,8 @@ if (!noScroll) {
       .theme {
         margin-left: 20px;
         color: white;
+        font-size: 18px;
+        cursor: pointer;
       }
     }
 

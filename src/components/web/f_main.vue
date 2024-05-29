@@ -20,7 +20,7 @@
 
   > .f_container {
     width: 1200px;
-    min-height: calc(100vh - 125px);
+    min-height: calc(100vh - 122px);
   }
 }
 </style>
