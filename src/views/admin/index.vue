@@ -10,7 +10,7 @@ import F_tabs from "@/components/admin/f_tabs.vue";
 import F_logo from "@/components/admin/f_logo.vue";
 
 function goHome() {
-  router.push({name: "web"})
+  router.push({name: "web_home"})
 }
 
 
