@@ -89,6 +89,11 @@ const router = createRouter({
                     ]
                 }
             ]
+        },
+        {
+            name: "notfound",
+            path: "/:match(.*)",
+            component: () => import("@/views/web/404.vue"),
         }
     ]
 })
