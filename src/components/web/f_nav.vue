@@ -1,10 +1,24 @@
 <script setup lang="ts">
 import {slogan, enSlogan} from "@/conf/global";
 import F_theme from "@/components/common/f_theme.vue";
+import {ref} from "vue";
+
+const isShow = ref(false)
+
+window.onscroll = function () {
+  const top = document.documentElement.scrollTop
+  if (top >= 200) {
+    isShow.value = true
+  } else {
+    isShow.value = false
+  }
+}
+
+
 </script>
 
 <template>
-  <div class="f_nav">
+  <div class="f_nav" :class="{isShow: isShow}">
     <div class="container">
       <div class="slogan">
         <div class="n1">{{ slogan }}</div>
@@ -14,7 +28,7 @@ import F_theme from "@/components/common/f_theme.vue";
         <router-link to="/">首页</router-link>
       </div>
       <div class="right">
-        <router-link to="/login">登录</router-link>
+        <router-link to="/admin">登录</router-link>
         <f_theme class="theme"></f_theme>
       </div>
     </div>
@@ -30,7 +44,29 @@ import F_theme from "@/components/common/f_theme.vue";
   z-index: 1000;
   display: flex;
   justify-content: center;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.06);
+  color: white;
+  transition: all .3s;
+
+
+  &.isShow {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.06);
+    background-color: var(--color-bg-1);
+    color: var(--color-text-2);
+
+    .n1 {
+      color: var(--color-text-1);
+    }
+
+    .n2 {
+      color: var(--color-text-2);
+    }
+    a{
+      color: var(--color-text-2) !important;
+    }
+    .theme {
+      color: var(--color-text-2) !important;
+    }
+  }
 
   .container {
     width: 1200px;
@@ -42,12 +78,12 @@ import F_theme from "@/components/common/f_theme.vue";
 
       .n1 {
         font-size: 20px;
-        color: var(--color-text-1);
+
       }
 
       .n2 {
         font-size: 12px;
-        color: var(--color-text-2);
+
         transform: scale(0.87);
         transform-origin: left center;
       }
@@ -60,18 +96,21 @@ import F_theme from "@/components/common/f_theme.vue";
 
     .right {
       width: 20%;
-      .theme{
+
+      .theme {
         margin-left: 20px;
+        color: white;
       }
     }
 
     a {
-      color: var(--color-text-2);
       font-size: 16px;
       text-decoration: none;
+      color: white;
     }
-    a.router-link-exact-active{
-      color: @primary-6;
+
+    a.router-link-exact-active {
+      color: @primary-6!important;
     }
   }
 }
