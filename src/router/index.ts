@@ -12,6 +12,13 @@ const router = createRouter({
             path: "/",
             component: () => import("@/views/web/index.vue"),
             // redirect: "/admin",
+            children: [
+                {
+                    name: "web_home",
+                    path: "",
+                    component: () => import("@/views/web/web_home.vue"),
+                }
+            ]
         },
         {
             name: "login",
