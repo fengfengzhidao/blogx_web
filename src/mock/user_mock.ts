@@ -10,6 +10,15 @@ export function userMock(){
     })
 
 
+    mock(/.*?\/api\/logout/, function (options: MockjsRequestOptions){
+        return {
+            code: 0,
+            data: "",
+            msg: "成功"
+        }
+    })
+
+
     mock(/.*?\/api\/user_info/, function (options: MockjsRequestOptions){
         return mock({
             "code": 0,
@@ -18,7 +27,7 @@ export function userMock(){
                 "created_at": "2023-02-19T17:23:04.543+08:00",
                 "nick_name": "@cname",
                 "user_name": "@name",
-                "avatar": "@img(100x100)",
+                "avatar": "/logo.png",
                 "email": "2663456523@qq.com",
                 "tel": "",
                 "addr": "内网地址",

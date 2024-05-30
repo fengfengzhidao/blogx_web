@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import {collapsed} from "@/components/admin/f_menu";
+import {slogan, enSlogan, ico} from "@/conf/global";
 </script>
 
 <template>
   <div class="f_logo" :class="{collapsed: collapsed}">
-    <img src="https://www.fengfengzhidao.com/image/logo.png" class="logo" alt="logo">
+    <img :src="ico" class="logo" alt="logo">
     <div class="slogan">
-      <div>枫枫知道</div>
-      <div>fengfengzhidao</div>
+      <div>{{  slogan  }}</div>
+      <div>{{  enSlogan }}</div>
     </div>
   </div>
 </template>

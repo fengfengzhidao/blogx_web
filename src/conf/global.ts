@@ -1,4 +1,4 @@
-export const title = "枫枫知道后台管理系统1"
+export const title = "枫枫知道后台管理系统"
 export const slogan = "枫枫知道"
 export const enSlogan = "fengfengzhidao"
 export const ico = "/logo.png"

@@ -37,7 +37,7 @@ async function emailLogin() {
     return
   }
   router.push({
-    name: "web"
+    name: "web_home"
   })
 
 
@@ -75,14 +75,15 @@ async function emailLogin() {
 
 <style lang="less">
 .login_view {
-  background: url(https://www.fengfengzhidao.com/image/bg.png) 50% / cover no-repeat;
+  background: url(@/assets/img/bg.png) 50% / cover no-repeat;
   position: relative;
   height: 100vh;
 
   .login_mask {
     width: 400px;
     height: 100vh;
-    background-color: rgba(white, 0.8);
+    --color-bg: white;
+    background-color: var(--login_bg);
     position: absolute;
     right: 0;
     top: 0;

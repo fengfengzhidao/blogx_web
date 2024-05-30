@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import {userStorei} from "@/stores/user_store";
 import {title, ico} from "@/conf/global";
+import {loadTheme} from "@/components/common/f_theme";
 
+loadTheme()
 const store = userStorei()
 store.loadUserInfo()
 
-if (title){
+if (title) {
   document.title = title
 }
-if (ico){
+if (ico) {
   const link = document.querySelector('link[rel="icon"]')
-  if (link){
+  if (link) {
     link.setAttribute("href", ico)
   }
 }

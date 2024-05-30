@@ -93,7 +93,7 @@ export const userStorei = defineStore('userStore', {
                 token: "",
             }
             Message.success("用户注销成功")
-            router.push({name: "web"})
+            router.push({name: "web_home"})
         }
 
     },
