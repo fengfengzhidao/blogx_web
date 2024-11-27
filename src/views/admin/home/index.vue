@@ -14,7 +14,7 @@ import User_login_echarts from "@/components/echarts/user_login_echarts.vue";
       <div class="left">
         <f_quick_entrance></f_quick_entrance>
         <f_card title="数据统计" class="statistics">
-          <user_login_echarts></user_login_echarts>
+<!--          <user_login_echarts></user_login_echarts>-->
         </f_card>
       </div>
       <div class="right">

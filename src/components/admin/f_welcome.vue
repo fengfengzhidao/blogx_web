@@ -41,7 +41,7 @@ async function getWeather() {
   Object.assign(weatherData, res.data)
 }
 
-getWeather()
+// getWeather()
 
 const temperatureLabel = computed(() => {
   const num = Number(weatherData.temperature)
@@ -84,7 +84,7 @@ const welcomeTitle = computed(() => {
   return "早安"
 })
 
-getData()
+// getData()
 
 </script>
 

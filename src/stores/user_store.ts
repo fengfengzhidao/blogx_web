@@ -23,12 +23,12 @@ export const userStorei = defineStore('userStore', {
     state: (): userStoreType => {
         return {
             userInfo: {
-                userID: 0,
-                nickName: "",
-                userName: "",
-                avatar: "",
-                role: 0,
-                token: "",
+                userID: 1,
+                nickName: "枫枫",
+                userName: "fengfeng",
+                avatar: "https://img2.baidu.com/it/u=3029837478,1144772205&fm=253&app=120&size=w931&n=0&f=JPEG&fmt=auto?sec=1732813200&t=fa3d317bb04f7146b4142d1ad1460457",
+                role: 1,
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjEsInVzZXJuYW1lIjoiZmVuZ2ZlbmciLCJyb2xlIjoxLCJleHAiOjE3MzM1ODU3MjEsImlzcyI6ImZlbmdmZW5nIn0.nhveJ4e1OUx5nqyMyWydIfiBVHRhzJpaBSN47DXI96E",
             },
         }
     },
