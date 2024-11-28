@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import F_title from "@/components/common/f_title.vue";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import F_image_upload from "@/components/common/f_image_upload.vue";
+import type {TreeNodeData} from "@arco-design/web-vue";
 
 const form = reactive({
   "siteInfo": {
@@ -46,6 +47,55 @@ const form = reactive({
 function updateHandler() {
   console.log(form.siteInfo)
 }
+
+const treeData = ref([
+  {title: "标签云", key: 1},
+  {title: "作者推荐", key: 2},
+  {title: "关于我们", key: 3},
+  {title: "独家推广", key: 4},
+  {title: "意见反馈", key: 5},
+  {title: "文章推荐", key: 6},
+])
+
+function onDrop({dragNode, dropNode, dropPosition}:{
+  dragNode: TreeNodeData,
+  dropNode: TreeNodeData,
+  dropPosition: number
+}) {
+  const data = treeData.value;
+  const loop = (data: TreeNodeData[], key: string|number, callback: any ) => {
+    data.some((item, index, arr) => {
+      if (item.key === key) {
+        callback(item, index, arr);
+        return true;
+      }
+      if (item.children) {
+        return loop(item.children, key, callback);
+      }
+      return false;
+    });
+  };
+
+  loop(data, dragNode.key as number, (_, index, arr) => {
+    arr.splice(index, 1);
+  });
+
+  if (dropPosition === 0) {
+    loop(data, dropNode.key as number, (item) => {
+      item.children = item.children || [];
+      item.children.push(dragNode);
+    });
+  } else {
+    loop(data, dropNode.key as number, (_, index, arr) => {
+      arr.splice(dropPosition < 0 ? index : index + 1, 0, dragNode);
+    });
+  }
+}
+
+function allowDropHandler(options: { dropNode: TreeNodeData; dropPosition: -1 | 0 | 1 }): boolean {
+  return options.dropPosition !== 0
+}
+
 
 </script>
 
@@ -153,7 +203,17 @@ function updateHandler() {
         <a-col :span="8">
           <div class="form index_right_form">
             <f_title>首页右侧组件展示</f_title>
-
+            <div class="body">
+              <a-tree
+                  class="index_right_tree"
+                  draggable
+                  blockNode
+                  checkable
+                  :data="treeData"
+                  :allow-drop="allowDropHandler"
+                  @drop="onDrop"
+              />
+            </div>
           </div>
           <div class="form article_form">
             <f_title>文章设置</f_title>
@@ -182,6 +242,20 @@ function updateHandler() {
 
     .body {
       margin-top: 10px;
+    }
+  }
+  .index_right_form{
+    .body{
+      width: 400px;
+      padding: 10px;
+      border-radius: 5px;
+      border: @f_border;
+
+      .arco-tree-node{
+        background: var(--color-fill-1);
+        border-radius: 5px;
+        margin-bottom: 3px;
+      }
     }
   }
 }
