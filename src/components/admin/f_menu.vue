@@ -35,8 +35,14 @@ const menuList: MenuType[] = [
     ]
   },
   {
-    title: "系统设置", role: 1, name: "settingsManage", icon: "iconfont icon-xitongpeizhi", children: [
-      {title: "系统信息", name: "settings", icon: IconSettings},
+    title: "系统管理", role: 1, name: "settingsManage", icon: "iconfont icon-xitongpeizhi", children: [
+      {
+        title: "站点配置", name: "siteManage", icon: IconSettings, children: [
+          {title: "网站设置", name: "siteManageSite", icon: IconSettings},
+          {title: "邮箱设置", name: "siteManageEmail", icon: IconSettings},
+        ]
+      },
+      {title: "日志列表", name: "logList", icon: IconSettings},
     ]
   },
 ]
