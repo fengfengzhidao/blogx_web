@@ -4,7 +4,7 @@ import {reactive, ref} from "vue";
 import F_image_upload from "@/components/common/f_image_upload.vue";
 import {Message, type TreeNodeData} from "@arco-design/web-vue";
 import F_index_right from "@/components/admin/site/f_index_right.vue";
-import {siteInfoApi, type siteResponse, siteUpdateApi} from "@/api/site_api";
+import {siteApi, type siteResponse, siteUpdateApi} from "@/api/site_api";
 
 const form = reactive<siteResponse>({
   "siteInfo": {
@@ -54,7 +54,7 @@ const form = reactive<siteResponse>({
 })
 
 async function getData() {
-  const res = await siteInfoApi()
+  const res = await siteApi("site")
   if (res.code) {
     Message.error(res.msg)
     return
@@ -65,7 +65,7 @@ async function getData() {
 getData()
 
 async function updateHandler() {
-  const res = await siteUpdateApi(form)
+  const res = await siteUpdateApi("site", form)
   if (res.code) {
     Message.error(res.msg)
     return
