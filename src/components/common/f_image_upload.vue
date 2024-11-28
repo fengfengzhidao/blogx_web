@@ -7,9 +7,13 @@ const store = userStorei()
 interface Props {
   modelValue: string
   placeholder?: string
+  shape?:string
 }
 
+
 const props = defineProps<Props>()
+
+const {shape="circle"} = props
 const emits = defineEmits(["update:modelValue"])
 
 function inputHandler(val: string) {
@@ -33,7 +37,7 @@ function fileUploadCallback(file: FileItem){
     <a-input :model-value="props.modelValue" :placeholder="props.placeholder" @input="inputHandler"></a-input>
     <a-upload :show-file-list="false" action="/api/images" @success="fileUploadCallback" name="file" :headers="{token: store.userInfo.token}">
       <template #upload-button>
-        <a-avatar :image-url="props.modelValue" :size="60" ></a-avatar>
+        <a-avatar :image-url="props.modelValue" :shape="shape" :size="60" ></a-avatar>
       </template>
     </a-upload>
   </div>
