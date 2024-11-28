@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import F_title from "@/components/common/f_title.vue";
 import {reactive} from "vue";
+import F_image_upload from "@/components/common/f_image_upload.vue";
 
 const form = reactive({
   "siteInfo": {
@@ -41,7 +42,9 @@ const form = reactive({
     "commentLine": 4
   }
 })
-
+function updateHandler() {
+  console.log(form.siteInfo)
+}
 
 </script>
 
@@ -57,7 +60,7 @@ const form = reactive({
                 <a-input placeholder="网站标题" v-model="form.siteInfo.title"></a-input>
               </a-form-item>
               <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 18}"  label="logo">
-
+                <f_image_upload v-model="form.siteInfo.logo" placeholder="logo地址"></f_image_upload>
               </a-form-item>
               <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 18}"  label="备案号">
                 <a-input placeholder="备案号" v-model="form.siteInfo.beian"></a-input>
@@ -76,6 +79,7 @@ const form = reactive({
           <div class="form seo_form">
             <f_title>SEO设置</f_title>
           </div>
+          <a-button @click="updateHandler" type="primary">更新</a-button>
         </a-col>
         <a-col :span="8">
           <div class="form about_form">
