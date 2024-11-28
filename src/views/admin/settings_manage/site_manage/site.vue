@@ -2,10 +2,11 @@
 import F_title from "@/components/common/f_title.vue";
 import {reactive, ref} from "vue";
 import F_image_upload from "@/components/common/f_image_upload.vue";
-import type {TreeNodeData} from "@arco-design/web-vue";
+import {Message, type TreeNodeData} from "@arco-design/web-vue";
 import F_index_right from "@/components/admin/site/f_index_right.vue";
+import {siteInfoApi, type siteResponse, siteUpdateApi} from "@/api/site_api";
 
-const form = reactive({
+const form = reactive<siteResponse>({
   "siteInfo": {
     "title": "",
     "logo": "",
@@ -52,8 +53,24 @@ const form = reactive({
   }
 })
 
-function updateHandler() {
-  console.log(form)
+async function getData() {
+  const res = await siteInfoApi()
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Object.assign(form, res.data)
+}
+
+getData()
+
+async function updateHandler() {
+  const res = await siteUpdateApi(form)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
 }
 
 
@@ -61,7 +78,7 @@ function updateHandler() {
 
 <template>
   <div class="site_view">
-    <a-form>
+    <a-form :model="form">
       <a-row>
         <a-col :span="8">
           <div class="form site_form">

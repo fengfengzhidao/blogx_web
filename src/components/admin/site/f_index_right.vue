@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import type {TreeNodeData} from "@arco-design/web-vue";
 
 interface Props {
@@ -14,6 +14,8 @@ const treeData = ref<TreeNodeData[]>([])
 const selectKeys = ref<string[]>([])
 
 function init() {
+  selectKeys.value = []
+  treeData.value = []
   for (const item of props.modelValue) {
     if (item.enable){
       selectKeys.value.push(item.title)
@@ -25,7 +27,9 @@ function init() {
   }
 }
 
-init()
+watch(()=>props.modelValue, ()=>{
+  init()
+}, {immediate: true, deep: true})
 
 function onDrop({dragNode, dropNode, dropPosition}: {
   dragNode: TreeNodeData,
