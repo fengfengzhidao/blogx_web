@@ -56,7 +56,9 @@ export interface emailResponse {
 }
 
 export interface qqResponse {
-
+    "appID": string
+    "appKey":string
+    "redirect": string
 }
 
 export interface qiNiuResponse {

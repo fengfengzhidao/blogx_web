@@ -40,6 +40,7 @@ const menuList: MenuType[] = [
         title: "站点配置", name: "siteManage", icon: IconSettings, children: [
           {title: "网站设置", name: "siteManageSite", icon: IconSettings},
           {title: "邮箱设置", name: "siteManageEmail", icon: IconSettings},
+          {title: "QQ设置", name: "siteManageQQ", icon: IconSettings},
         ]
       },
       {title: "日志列表", name: "logList", icon: IconSettings},
