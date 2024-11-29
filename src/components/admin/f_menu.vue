@@ -61,7 +61,6 @@ const openKeys = ref<string[]>([])
 const selectedKeys = ref<string[]>([])
 
 function initRoute() {
-  console.log(route.matched)
   if (route.matched.length >= 3) {
     // 把中间的 name加到 openKeys
     // 1 length - 1
