@@ -8,12 +8,14 @@ interface Props {
   modelValue: string
   placeholder?: string
   shape?:string
+  width?: number
+  height?:number
 }
 
 
 const props = defineProps<Props>()
 
-const {shape="circle"} = props
+const {shape="circle", width = 60, height = 60} = props
 const emits = defineEmits(["update:modelValue"])
 
 function inputHandler(val: string) {
@@ -37,7 +39,7 @@ function fileUploadCallback(file: FileItem){
     <a-input :model-value="props.modelValue" :placeholder="props.placeholder" @input="inputHandler"></a-input>
     <a-upload :show-file-list="false" action="/api/images" @success="fileUploadCallback" name="file" :headers="{token: store.userInfo.token}">
       <template #upload-button>
-        <a-avatar :image-url="props.modelValue" :shape="shape" :size="60" ></a-avatar>
+        <a-image :src="props.modelValue" :preview="false" :class="shape"  :width="width" :height="height"></a-image>
       </template>
     </a-upload>
   </div>
@@ -49,6 +51,11 @@ function fileUploadCallback(file: FileItem){
   .arco-input-wrapper{
     display: flex;
     margin-bottom: 10px;
+  }
+  .arco-image{
+    &.circle{
+      border-radius: 50%;
+    }
   }
 }
 </style>

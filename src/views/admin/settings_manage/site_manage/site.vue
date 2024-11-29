@@ -79,10 +79,10 @@ import F_site from "@/components/admin/site/f_site.vue";
                   <span>{{ form.about.version }}</span>
                 </a-form-item>
                 <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 18}" label="qq二维码">
-                  <f_image_upload shape="square" v-model="form.about.qq" placeholder="qq二维码地址"></f_image_upload>
+                  <f_image_upload :width="100" :height="100" shape="square" v-model="form.about.qq" placeholder="qq二维码地址"></f_image_upload>
                 </a-form-item>
                 <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 18}" label="微信二维码">
-                  <f_image_upload shape="square" v-model="form.about.wechat"
+                  <f_image_upload shape="square" v-model="form.about.wechat" :width="100" :height="100"
                                   placeholder="微信二维码地址"></f_image_upload>
                 </a-form-item>
                 <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 18}" label="gitee">
