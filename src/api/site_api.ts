@@ -66,7 +66,11 @@ export interface qiNiuResponse {
 }
 
 export interface aiResponse {
-
+    "enable": boolean,
+    "secretKey": string
+    "nickname": string
+    "avatar": string
+    "abstract": string
 }
 
 interface siteBaseResponse {
