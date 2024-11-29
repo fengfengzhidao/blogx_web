@@ -46,7 +46,13 @@ export interface indexRightType {
 }
 
 export interface emailResponse {
-
+    "domain": string
+    "port": number
+    "sendEmail": string
+    "authCode": string
+    "sendNickname": string
+    "ssl": boolean
+    "tls": boolean
 }
 
 export interface qqResponse {

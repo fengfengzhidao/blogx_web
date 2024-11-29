@@ -46,6 +46,9 @@ import F_site from "@/components/admin/site/f_site.vue";
                 </a-form-item>
                 <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 18}" label="前端地址">
                   <a-input placeholder="前端地址" v-model="form.project.webPath"></a-input>
+                  <template #help>
+                    前端index.html的文件路径
+                  </template>
                 </a-form-item>
               </div>
             </div>
@@ -119,10 +122,13 @@ import F_site from "@/components/admin/site/f_site.vue";
             <div class="form article_form">
               <f_title>文章设置</f_title>
               <div class="body">
-                <a-form-item :label-col-props="{span: 5}" :wrapper-col-props="{span: 13}" label="文章免审核">
+                <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 14}" label="文章免审核">
                   <a-switch v-model="form.article.noExamine"></a-switch>
+                  <template #help>
+                    开启文章免审核之后，文章直接可以在首页中查询
+                  </template>
                 </a-form-item>
-                <a-form-item :label-col-props="{span: 5}" :wrapper-col-props="{span: 13}" label="评论层数">
+                <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 14}" label="评论层数">
                   <a-input-number placeholder="评论层数" v-model="form.article.commentLine"></a-input-number>
                 </a-form-item>
               </div>
