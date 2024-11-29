@@ -62,7 +62,15 @@ export interface qqResponse {
 }
 
 export interface qiNiuResponse {
-
+    "enable": boolean
+    "accessKey": string
+    "secretKey": string
+    "bucket": string
+    "uri": string
+    "region": string
+    "prefix": string
+    "size": number // 单位MB
+    "expiry": number // 单位秒
 }
 
 export interface aiResponse {

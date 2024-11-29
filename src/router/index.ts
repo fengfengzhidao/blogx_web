@@ -123,6 +123,14 @@ const router = createRouter({
                                         title: "AI设置"
                                     },
                                     component: () => import("@/views/admin/settings_manage/site_manage/ai.vue"),
+                                },
+                                {
+                                    name: "siteManageQiNiu",
+                                    path: "qiniu",
+                                    meta: {
+                                        title: "对象存储设置"
+                                    },
+                                    component: () => import("@/views/admin/settings_manage/site_manage/qiniu.vue"),
                                 }
                             ]
                         },
