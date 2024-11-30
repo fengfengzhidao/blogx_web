@@ -78,6 +78,23 @@ const router = createRouter({
                     ]
                 },
                 {
+                    name: "articleManage",
+                    path: "article",
+                    meta: {
+                        title: "文章管理"
+                    },
+                    children: [
+                        {
+                            name: "articleList",
+                            path: "article_list",
+                            meta: {
+                                title: "文章列表"
+                            },
+                            component: () => import("@/views/admin/article_manage/article_list.vue"),
+                        }
+                    ]
+                },
+                {
                     name: "settingsManage",
                     path: "settings",
                     meta: {

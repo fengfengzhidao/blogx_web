@@ -50,6 +50,7 @@ interface Props {
   formList?: formListType[]
   addFormLabel?: string
   editFormLabel?: string
+  defaultParams?: Object
 }
 
 const props = defineProps<Props>()
@@ -137,6 +138,10 @@ const params = reactive<paramsType>({
 })
 
 async function getList(newParams?: paramsType) {
+  // 判断有没有默认的params
+  if (props.defaultParams){
+    Object.assign(params, props.defaultParams)
+  }
   loading.value = true
   if (newParams) {
     Object.assign(params, newParams)

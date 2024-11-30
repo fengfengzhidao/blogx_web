@@ -1,0 +1,10 @@
+export interface optionsType {
+    label: string
+    value: number|string
+    color?: string
+}
+export const articleStatusOptions = [
+    {label: "草稿", value: 1, color: "green"},
+    {label: "审核中", value: 2, color: "red"},
+    {label: "已发布", value: 3, color: "blue"},
+]
