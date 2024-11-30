@@ -65,3 +65,16 @@ export interface userListType{
 export function userListApi(params: paramsType):Promise<baseResponse<listResponse<userListType>>>{
     return  useAxios.get("/api/user", {params})
 }
+
+export interface userUpdateAdminRequest {
+    userID: number
+    username: string
+    nickname: string
+    avatar: string
+    abstract?: string
+    role?: number
+}
+
+export function userUpdateAdminApi(data: userUpdateAdminRequest):Promise<baseResponse<string>>{
+    return  useAxios.put("/api/user/admin", data)
+}
