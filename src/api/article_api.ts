@@ -60,3 +60,13 @@ export interface articleDetailType {
 export function articleDetailApi(id: number): Promise<baseResponse<articleDetailType>> {
     return useAxios.get("/api/article/" + id.toString())
 }
+
+export interface articleExamineRequest {
+    "articleID": number
+    "status": number // 3 审核通过 4 不通过
+    msg: string
+}
+
+export function articleExamineApi(data: articleExamineRequest):Promise<baseResponse<string>>{
+    return useAxios.post("/api/article/examine", data)
+}

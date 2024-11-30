@@ -3,11 +3,17 @@ import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import type {columnType} from "@/components/admin/f_list.vue";
 import {type formListType} from "@/components/admin/f_modal_form.vue";
 import {reactive, ref} from "vue";
-import {articleDetailApi, type articleDetailType, type articleListType} from "@/api/article_api";
+import {
+  articleDetailApi,
+  type articleDetailType,
+  type articleExamineRequest,
+  type articleListType
+} from "@/api/article_api";
 import {articleListApi} from "@/api/article_api";
 import {articleStatusOptions} from "@/options/options";
 import {Message} from "@arco-design/web-vue";
 import F_user from "@/components/common/f_user.vue";
+import {articleExamineApi} from "@/api/article_api";
 
 const columns: columnType[] = [
   {title: "ID", dataIndex: 'id'},
@@ -61,16 +67,32 @@ async function edit(record: articleListType) {
   visible.value = true
 }
 
+const form = reactive<articleExamineRequest>({
+  articleID: 0,
+  status: 3,
+  msg:""
+})
 
 async function handler() {
-
+  if (data.status != 2){
+    return  true
+  }
+  form.articleID = data.id
+  const res = await articleExamineApi(form)
+  if (res.code){
+    Message.error(res.msg)
+    return false
+  }
+  Message.success(res.msg)
+  fListRef.value.getList()
+  return  true
 }
 
 </script>
 
 <template>
   <div>
-    <a-modal v-model:visible="visible" title="文章审核" modal-class="article_examine_modal">
+    <a-modal v-model:visible="visible" title="文章审核" :on-before-ok="handler"  modal-class="article_examine_modal">
         <a-form>
           <a-form-item label="文章标题">{{ data.title }}</a-form-item>
           <a-form-item label="文章简介">{{ data.abstract }}</a-form-item>
@@ -84,12 +106,16 @@ async function handler() {
           <a-form-item label="文章正文">
             {{ data.content }}
           </a-form-item>
+          <a-form-item label="审核"  v-if="data.status === 2" >
+            <a-radio-group v-model="form.status">
+              <a-radio :value="3">审核通过</a-radio>
+              <a-radio :value="4">审核不通过</a-radio>
+            </a-radio-group>
+          </a-form-item>
+          <a-form-item label="拒绝原因" v-if="form.status === 4">
+            <a-textarea v-model="form.msg" placeholder="拒绝原因"></a-textarea>
+          </a-form-item>
         </a-form>
-      <template #footer>
-        <a-button>取消</a-button>
-        <a-button type="primary">审核通过</a-button>
-        <a-button type="primary" status="danger">不通过</a-button>
-      </template>
     </a-modal>
     <f_list
         ref="fListRef"
