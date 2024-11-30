@@ -345,7 +345,7 @@ defineExpose({
                       </a-popconfirm>
                       <slot v-bind="data" name="action_right"></slot>
                     </div>
-                    <div v-if="col.slotName === 'created_at'">
+                    <div v-if="col.slotName === 'createdAt'">
                       {{ dateTemFormat(data.record[col.slotName], col.dateFormat) }}
                     </div>
                     <slot v-else :name="col.slotName" v-bind="data"></slot>

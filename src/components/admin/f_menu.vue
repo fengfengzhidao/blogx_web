@@ -45,6 +45,7 @@ const menuList: MenuType[] = [
           {title: "对象存储设置", name: "siteManageQiNiu", icon: IconSettings},
         ]
       },
+      {title: "Banner管理", name: "bannerList", icon: IconSettings},
       {title: "日志列表", name: "logList", icon: IconSettings},
     ]
   },
