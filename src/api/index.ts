@@ -41,8 +41,8 @@ useAxios.interceptors.response.use((res) => {
     Message.error(res.message)
 })
 
-export function defaultDeleteApi(url: string, id_list: number[]): Promise<baseResponse<string>> {
-    return useAxios.delete(url, {data: {id_list}})
+export function defaultDeleteApi(url: string, idList: number[]): Promise<baseResponse<string>> {
+    return useAxios.delete(url, {data: {idList}})
 }
 export function defaultPostApi(url: string, data: any): Promise<baseResponse<string>> {
     return useAxios.post(url, data)
