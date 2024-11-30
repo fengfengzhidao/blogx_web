@@ -3,9 +3,11 @@ import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import type {columnType} from "@/components/admin/f_list.vue";
 import {type formListType} from "@/components/admin/f_modal_form.vue";
 import {reactive, ref} from "vue";
-import type {articleListType} from "@/api/article_api";
+import {articleDetailApi, type articleDetailType, type articleListType} from "@/api/article_api";
 import {articleListApi} from "@/api/article_api";
 import {articleStatusOptions} from "@/options/options";
+import {Message} from "@arco-design/web-vue";
+import F_user from "@/components/common/f_user.vue";
 
 const columns: columnType[] = [
   {title: "ID", dataIndex: 'id'},
@@ -26,7 +28,36 @@ const columns: columnType[] = [
 const visible = ref(false)
 const fListRef = ref()
 
-function edit(record: articleListType) {
+const data = reactive<articleDetailType>({
+  "id": 0,
+  "createdAt": "",
+  "updatedAt": "",
+  "title": "",
+  "abstract": "",
+  "content": "",
+  "tagList": [],
+  cover: "",
+  "userID": 0,
+  "lookCount": 0,
+  "diggCount": 0,
+  "commentCount": 0,
+  "collectCount": 0,
+  "openComment": false,
+  "status": 0,
+  "username": "",
+  "nickname": "",
+  "userAvatar": ""
+})
+
+async function edit(record: articleListType) {
+  if (record.id !== data.id){
+    const res = await articleDetailApi(record.id)
+    if (res.code){
+      Message.error(res.msg)
+      return
+    }
+    Object.assign(data, res.data)
+  }
   visible.value = true
 }
 
@@ -39,9 +70,31 @@ async function handler() {
 
 <template>
   <div>
+    <a-modal v-model:visible="visible" title="文章审核" modal-class="article_examine_modal">
+        <a-form>
+          <a-form-item label="文章标题">{{ data.title }}</a-form-item>
+          <a-form-item label="文章简介">{{ data.abstract }}</a-form-item>
+          <a-form-item label="发布用户">
+            <f_user :nickname="data.nickname" :avatar="data.userAvatar"></f_user>
+          </a-form-item>
+          <a-form-item label="文章分类">{{ data.categoryTitle}}</a-form-item>
+          <a-form-item label="文章标签">
+            <a-tag style="margin-right: 10px" v-for="tag in data.tagList">{{ tag}}</a-tag>
+          </a-form-item>
+          <a-form-item label="文章正文">
+            {{ data.content }}
+          </a-form-item>
+        </a-form>
+      <template #footer>
+        <a-button>取消</a-button>
+        <a-button type="primary">审核通过</a-button>
+        <a-button type="primary" status="danger">不通过</a-button>
+      </template>
+    </a-modal>
     <f_list
         ref="fListRef"
         @edit="edit"
+        no-add
         :url="articleListApi"
         :default-params="{type: 3}"
         :columns="columns">
@@ -50,8 +103,7 @@ async function handler() {
         <span v-else>-</span>
       </template>
       <template #user="{record}:{record: articleListType}">
-        <a-avatar :image-url="record.userAvatar" size="40"></a-avatar>
-        <span style="margin-left: 2px">{{ record.userNickname }}</span>
+        <f_user :nickname="record.userNickname" :avatar="record.userAvatar"></f_user>
       </template>
       <template #category="{record}:{record: articleListType}">
         <span>{{ record.categoryTitle ? record.categoryTitle : '-' }}</span>

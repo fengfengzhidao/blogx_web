@@ -33,3 +33,30 @@ export interface articleListRequest extends paramsType {
 export function articleListApi(params: articleListRequest): Promise<baseResponse<listResponse<articleListType>>> {
     return useAxios.get("/api/article", {params})
 }
+
+export interface articleDetailType {
+    "id": number
+    "createdAt": string
+    "updatedAt": string
+    "title": string
+    "abstract": string
+    "content": string
+    "categoryID"?: number,
+    categoryTitle?: string
+    "tagList": string[]
+    "cover": string
+    "userID": number
+    "lookCount": number
+    "diggCount": number
+    "commentCount": number
+    "collectCount": number
+    "openComment": false,
+    "status": number
+    "username": string
+    "nickname": string
+    "userAvatar": string
+}
+
+export function articleDetailApi(id: number): Promise<baseResponse<articleDetailType>> {
+    return useAxios.get("/api/article/" + id.toString())
+}
