@@ -6,9 +6,13 @@ import {dateTemFormat, type dateTemType} from "@/utils/date";
 import {defaultDeleteApi, defaultPostApi, defaultPutApi} from "@/api";
 import type {emitFnType, formListType} from "@/components/admin/f_modal_form.vue";
 import F_modal_form from "@/components/admin/f_modal_form.vue";
+import {articleStatusOptions, type optionsColorType} from "@/options/options";
+import F_label from "@/components/common/f_label.vue";
 
 export interface columnType extends TableColumnData {
   dateFormat?: dateTemType
+  type?: "date" | "options" | "switch"
+  options?: optionsColorType
 }
 
 export interface actionGroupType {
@@ -339,7 +343,22 @@ defineExpose({
                    :row-selection="props.noCheck ? undefined : rowSelection " :pagination="false">
             <template #columns>
               <template v-for="col in props.columns">
-                <a-table-column v-if="col.dataIndex" v-bind="col"></a-table-column>
+                <a-table-column v-if="col.type === 'date'" v-bind="col">
+                  <template #cell="data">
+                    {{ dateTemFormat(data.record[col.dataIndex], col.dateFormat) }}
+                  </template>
+                </a-table-column>
+                <a-table-column v-else-if="col.type === 'options'" v-bind="col">
+                  <template #cell="data">
+                    <f_label :options="col.options" :value="data.record[col.dataIndex]"></f_label>
+                  </template>
+                </a-table-column>
+                <a-table-column v-else-if="col.type === 'switch'" v-bind="col">
+                  <template #cell="data">
+                    <a-switch :model-value="data.record[col.dataIndex]"></a-switch>
+                  </template>
+                </a-table-column>
+                <a-table-column v-else-if="col.dataIndex" v-bind="col"></a-table-column>
                 <a-table-column v-else-if="col.slotName" v-bind="col">
                   <template #cell="data">
                     <div class="col_actions" v-if="col.slotName === 'action'">

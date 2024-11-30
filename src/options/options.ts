@@ -1,6 +1,6 @@
-export interface optionsType {
-    label: string
-    value: number|string
+import type {optionsType} from "@/api";
+
+export interface optionsColorType  extends  optionsType{
     color?: string
 }
 export const articleStatusOptions = [

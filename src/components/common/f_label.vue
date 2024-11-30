@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type {optionsType} from "@/options/options";
+import type {optionsColorType} from "@/options/options";
 import {computed} from "vue";
 
 interface Props {
   value: number | string
-  options: optionsType[]
+  options: optionsColorType[]
 }
 
 const props = defineProps<Props>()

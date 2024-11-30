@@ -2,14 +2,12 @@
 import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import type {columnType} from "@/components/admin/f_list.vue";
 import {type formListType} from "@/components/admin/f_modal_form.vue";
-import {type bannerType} from "@/api/banner_api";
 import {reactive, ref} from "vue";
 import type {articleListType} from "@/api/article_api";
 import {articleListApi} from "@/api/article_api";
-import F_label from "@/components/common/f_label.vue";
 import {articleStatusOptions} from "@/options/options";
 
-const columns = [
+const columns: columnType[] = [
   {title: "ID", dataIndex: 'id'},
   {title: "文章标题", dataIndex: 'title'},
   {title: "发布用户", slotName: 'user'},
@@ -18,10 +16,11 @@ const columns = [
   {title: "评论数", dataIndex: 'commentCount'},
   {title: "点赞", dataIndex: 'diggCount'},
   {title: "收藏", dataIndex: 'collectCount'},
-  {title: "状态", slotName: 'status'},
+  {title: "是否开启评论", dataIndex: 'openComment', type: "switch"},
+  {title: "状态", dataIndex: 'status', type: "options", options: articleStatusOptions},
   {title: "分类", slotName: 'category'},
-  {title: "发布时间", slotName: 'createdAt'},
-  {title: "最后更新时间", slotName: 'updateAt'},
+  {title: "发布时间", dataIndex: 'createdAt', type: "date"},
+  {title: "最后更新时间", dataIndex: 'updateAt', type: "date", dateFormat: "current"},
   {title: "操作", slotName: 'action'},
 ]
 const visible = ref(false)
@@ -47,7 +46,8 @@ async function handler() {
         :default-params="{type: 3}"
         :columns="columns">
       <template #cover="{record}:{record: articleListType}">
-        <a-image :src="record.cover" height="50px"></a-image>
+        <a-image v-if="record.cover" :src="record.cover" height="50px"></a-image>
+        <span v-else>-</span>
       </template>
       <template #user="{record}:{record: articleListType}">
         <a-avatar :image-url="record.userAvatar" size="40"></a-avatar>
@@ -55,9 +55,6 @@ async function handler() {
       </template>
       <template #category="{record}:{record: articleListType}">
         <span>{{ record.categoryTitle ? record.categoryTitle : '-' }}</span>
-      </template>
-      <template #status="{record}:{record: articleListType}">
-        <f_label :options="articleStatusOptions" :value="record.status"></f_label>
       </template>
     </f_list>
   </div>
