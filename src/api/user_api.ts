@@ -37,30 +37,6 @@ export function userLogoutApi(): Promise<baseResponse<string>> {
     return useAxios.post("/api/logout")
 }
 
-export interface userListType {
-    "id": number
-    "created_at": string
-    "nick_name": string
-    "user_name": string
-    "avatar": string
-    "email": string
-    "tel": string
-    "addr": string
-    "token": string
-    "ip": string
-    "role": string
-    "sign_status": string
-    "integral": number
-    "sign": string
-    "link": string
-    "role_id": number
-}
-
-export function userListApi(params?: paramsType): Promise<baseResponse<listResponse<userListType>>> {
-    return useAxios.get("/api/users", {params})
-}
-
-
 export function articleCategoryOptionsApi(params?: paramsType): Promise<baseResponse<optionsType[]>> {
     return useAxios.get("/api/categorys")
 }
@@ -71,4 +47,21 @@ export interface userArticleTopRequest {
 }
 export function userArticleTopApi(data: userArticleTopRequest):Promise<baseResponse<string>>{
     return useAxios.post("/api/user/article/top", data)
+}
+
+export interface userListType{
+    "id": number
+    "nickname": string
+    "username": string
+    "avatar": string
+    "ip": string
+    "addr": string
+    "articleCount": number
+    "indexCount":number
+    "createdAt": string
+    "lastLoginDate": string
+}
+
+export function userListApi(params: paramsType):Promise<baseResponse<listResponse<userListType>>>{
+    return  useAxios.get("/api/user", {params})
 }

@@ -73,7 +73,7 @@ const router = createRouter({
                             meta: {
                                 title: "用户列表"
                             },
-                            component: () => import("@/views/admin/user_manage/index.vue"),
+                            component: () => import("@/views/admin/user_manage/user_list.vue"),
                         }
                     ]
                 },
