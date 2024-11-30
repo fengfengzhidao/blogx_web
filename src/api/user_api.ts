@@ -64,3 +64,11 @@ export function userListApi(params?: paramsType): Promise<baseResponse<listRespo
 export function articleCategoryOptionsApi(params?: paramsType): Promise<baseResponse<optionsType[]>> {
     return useAxios.get("/api/categorys")
 }
+
+export interface userArticleTopRequest {
+    articleID: number
+    type: number
+}
+export function userArticleTopApi(data: userArticleTopRequest):Promise<baseResponse<string>>{
+    return useAxios.post("/api/user/article/top", data)
+}

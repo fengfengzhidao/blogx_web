@@ -14,6 +14,7 @@ import {articleStatusOptions} from "@/options/options";
 import {Message} from "@arco-design/web-vue";
 import F_user from "@/components/common/f_user.vue";
 import {articleExamineApi} from "@/api/article_api";
+import {userArticleTopApi} from "@/api/user_api";
 
 const columns: columnType[] = [
   {title: "ID", dataIndex: 'id'},
@@ -27,6 +28,7 @@ const columns: columnType[] = [
   {title: "是否开启评论", dataIndex: 'openComment', type: "switch"},
   {title: "状态", dataIndex: 'status', type: "options", options: articleStatusOptions},
   {title: "分类", slotName: 'category'},
+  {title: "文章置顶", slotName: 'adminTop'},
   {title: "发布时间", dataIndex: 'createdAt', type: "date"},
   {title: "最后更新时间", dataIndex: 'updateAt', type: "date", dateFormat: "current"},
   {title: "操作", slotName: 'action'},
@@ -56,9 +58,9 @@ const data = reactive<articleDetailType>({
 })
 
 async function edit(record: articleListType) {
-  if (record.id !== data.id){
+  if (record.id !== data.id) {
     const res = await articleDetailApi(record.id)
-    if (res.code){
+    if (res.code) {
       Message.error(res.msg)
       return
     }
@@ -70,52 +72,67 @@ async function edit(record: articleListType) {
 const form = reactive<articleExamineRequest>({
   articleID: 0,
   status: 3,
-  msg:""
+  msg: ""
 })
 
 async function handler() {
-  if (data.status != 2){
-    return  true
+  if (data.status != 2) {
+    return true
   }
   form.articleID = data.id
   const res = await articleExamineApi(form)
-  if (res.code){
+  if (res.code) {
     Message.error(res.msg)
     return false
   }
   Message.success(res.msg)
   fListRef.value.getList()
-  return  true
+  return true
 }
+
+async function adminArticleTop(record: articleListType) {
+  if (record.status !== 3){
+    Message.warning("只能置顶已发布的文章")
+    record.adminTop = !record.adminTop
+    return
+  }
+  const res = await userArticleTopApi({articleID: record.id, type: 2})
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+}
+
 
 </script>
 
 <template>
   <div>
-    <a-modal v-model:visible="visible" title="文章审核" :on-before-ok="handler"  modal-class="article_examine_modal">
-        <a-form>
-          <a-form-item label="文章标题">{{ data.title }}</a-form-item>
-          <a-form-item label="文章简介">{{ data.abstract }}</a-form-item>
-          <a-form-item label="发布用户">
-            <f_user :nickname="data.nickname" :avatar="data.userAvatar"></f_user>
-          </a-form-item>
-          <a-form-item label="文章分类">{{ data.categoryTitle}}</a-form-item>
-          <a-form-item label="文章标签">
-            <a-tag style="margin-right: 10px" v-for="tag in data.tagList">{{ tag}}</a-tag>
-          </a-form-item>
-          <a-form-item label="文章正文">
-            {{ data.content }}
-          </a-form-item>
-          <a-form-item label="审核"  v-if="data.status === 2" >
-            <a-radio-group v-model="form.status">
-              <a-radio :value="3">审核通过</a-radio>
-              <a-radio :value="4">审核不通过</a-radio>
-            </a-radio-group>
-          </a-form-item>
-          <a-form-item label="拒绝原因" v-if="form.status === 4">
-            <a-textarea v-model="form.msg" placeholder="拒绝原因"></a-textarea>
-          </a-form-item>
-        </a-form>
+    <a-modal v-model:visible="visible" title="文章审核" :on-before-ok="handler" modal-class="article_examine_modal">
+      <a-form>
+        <a-form-item label="文章标题">{{ data.title }}</a-form-item>
+        <a-form-item label="文章简介">{{ data.abstract }}</a-form-item>
+        <a-form-item label="发布用户">
+          <f_user :nickname="data.nickname" :avatar="data.userAvatar"></f_user>
+        </a-form-item>
+        <a-form-item label="文章分类">{{ data.categoryTitle }}</a-form-item>
+        <a-form-item label="文章标签">
+          <a-tag style="margin-right: 10px" v-for="tag in data.tagList">{{ tag }}</a-tag>
+        </a-form-item>
+        <a-form-item label="文章正文">
+          {{ data.content }}
+        </a-form-item>
+        <a-form-item label="审核" v-if="data.status === 2">
+          <a-radio-group v-model="form.status">
+            <a-radio :value="3">审核通过</a-radio>
+            <a-radio :value="4">审核不通过</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item label="拒绝原因" v-if="form.status === 4">
+          <a-textarea v-model="form.msg" placeholder="拒绝原因"></a-textarea>
+        </a-form-item>
+      </a-form>
     </a-modal>
     <f_list
         ref="fListRef"
@@ -133,6 +150,9 @@ async function handler() {
       </template>
       <template #category="{record}:{record: articleListType}">
         <span>{{ record.categoryTitle ? record.categoryTitle : '-' }}</span>
+      </template>
+      <template #adminTop="{record}:{record: articleListType}">
+        <a-switch v-model="record.adminTop" @change="adminArticleTop(record)"></a-switch>
       </template>
     </f_list>
   </div>
