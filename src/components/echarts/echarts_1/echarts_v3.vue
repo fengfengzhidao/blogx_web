@@ -70,6 +70,11 @@ function initEcharts() {
       max: 100,
       axisLabel: {
         formatter: '{value}%'
+      },
+      splitLine: {
+        lineStyle: {
+          color: lineColor
+        }
       }
     },
     yAxis: {

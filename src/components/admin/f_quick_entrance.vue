@@ -12,12 +12,12 @@ interface quickType {
 }
 
 const list: quickType[] = [
-  {label: "用户列表", icon: IconUser, name: "userList"},
-  {label: "文章列表", icon: IconUser, name: "articleList"},
-  {label: "网站设置", icon: IconUser, name: "siteManageSite"},
-  {label: "AI设置", icon: IconUser, name: "siteManageAi"},
-  {label: "Banner设置", icon: IconUser, name: "bannerList"},
-  {label: "日志列表", icon: IconUser, name: "logList"},
+  {label: "用户列表", icon: "iconfont icon-list", name: "userList"},
+  {label: "文章列表", icon: "iconfont icon-navicon-wzgl", name: "articleList"},
+  {label: "网站设置", icon: "iconfont icon-wangzhan", name: "siteManageSite"},
+  {label: "AI设置", icon: "iconfont icon-wuguan", name: "siteManageAi"},
+  {label: "Banner设置", icon: "iconfont icon-banner", name: "bannerList"},
+  {label: "日志列表", icon: "iconfont icon-xitongrizhi", name: "logList"},
 ]
 
 function goRouter(item: quickType) {
@@ -60,7 +60,6 @@ function goRouter(item: quickType) {
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 22px;
         background-color: var(--color-fill-2);
         cursor: pointer;
         transition: all .3s;
@@ -68,6 +67,9 @@ function goRouter(item: quickType) {
         &:hover {
           transform: translateY(-5px);
           box-shadow: 0 0 5px rgba(0, 0, 0, 0.08);
+        }
+        i{
+          font-size: 20px;
         }
       }
 
