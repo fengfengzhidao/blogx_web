@@ -50,7 +50,7 @@ getData()
 .f_charts_v1_com {
   display: flex;
   justify-content: space-between;
-  height: 200px;
+  height: 110px;
 
   .left {
     width: 40%;
@@ -78,7 +78,7 @@ getData()
         font-size: 16px;
 
         &::before {
-          content: "-";
+
         }
 
         &::after {

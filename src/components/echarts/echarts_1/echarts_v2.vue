@@ -97,7 +97,7 @@ function initEcharts() {
 
 onMounted(async () => {
   await getData()
-  const chartDom = document.querySelector('.user_login_echarts') as HTMLDivElement;
+  const chartDom = document.querySelector('.article_year_charts') as HTMLDivElement;
   myChart = echarts.init(chartDom);
   initEcharts()
 })
@@ -110,13 +110,13 @@ watch(() => theme.value, () => {
 </script>
 
 <template>
-  <div class="user_login_echarts"></div>
+  <div class="article_year_charts"></div>
 </template>
 
 <style lang="less">
-.user_login_echarts {
+.article_year_charts {
   width: 100%;
-  height: 300px;
+  height: 260px;
   background-color: var(--color-bg-1);
   border-radius: 5px;
 }

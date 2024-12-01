@@ -62,6 +62,7 @@ function initEcharts() {
       left: '3%',
       right: '10%',
       bottom: '3%',
+      top: "5%",
       containLabel: true
     },
     xAxis: {
@@ -119,7 +120,7 @@ watch(() => theme.value, () => {
 <style lang="less">
 .data_computer {
   width: 100%;
-  height: 300px;
+  height: 260px;
   background-color: var(--color-bg-1);
   border-radius: 5px;
 }
