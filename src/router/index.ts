@@ -39,7 +39,7 @@ const router = createRouter({
                     path: "",
                     component: () => import("@/views/admin/home/index.vue"),
                     meta: {
-                        title: "首页",
+                        title: "数据统计",
                     }
                 },
                 {

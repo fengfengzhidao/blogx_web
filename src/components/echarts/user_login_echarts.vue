@@ -3,8 +3,6 @@ import * as echarts from 'echarts';
 import {onMounted, reactive, ref, watch} from "vue";
 import {theme} from "@/components/common/f_theme";
 import type {dataLoginStatisticType} from "@/api/data_api";
-import {dataLoginStatisticApi} from "@/api/data_api";
-import {Message} from "@arco-design/web-vue";
 
 type EChartsOption = echarts.EChartsOption;
 let myChart: echarts.ECharts | null = null
@@ -15,14 +13,14 @@ const data = reactive<dataLoginStatisticType>({
   sign_data: [],
 })
 
-async function getData() {
-  const res = await dataLoginStatisticApi()
-  if (res.code) {
-    Message.error(res.msg)
-    return
-  }
-  Object.assign(data, res.data)
-}
+// async function getData() {
+//   const res = await dataLoginStatisticApi()
+//   if (res.code) {
+//     Message.error(res.msg)
+//     return
+//   }
+//   Object.assign(data, res.data)
+// }
 
 
 

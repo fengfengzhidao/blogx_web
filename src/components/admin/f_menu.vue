@@ -23,7 +23,7 @@ interface MenuType {
 
 
 const menuList: MenuType[] = [
-  {title: "首页", name: "home", icon: IconHome},
+  {title: "数据统计", name: "home", icon: IconHome},
   {
     title: "个人中心", name: "userCenter", icon: IconUser, children: [
       {title: "个人信息", name: "userInfo", icon: "iconfont icon-yonghuxinxi-"}

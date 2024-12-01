@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue";
-import type {optionsType} from "@/api";
-import {dataStatisticApi, dataWeatherApi, type  weatherType} from "@/api/data_api";
+import {type dataSumType, dataSumApi, type weatherType} from "@/api/data_api";
 import {userStorei} from "@/stores/user_store";
 import {computed} from "vue";
+import {Message} from "@arco-design/web-vue";
 
 interface Props {
   noWeather?: boolean
@@ -12,13 +12,25 @@ interface Props {
 
 const props = defineProps<Props>()
 const store = userStorei()
-const data = ref<optionsType[]>([])
+const data = reactive<dataSumType>({
+  flowCount: 0,
+  userCount: 0,
+  articleCount: 0,
+  messageCount: 0,
+  commentCount: 0,
+  newLoginCount: 0,
+  newSignCount: 0,
+})
 
 async function getData() {
-  const res = await dataStatisticApi()
-  data.value = res.data
+  const res = await dataSumApi()
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Object.assign(data, res.data)
 }
-
+getData()
 const weatherData = reactive<weatherType>({
   "province": "湖南",
   "city": "长沙市",
@@ -33,15 +45,6 @@ const weatherData = reactive<weatherType>({
   "humidity_float": "55.0"
 })
 
-async function getWeather() {
-  if (props.noWeather) {
-    return
-  }
-  const res = await dataWeatherApi()
-  Object.assign(weatherData, res.data)
-}
-
-// getWeather()
 
 const temperatureLabel = computed(() => {
   const num = Number(weatherData.temperature)
@@ -97,7 +100,13 @@ const welcomeTitle = computed(() => {
       }}℃，{{ temperatureLabel }}
     </div>
     <div class="statistics">
-      <a-statistic animation v-for="item in data" :title="item.label" :value="item.value" show-group-separator/>
+      <a-statistic animation title="当日流量" :value="data.flowCount" show-group-separator/>
+      <a-statistic animation title="用户总数" :value="data.userCount" show-group-separator/>
+      <a-statistic animation title="文章总数" :value="data.articleCount" show-group-separator/>
+      <a-statistic animation title="消息总数" :value="data.messageCount" show-group-separator/>
+      <a-statistic animation title="评论总数" :value="data.commentCount" show-group-separator/>
+      <a-statistic animation title="今日登录" :value="data.newLoginCount" show-group-separator/>
+      <a-statistic animation title="今日注册" :value="data.newSignCount" show-group-separator/>
     </div>
     <div class="extra" v-if="!props.noHelp">
       欢迎使用FengfengAdmin后台系统，可查看 <a href="">系统帮助</a> 以便更好的使用本系统
