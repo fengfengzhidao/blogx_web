@@ -9,7 +9,7 @@ const props = defineProps<Props>()
 
 <template>
   <div class="f_user_com">
-    <a-avatar :image-url="props.avatar" size="40"></a-avatar>
+    <a-avatar :image-url="props.avatar" :size="40"></a-avatar>
     <span style="margin-left: 2px">{{ props.nickname }}</span>
   </div>
 </template>

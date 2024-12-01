@@ -188,7 +188,6 @@ router.beforeEach((to, from, next) => {
     if (to.meta.role) {
         // 判断当前用户的角色，在不在列表里面
         const store = userStorei()
-        console.log(store.userInfo)
         if (!store.isLogin) {
             // 没有登陆
             Message.warning("需要登陆")

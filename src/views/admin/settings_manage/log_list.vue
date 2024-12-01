@@ -94,7 +94,7 @@ function jsonParse() {
 <template>
   <div class="log_list_view">
     <a-modal v-model:visible="visible" width="35%" title="日志详情" body-class="log_modal_body" :footer="false">
-      <div class="log_body" v-html="content"></div>
+      <div class="log_body" :class="`log_type_${params.logType}`" v-html="content"></div>
     </a-modal>
     <f_list
         ref="fListRef"
@@ -152,7 +152,7 @@ function jsonParse() {
   max-height: 60vh;
   overflow-y: auto;
 
-  .log_body {
+  .log_type_2 {
     > div {
       padding: 20px;
       border-radius: 5px;
@@ -172,22 +172,25 @@ function jsonParse() {
       &.info {
         .text_color("info");
       }
+
       &.warn {
         .text_color("warn", rgb(var(--orange-6)));
       }
+
       &.error {
         .text_color("error", rgb(var(--red-6)));
       }
 
-      &.link{
+      &.link {
         .text_color("链接");
       }
 
     }
 
-    .log_image{
+    .log_image {
       .text_color("图片");
-      img{
+
+      img {
         width: 60%;
         object-fit: cover;
       }
@@ -238,7 +241,7 @@ function jsonParse() {
       .text_color("响应");
     }
 
-    .log_response_header{
+    .log_response_header {
       .text_color("响应头");
     }
 
@@ -249,6 +252,53 @@ function jsonParse() {
       .vjs-value-string {
         white-space: break-spaces;
         word-break: break-all;
+      }
+    }
+  }
+
+  .log_type_3 {
+    color: var(--color-text-2);
+
+    .log_item {
+      display: flex;
+
+      &.warn {
+        color: rgb(var(--orange-6));
+      }
+
+      &.error {
+        color: rgb(var(--red-6));
+      }
+
+      .log_item_label {
+        font-weight: 600;
+        margin-right: 5px;
+      }
+    }
+
+    .log_time {
+      text-align: center;
+      font-size: 12px;
+      margin-bottom: 20px;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &::before {
+        content: "";
+        display: block;
+        width: 40%;
+        height: 1px;
+        background: var(--color-fill-2);
+      }
+
+      &::after {
+        content: "";
+        display: block;
+        width: 40%;
+        height: 1px;
+        background: var(--color-fill-2);
       }
     }
   }
