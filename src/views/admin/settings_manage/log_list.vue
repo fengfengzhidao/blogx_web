@@ -3,36 +3,39 @@ import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import type {columnType} from "@/components/admin/f_list.vue";
 import {type formListType} from "@/components/admin/f_modal_form.vue";
 import {reactive, ref} from "vue";
-import {logListApi, type logListParams, type logListType} from "@/api/log_api";
+import {logListApi, type logListParams, type logListType, logReadApi} from "@/api/log_api";
+import F_user from "@/components/common/f_user.vue";
+import {logLevelOptions} from "@/options/options";
+import {Message} from "@arco-design/web-vue";
 
 const params = reactive<logListParams>({
   logType: 2,
 })
 
 const columnsDict = reactive({
-  1:[
+  1: [
     {title: "ID", dataIndex: 'id'},
     {title: "地址", slotName: 'addr'},
     {title: "用户名", dataIndex: 'username'},
-    {title: "状态", dataIndex: 'loginStatus'},
+    {title: "状态", slotName: 'loginStatus'},
     {title: "标题", dataIndex: 'title'},
     {title: "时间", dataIndex: 'createdAt', type: "date"},
     {title: "操作", slotName: 'action'},
   ],
-  2:  [
+  2: [
     {title: "ID", dataIndex: 'id'},
     {title: "地址", slotName: 'addr'},
     {title: "用户", slotName: 'user'},
-    {title: "等级", dataIndex: 'level'},
-    {title: "标题", dataIndex: 'title'},
+    {title: "等级", dataIndex: 'level', type: "options", options: logLevelOptions},
+    {title: "标题", slotName: 'title'},
     {title: "时间", dataIndex: 'createdAt', type: "date"},
     {title: "操作", slotName: 'action'},
   ],
-  3:  [
+  3: [
     {title: "ID", dataIndex: 'id'},
     {title: "服务", dataIndex: 'serviceName'},
-    {title: "标题", dataIndex: 'title'},
-    {title: "等级", dataIndex: 'level'},
+    {title: "标题", slotName: 'title'},
+    {title: "等级", dataIndex: 'level', type: "options", options: logLevelOptions},
     {title: "时间", dataIndex: 'createdAt', type: "date"},
     {title: "操作", slotName: 'action'},
   ]
@@ -49,10 +52,28 @@ function logTypeChange() {
   fListRef.value.getList(params)
 }
 
+const content = ref("")
+
+async function logRead(record: logListType) {
+  if (!record.isRead) {
+    const res = await logReadApi(record.id)
+    if (res.code) {
+      Message.error(res.msg)
+      return
+    }
+  }
+  content.value = record.content
+  visible.value = true
+}
+
+
 </script>
 
 <template>
-  <div>
+  <div class="log_list_view">
+    <a-modal v-model:visible="visible" title="日志详情" :footer="false">
+      <div v-html="content"></div>
+    </a-modal>
     <f_list
         ref="fListRef"
         no-add
@@ -67,6 +88,27 @@ function logTypeChange() {
           <a-radio :value="3">运行日志</a-radio>
         </a-radio-group>
       </template>
+      <template #addr="{record}:{record: logListType}">
+        {{ record.ip }}({{ record.addr }})
+      </template>
+      <template #user="{record}:{record: logListType}">
+        <f_user v-if="record.userID" :nickname="record.userNickname" :avatar="record.userAvatar"></f_user>
+      </template>
+      <template #loginStatus="{record}:{record: logListType}">
+        <a-tag v-if="record.loginStatus" color="blue">登录成功</a-tag>
+        <a-tag v-else color="red">登录失败</a-tag>
+      </template>
+      <template #title="{record}:{record: logListType}">
+        <a href="javascript:void 0" @click="logRead(record)" :class="{is_read: record.isRead}">{{ record.title }}</a>
+      </template>
     </f_list>
   </div>
 </template>
+
+<style lang="less">
+.log_list_view{
+  .is_read{
+    color: var(--color-text-2);
+  }
+}
+</style>

@@ -28,3 +28,7 @@ export interface logListParams extends paramsType {
 export function logListApi(params: logListParams):Promise<baseResponse<listResponse<logListType>>>{
     return  useAxios.get("/api/logs", {params})
 }
+
+export function logReadApi(id: number):Promise<baseResponse<string>>{
+    return useAxios.get("/api/logs/" + id.toString())
+}
