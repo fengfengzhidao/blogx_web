@@ -2,11 +2,14 @@
 import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import type {columnType} from "@/components/admin/f_list.vue";
 import {type formListType} from "@/components/admin/f_modal_form.vue";
-import {reactive, ref} from "vue";
+import {nextTick, reactive, ref} from "vue";
 import {logListApi, type logListParams, type logListType, logReadApi} from "@/api/log_api";
 import F_user from "@/components/common/f_user.vue";
 import {logLevelOptions} from "@/options/options";
 import {Message} from "@arco-design/web-vue";
+import VueJsonPretty from 'vue-json-pretty';
+import 'vue-json-pretty/lib/styles.css';
+import {h, createApp} from "vue";
 
 const params = reactive<logListParams>({
   logType: 2,
@@ -64,6 +67,25 @@ async function logRead(record: logListType) {
   }
   content.value = record.content
   visible.value = true
+  nextTick(() => {
+    jsonParse()
+  })
+}
+
+function jsonParse() {
+  const jsonList = document.querySelectorAll(".log_json_body")
+  jsonList.forEach(value => {
+    const jsonData = (value as HTMLPreElement).innerText
+    const data = JSON.parse(jsonData)
+    // 生成虚拟dom
+    const vNode = h(VueJsonPretty, {data: data, deep:1})
+    // 创建app
+    const app = createApp({
+      render: ()=>vNode
+    })
+    // 挂载app
+    app.mount(value)
+  })
 }
 
 
@@ -71,7 +93,7 @@ async function logRead(record: logListType) {
 
 <template>
   <div class="log_list_view">
-    <a-modal v-model:visible="visible" title="日志详情" body-class="log_modal_body" :footer="false">
+    <a-modal v-model:visible="visible" width="35%" title="日志详情" body-class="log_modal_body" :footer="false">
       <div class="log_body" v-html="content"></div>
     </a-modal>
     <f_list
@@ -162,8 +184,13 @@ async function logRead(record: logListType) {
     }
 
     .log_json_body {
-      white-space: break-spaces;
-      word-break: break-all;
+      //white-space: break-spaces;
+      //word-break: break-all;
+
+      .vjs-value-string{
+        white-space: break-spaces;
+        word-break: break-all;
+      }
     }
   }
 }

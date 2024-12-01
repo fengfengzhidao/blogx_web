@@ -172,6 +172,11 @@ const router = createRouter({
             ]
         },
         {
+            name: "test",
+            path: "/test",
+            component: () => import("@/test/json.vue"),
+        },
+        {
             name: "notfound",
             path: "/:match(.*)",
             component: () => import("@/views/web/404.vue"),
