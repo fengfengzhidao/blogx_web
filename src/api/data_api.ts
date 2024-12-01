@@ -49,3 +49,14 @@ export function dataGrowthApi(type: 1 | 2 | 3): Promise<baseResponse<dataGrowthT
 export function dataArticleGrowthApi(): Promise<baseResponse<dataGrowthType>> {
     return useAxios.get("/api/data/article/year")
 }
+
+
+export interface dataComputerType {
+    "cpuPercent": number
+    "memPercent": number
+    "diskPercent":  number
+}
+
+export function dataComputerApi():Promise<baseResponse<dataComputerType>>{
+    return  useAxios.get("/api/data/computer")
+}
