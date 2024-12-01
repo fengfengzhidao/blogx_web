@@ -238,6 +238,8 @@ function jsonParse() {
 
       .stack {
         font-size: 12px;
+        white-space: break-spaces;
+        word-break: break-all;
         color: var(--color-text-2);
       }
     }
