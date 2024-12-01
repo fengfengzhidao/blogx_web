@@ -10,6 +10,7 @@ import {Message} from "@arco-design/web-vue";
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
 import {h, createApp} from "vue";
+import {theme} from "@/components/common/f_theme";
 
 const params = reactive<logListParams>({
   logType: 2,
@@ -68,6 +69,10 @@ async function logRead(record: logListType) {
   content.value = record.content
   visible.value = true
   nextTick(() => {
+    const dom = document.querySelector(".log_modal_body")
+    if (dom){
+      dom.classList.add("scrollbar")
+    }
     jsonParse()
   })
 }
@@ -78,7 +83,7 @@ function jsonParse() {
     const jsonData = (value as HTMLPreElement).innerText
     const data = JSON.parse(jsonData)
     // 生成虚拟dom
-    const vNode = h(VueJsonPretty, {data: data, deep: 1})
+    const vNode = h(VueJsonPretty, {data: data, deep: 1, theme: theme.value})
     // 创建app
     const app = createApp({
       render: () => vNode
