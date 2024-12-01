@@ -40,7 +40,7 @@ const menuList: MenuType[] = [
     ]
   },
   {
-    title: "系统管理", role: 1, name: "settingsManage", icon: "iconfont icon-xitongpeizhi", children: [
+    title: "系统管理", role: 1, name: "settingsManage", icon: "iconfont icon-setting", children: [
       {
         title: "站点配置", name: "siteManage", icon: "iconfont icon-zhandianpeizhi", children: [
           {title: "网站设置", name: "siteManageSite", icon: "iconfont icon-wangzhan"},
