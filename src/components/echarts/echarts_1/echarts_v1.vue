@@ -47,7 +47,7 @@ watch(()=>props.dateList, ()=>{
         type: 'line',
         smooth: true,
       }
-    ]
+    ],
   };
   chart.value?.setOption(option);
 })
