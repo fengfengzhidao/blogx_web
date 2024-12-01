@@ -1,5 +1,6 @@
 import type {baseResponse} from "@/api/index";
 import {useAxios} from "@/api/index";
+
 export interface weatherType {
     "province": string
     "city": string
@@ -13,6 +14,7 @@ export interface weatherType {
     "temperature_float": string
     "humidity_float": string
 }
+
 export interface dataSumType {
     "flowCount": number
     "userCount": number
@@ -22,11 +24,24 @@ export interface dataSumType {
     "newLoginCount": number
     "newSignCount": number
 }
-export interface dataLoginStatisticType{
+
+export interface dataLoginStatisticType {
     date_list: string[]
     login_data: number[]
     sign_data: number[]
 }
+
 export function dataSumApi(): Promise<baseResponse<dataSumType>> {
     return useAxios.get("/api/data/sum")
+}
+
+export interface dataGrowthType {
+    "growthRate": number
+    "growthNum": number
+    "countList": number[]
+    "dateList": number[]
+}
+
+export function dataGrowthApi(type: 1 | 2 | 3): Promise<baseResponse<dataGrowthType>> {
+    return useAxios.get("/api/data/growth", {params: {type}})
 }
