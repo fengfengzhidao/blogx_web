@@ -71,8 +71,8 @@ async function logRead(record: logListType) {
 
 <template>
   <div class="log_list_view">
-    <a-modal v-model:visible="visible" title="日志详情" :footer="false">
-      <div v-html="content"></div>
+    <a-modal v-model:visible="visible" title="日志详情" body-class="log_modal_body" :footer="false">
+      <div class="log_body" v-html="content"></div>
     </a-modal>
     <f_list
         ref="fListRef"
@@ -106,9 +106,67 @@ async function logRead(record: logListType) {
 </template>
 
 <style lang="less">
-.log_list_view{
-  .is_read{
+.log_list_view {
+  .is_read {
     color: var(--color-text-2);
   }
 }
+
+.text_color(@text, @color:rgb(var(--arcoblue-6))) {
+  &::after {
+    content: @text;
+    display: block;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    color: @color;
+    font-size: 12px;
+  }
+
+}
+
+.log_modal_body {
+  padding: 10px;
+  max-height: 60vh;
+  overflow-y: auto;
+
+  .log_body {
+    > div {
+      padding: 20px;
+      border-radius: 5px;
+      background: var(--color-fill-2);
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .log_item {
+      display: flex;
+
+      .log_item_label {
+        font-weight: 600;
+        margin-right: 10px;
+      }
+
+      &.info {
+        .text_color("info");
+      }
+
+    }
+
+    .log_request_header {
+      .text_color("请求头");
+    }
+
+    .log_response {
+      .text_color("响应");
+    }
+
+    .log_json_body {
+      white-space: break-spaces;
+      word-break: break-all;
+    }
+  }
+}
+
+
 </style>
