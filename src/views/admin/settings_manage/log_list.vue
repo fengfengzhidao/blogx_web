@@ -78,10 +78,10 @@ function jsonParse() {
     const jsonData = (value as HTMLPreElement).innerText
     const data = JSON.parse(jsonData)
     // 生成虚拟dom
-    const vNode = h(VueJsonPretty, {data: data, deep:1})
+    const vNode = h(VueJsonPretty, {data: data, deep: 1})
     // 创建app
     const app = createApp({
-      render: ()=>vNode
+      render: () => vNode
     })
     // 挂载app
     app.mount(value)
@@ -172,22 +172,81 @@ function jsonParse() {
       &.info {
         .text_color("info");
       }
+      &.warn {
+        .text_color("warn", rgb(var(--orange-6)));
+      }
+      &.error {
+        .text_color("error", rgb(var(--red-6)));
+      }
 
+      &.link{
+        .text_color("链接");
+      }
+
+    }
+
+    .log_image{
+      .text_color("图片");
+      img{
+        width: 60%;
+        object-fit: cover;
+      }
     }
 
     .log_request_header {
       .text_color("请求头");
     }
 
+    .log_request {
+      .text_color("请求");
+
+      .log_request_head {
+        margin-bottom: 5px;
+
+        .log_request_method {
+          font-weight: 600;
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .log_error {
+      .line {
+        display: flex;
+
+        .label {
+          font-weight: 600;
+          margin-right: 10px;
+        }
+
+        .type {
+          position: absolute;
+          right: 5px;
+          top: 5px;
+          color: rgb(var(--red-6));
+          font-size: 12px;
+        }
+      }
+
+      .stack {
+        font-size: 12px;
+        color: var(--color-text-2);
+      }
+    }
+
     .log_response {
       .text_color("响应");
+    }
+
+    .log_response_header{
+      .text_color("响应头");
     }
 
     .log_json_body {
       //white-space: break-spaces;
       //word-break: break-all;
 
-      .vjs-value-string{
+      .vjs-value-string {
         white-space: break-spaces;
         word-break: break-all;
       }
