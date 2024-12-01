@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import {onMounted, ref, watch} from "vue";
 import * as echarts from 'echarts';
-import type {EChartsType} from "echarts";
+import type {EChartsOption, EChartsType} from "echarts";
+import {theme} from "@/components/common/f_theme";
 
 interface Props {
   class: string
@@ -11,10 +12,27 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const chart = ref<EChartsType>()
+type EChartsOption = echarts.EChartsOption;
+let myChart: echarts.ECharts | null = null
 
-watch(()=>props.dateList, ()=>{
-  const option = {
+function initEcharts() {
+  let option: EChartsOption;
+
+  const textColor = getComputedStyle(document.body).getPropertyValue("--color-text-1")
+  const lineColor = getComputedStyle(document.body).getPropertyValue("--color-neutral-2")
+
+  let themeColor = [
+    '#1c5ae0',
+    '#15c5be'
+  ]
+  if (theme.value === "dark") {
+    themeColor = [
+      '#1c5ae0',
+      '#15c5be'
+    ]
+  }
+  option = {
+    color: themeColor,
     xAxis: {
       type: 'category',
       data: props.dateList,
@@ -30,6 +48,11 @@ watch(()=>props.dateList, ()=>{
       type: 'value',
       axisLabel: {
         show: false,
+      },
+      splitLine: {
+        lineStyle: {
+          color: lineColor
+        }
       }
     },
     tooltip: {
@@ -49,17 +72,23 @@ watch(()=>props.dateList, ()=>{
       }
     ],
   };
-  chart.value?.setOption(option);
+  myChart?.setOption(option);
+}
+
+
+watch(() => props.dateList, () => {
+  initEcharts()
+})
+watch(() => theme.value, () => {
+  initEcharts()
 })
 
 onMounted(() => {
-  let chartDom = document.querySelector("."+props.class);
+  let chartDom = document.querySelector("." + props.class) as HTMLDivElement;
   if (chartDom) {
-    chart.value = echarts.init(chartDom);
+    myChart = echarts.init(chartDom);
     return
   }
-
-
 })
 </script>
 

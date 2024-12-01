@@ -4,6 +4,7 @@ import F_quick_entrance from "@/components/admin/f_quick_entrance.vue";
 import F_version from "@/components/common/f_version.vue";
 import F_title from "@/components/common/f_title.vue";
 import F_home_charts_v1 from "@/components/admin/f_home_charts_v1.vue";
+import Echarts_v2 from "@/components/echarts/echarts_1/echarts_v2.vue";
 
 </script>
 
@@ -28,6 +29,9 @@ import F_home_charts_v1 from "@/components/admin/f_home_charts_v1.vue";
       <div class="charts charts_2">
         <div class="item">
           <f_title :type="2">发布文章</f_title>
+          <div class="body">
+            <echarts_v2></echarts_v2>
+          </div>
         </div>
         <div class="item">
           <f_title :type="2">系统资源</f_title>
