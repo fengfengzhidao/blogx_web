@@ -6,6 +6,7 @@ import F_user_dropdown from "@/components/common/f_user_dropdown.vue";
 import {userStorei} from "@/stores/user_store";
 
 const store = userStorei()
+
 interface Props {
   noScroll?: boolean
   scrollTop?: number
@@ -33,17 +34,48 @@ if (!noScroll) {
 <template>
   <div class="f_nav" :class="{isShow: isShow}">
     <div class="container">
-      <div class="slogan">
-        <div class="n1">{{ slogan }}</div>
-        <div class="n2">{{ enSlogan }}</div>
+      <div class="logo">
+        <a href="/">
+          <span class="n1">Blogx</span>
+          <span class="n2">社区版</span>
+        </a>
       </div>
-      <div class="left">
-        <router-link to="/">首页</router-link>
+      <div class="center">
+        <i class="iconfont icon-dengpao"></i>
+        <a-input-search placeholder="搜索你喜欢的文章"></a-input-search>
       </div>
       <div class="right">
-        <f_user_dropdown v-if="store.isLogin"></f_user_dropdown>
-        <router-link v-else :to="{name: 'login'}">登录</router-link>
-        <f_theme class="theme"></f_theme>
+        <a-avatar :image-url="store.userInfo.avatar" :size="30"></a-avatar>
+        <a-badge :count="9" dot :dotStyle="{ width: '5px', height: '5px' }">
+          <a-dropdown>
+            <a href="javascript:void 0">消息</a>
+            <template #content>
+              <a-doption>
+                <a-badge :count="9" dot :dotStyle="{ width: '5px', height: '5px' }">
+                评论和@
+                </a-badge>
+              </a-doption>
+              <a-doption>
+                <a-badge :count="9" dot :dotStyle="{ width: '5px', height: '5px' }">
+                  赞和收藏
+                </a-badge>
+              </a-doption>
+              <a-doption>
+                <a-badge :count="9" dot :dotStyle="{ width: '5px', height: '5px' }">
+                  私信
+                </a-badge>
+              </a-doption>
+              <a-doption>
+                <a-badge :count="9" dot :dotStyle="{ width: '5px', height: '5px' }">
+                  系统通知
+                </a-badge>
+              </a-doption>
+            </template>
+          </a-dropdown>
+
+        </a-badge>
+        <a href="javascript:void 0">历史</a>
+        <a-button type="primary"><i class="iconfont icon-jia"></i> <span>发布</span></a-button>
       </div>
     </div>
   </div>
@@ -88,49 +120,77 @@ if (!noScroll) {
     width: 1200px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
-    .slogan {
-      width: 10%;
+    .logo {
+      width: 20%;
 
-      .n1 {
-        font-size: 20px;
+      a {
+        .n1 {
+          font-size: 16px;
+          color: var(--color-text-1);
+        }
 
-      }
-
-      .n2 {
-        font-size: 12px;
-
-        transform: scale(0.87);
-        transform-origin: left center;
+        .n2 {
+          margin-left: 10px;
+          font-size: 14px;
+          color: var(--color-text-2);
+        }
       }
     }
 
-    .left {
-      width: 70%;
+    .center {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
+      i {
+        margin-right: 10px;
+        font-size: 20px;
+        color: rgb(var(--arcoblue-6));
+        cursor: pointer;
+      }
+
+      .arco-input-wrapper {
+        width: 400px;
+        border-radius: 20px;
+      }
     }
 
     .right {
-      width: 20%;
+      width: 30%;
       display: flex;
       align-items: center;
 
-      .theme {
-        margin-left: 20px;
-        color: white;
-        font-size: 18px;
-        cursor: pointer;
+      >a{
+        margin-right: 20px;
       }
-    }
+      .arco-avatar{
+        margin-right: 20px;
+      }
 
-    a {
-      font-size: 16px;
-      text-decoration: none;
-      color: white;
-    }
+      .arco-badge{
+        margin-right: 20px;
+        .arco-badge-dot{
+          top: 1px;
+          right: -3px;
 
-    a.router-link-exact-active {
-      color: @primary-6 !important;
+        }
+      }
+
+
+      .arco-btn {
+        border-radius: 200px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        i{
+          font-size: 14px;
+          margin-right: 3px;
+          margin-top: 1px;
+        }
+      }
     }
   }
 }
