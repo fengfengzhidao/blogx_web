@@ -3,11 +3,12 @@ import {slogan, enSlogan} from "@/conf/global";
 import F_theme from "@/components/common/f_theme.vue";
 import {ref} from "vue";
 import F_user_dropdown from "@/components/common/f_user_dropdown.vue";
-import {userStorei} from "@/stores/user_store";
+
 import F_point from "@/components/common/f_point.vue";
 import F_nav_msg from "@/components/web/f_nav_msg.vue";
+import F_nav_avatar from "@/components/web/f_nav_avatar.vue";
 
-const store = userStorei()
+
 
 interface Props {
   noScroll?: boolean
@@ -47,7 +48,7 @@ if (!noScroll) {
         <a-input-search placeholder="搜索你喜欢的文章"></a-input-search>
       </div>
       <div class="right">
-        <a-avatar :image-url="store.userInfo.avatar" :size="30"></a-avatar>
+        <f_nav_avatar></f_nav_avatar>
         <f_nav_msg></f_nav_msg>
         <a href="javascript:void 0">历史</a>
         <a-button type="primary"><i class="iconfont icon-jia"></i> <span>发布</span></a-button>
