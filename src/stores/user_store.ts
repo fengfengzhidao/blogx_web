@@ -47,9 +47,9 @@ export const userStorei = defineStore('userStore', {
                 }
 
                  this.userInfo = {
-                     userID: res.data.id,
-                     nickName: res.data.nick_name,
-                     userName: res.data.user_name,
+                     userID: res.data.userID,
+                     nickName: res.data.nickname,
+                     userName: res.data.nickname,
                      avatar: res.data.avatar,
                      role: payLoad.role,
                      token: token,

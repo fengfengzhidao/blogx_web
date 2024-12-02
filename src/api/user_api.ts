@@ -1,36 +1,31 @@
 import {type baseResponse, type listResponse, type optionsType, type paramsType, useAxios} from "@/api/index";
 
 
-export interface emailLoginRequest {
-    user_name: string
-    password: string
+export interface pwdLoginRequest {
+    "val": string,
+    "password": string
+    code: string
 }
 
-export function emailLoginApi(data: emailLoginRequest): Promise<baseResponse<string>> {
-    return useAxios.post("/api/email_login", data)
+export function pwdLoginApi(data: pwdLoginRequest): Promise<baseResponse<string>> {
+    return useAxios.post("/api/user/login", data)
 }
 
 
 export interface userInfoType {
-    "id": number
-    "created_at": string
-    "nick_name": string
-    "user_name": string
+    "userID": number
+    "codeAge": number
     "avatar": string
-    "email": string
-    "tel": string
-    "addr": string
-    "token": string
-    "ip": string
-    "role": string
-    "sign_status": string
-    "integral": number
-    "sign": string
-    "link": string
+    "nickname": string
+    "lookCount": number
+    "articleCount": number
+    "fansCount":number
+    "followCount": number
+    "place": string
 }
 
 export function userInfoApi(): Promise<baseResponse<userInfoType>> {
-    return useAxios.get("/api/user_info")
+    return useAxios.get("/api/user/base")
 }
 
 export function userLogoutApi(): Promise<baseResponse<string>> {
