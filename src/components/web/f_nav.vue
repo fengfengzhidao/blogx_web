@@ -4,6 +4,8 @@ import F_theme from "@/components/common/f_theme.vue";
 import {ref} from "vue";
 import F_user_dropdown from "@/components/common/f_user_dropdown.vue";
 import {userStorei} from "@/stores/user_store";
+import F_point from "@/components/common/f_point.vue";
+import F_nav_msg from "@/components/web/f_nav_msg.vue";
 
 const store = userStorei()
 
@@ -46,34 +48,7 @@ if (!noScroll) {
       </div>
       <div class="right">
         <a-avatar :image-url="store.userInfo.avatar" :size="30"></a-avatar>
-        <a-badge :count="9" dot :dotStyle="{ width: '5px', height: '5px' }">
-          <a-dropdown>
-            <a href="javascript:void 0">消息</a>
-            <template #content>
-              <a-doption>
-                <a-badge :count="9" dot :dotStyle="{ width: '5px', height: '5px' }">
-                评论和@
-                </a-badge>
-              </a-doption>
-              <a-doption>
-                <a-badge :count="9" dot :dotStyle="{ width: '5px', height: '5px' }">
-                  赞和收藏
-                </a-badge>
-              </a-doption>
-              <a-doption>
-                <a-badge :count="9" dot :dotStyle="{ width: '5px', height: '5px' }">
-                  私信
-                </a-badge>
-              </a-doption>
-              <a-doption>
-                <a-badge :count="9" dot :dotStyle="{ width: '5px', height: '5px' }">
-                  系统通知
-                </a-badge>
-              </a-doption>
-            </template>
-          </a-dropdown>
-
-        </a-badge>
+        <f_nav_msg></f_nav_msg>
         <a href="javascript:void 0">历史</a>
         <a-button type="primary"><i class="iconfont icon-jia"></i> <span>发布</span></a-button>
       </div>
@@ -163,20 +138,16 @@ if (!noScroll) {
       display: flex;
       align-items: center;
 
-      >a{
-        margin-right: 20px;
-      }
-      .arco-avatar{
+      > a {
         margin-right: 20px;
       }
 
-      .arco-badge{
+      .arco-avatar {
         margin-right: 20px;
-        .arco-badge-dot{
-          top: 1px;
-          right: -3px;
+      }
 
-        }
+      .f_nav_msg_com {
+        margin-right: 20px;
       }
 
 
@@ -185,7 +156,8 @@ if (!noScroll) {
         font-size: 12px;
         display: flex;
         align-items: center;
-        i{
+
+        i {
           font-size: 14px;
           margin-right: 3px;
           margin-top: 1px;
@@ -194,4 +166,5 @@ if (!noScroll) {
     }
   }
 }
+
 </style>
