@@ -138,6 +138,7 @@ if (!noScroll) {
       width: 30%;
       display: flex;
       align-items: center;
+      justify-content: end;
 
       > a {
         margin-right: 20px;
