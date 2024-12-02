@@ -23,7 +23,7 @@ export const userStorei = defineStore('userStore', {
     state: (): userStoreType => {
         return {
             userInfo: {
-                userID: 1,
+                userID: 0,
                 nickName: "枫枫",
                 userName: "fengfeng",
                 avatar: "https://img2.baidu.com/it/u=3029837478,1144772205&fm=253&app=120&size=w931&n=0&f=JPEG&fmt=auto?sec=1732813200&t=fa3d317bb04f7146b4142d1ad1460457",

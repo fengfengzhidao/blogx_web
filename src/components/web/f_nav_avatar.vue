@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import {userStorei} from "@/stores/user_store";
 import router from "@/router";
+import {showLogin} from "@/components/web/f_login";
 
 const store = userStorei()
 
-function goRouter(name: string){
-  if (name === "exit"){
+function goRouter(name: string) {
+  if (name === "exit") {
     return
   }
-
   router.push({name: name})
 
 }
-
 </script>
 
 <template>
-  <a-trigger class="f_nav_avatar_trigger" animation-name="fade" trigger="hover" :unmount-on-close="false">
+  <a-avatar v-if="!store.isLogin" class="avatar_1" :size="30" @click="showLogin">登录</a-avatar>
+  <a-trigger v-else class="f_nav_avatar_trigger" animation-name="fade" trigger="hover" :unmount-on-close="false">
     <a-avatar class="avatar_1" :image-url="store.userInfo.avatar" :size="30"></a-avatar>
     <template #content>
       <div class="f_nav_avatar_com">
@@ -30,9 +30,12 @@ function goRouter(name: string){
           <a-statistic extra="文章" :value="342"/>
         </div>
         <div class="menu">
-          <div class="item" @click="goRouter('userCenter')"><i class="iconfont icon-list"></i> <span>个人中心</span></div>
-          <div class="item" @click="goRouter('articleManage')"><i class="iconfont icon-wenzhangguanli"></i> <span>文章管理</span></div>
-          <div class="item" @click="goRouter('msgChat')"><i class="iconfont icon-xiaoxi"></i> <span>我的消息</span></div>
+          <div class="item" @click="goRouter('userCenter')"><i class="iconfont icon-list"></i> <span>个人中心</span>
+          </div>
+          <div class="item" @click="goRouter('articleManage')"><i class="iconfont icon-wenzhangguanli"></i>
+            <span>文章管理</span></div>
+          <div class="item" @click="goRouter('msgChat')"><i class="iconfont icon-xiaoxi"></i> <span>我的消息</span>
+          </div>
         </div>
         <div class="exit">
           <div class="item" @click="goRouter('exit')"><i class="iconfont icon-liulanliang"></i> <span>退出</span></div>
@@ -44,9 +47,10 @@ function goRouter(name: string){
 
 <style lang="less">
 
-.avatar_1{
+.avatar_1 {
   cursor: pointer;
 }
+
 .f_nav_avatar_com {
   width: 180px;
   border-radius: 5px;
@@ -121,10 +125,11 @@ function goRouter(name: string){
   }
 }
 
-.f_nav_avatar_trigger{
-  .arco-trigger-popup-wrapper{
+.f_nav_avatar_trigger {
+  .arco-trigger-popup-wrapper {
     transition: all .3s;
   }
+
   // 组件刚开始离开
   .fade-leave-active {
   }
