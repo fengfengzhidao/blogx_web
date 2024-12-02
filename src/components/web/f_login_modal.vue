@@ -5,8 +5,11 @@ import {Form, FormItem, Input} from "@arco-design/web-vue";
 import {pwdLoginApi, type pwdLoginRequest} from "@/api/user_api";
 import {reactive, ref} from "vue";
 import {userStorei} from "@/stores/user_store";
+import Pwd_login from "@/components/web/login/pwd_login.vue";
+import Email_login from "@/components/web/login/email_login.vue";
 
 const store = userStorei()
+
 interface Props {
   visible: boolean
 }
@@ -18,34 +21,20 @@ function cancel() {
   emits("update:visible", false)
 }
 
-const form = reactive<pwdLoginRequest>({
-  val: "",
-  password: "",
-  code: ""
-})
-
 function loginSuccess() {
   emits("destruction")
 }
 
-const formRef = ref()
+const type = ref(1) // 1 pwd 2 邮箱
 
-async function pwdLoginHandler() {
-  const val = await formRef.value.validate()
-  if (val) return
-  const res = await pwdLoginApi(form)
-  if (res.code) {
-    Message.error(res.msg)
-    return
-  }
 
-  Message.success(res.msg)
- store.saveUserInfo(res.data)
+async function handler(data: string) {
+  Message.success("登录成功")
+  store.saveUserInfo(data)
   emits("update:visible", false)
-  setTimeout(()=>{
+  setTimeout(() => {
     emits("destruction")
   }, 1000)
-
 }
 
 </script>
@@ -56,29 +45,21 @@ async function pwdLoginHandler() {
       <div class="title">BlogX 登录</div>
       <img src="@/assets/img/banner.png" alt="">
     </div>
-    <Form ref="formRef" :model="form" :label-col-props="{span: 0}" :wrapper-col-props="{span: 24}">
-      <FormItem field="val" :rules="[{required: true, message:'请输入用户名'}]">
-        <Input v-model="form.val" placeholder="用户名"></Input>
-      </FormItem>
-      <FormItem field="password" :rules="[{required: true, message:'请输入密码'}]">
-        <Input v-model="form.password" placeholder="密码"></Input>
-      </FormItem>
-      <FormItem>
-        <Input v-model="form.code" placeholder="图形验证码"></Input>
-        <img src="https://modao.cc/uploads7/images/13792/137926380/v2_sk3ooq.png" alt="">
-      </FormItem>
-      <FormItem>
-        <Button type="primary" @click="pwdLoginHandler" long>登录</Button>
-      </FormItem>
+
+    <pwd_login v-if="type === 1" @ok="handler"></pwd_login>
+    <email_login v-if="type===2" @ok="handler"></email_login>
+
+    <div class="form">
       <div class="register">
-        <span>还没有账号？ <a href="javascript:void 0">去注册</a></span>
+        <span v-if="type===1">还没有账号？ <a href="javascript:void 0" @click="type=2">去注册</a></span>
+        <span v-if="type===2">已有账号 <a href="javascript:void 0" @click="type=1">去登录</a></span>
       </div>
       <div class="other">第三方登录</div>
 
       <div class="other_login">
         <img src="@/assets/img/QQ.svg" alt="">
       </div>
-    </Form>
+    </div>
   </Modal>
 </template>
 
@@ -119,7 +100,11 @@ async function pwdLoginHandler() {
     }
 
     .arco-form {
-      padding: 20px;
+      padding: 20px 20px 0 20px;
+    }
+
+    .form {
+      padding: 0 20px 20px 20px;
 
       .register {
         font-size: 14px;
@@ -162,6 +147,8 @@ async function pwdLoginHandler() {
         }
       }
     }
+
+
   }
 }
 </style>
