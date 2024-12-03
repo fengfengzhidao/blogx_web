@@ -13,6 +13,11 @@ interface userInfoType {
     avatar: string
     role: number
     token: string
+    "lookCount": number
+    "articleCount": number
+    "fansCount": number
+    "followCount": number
+    "place": string
 }
 
 interface userStoreType {
@@ -26,11 +31,16 @@ export const userStorei = defineStore('userStore', {
         return {
             userInfo: {
                 userID: 0,
-                nickName: "枫枫",
-                userName: "fengfeng",
-                avatar: "https://img2.baidu.com/it/u=3029837478,1144772205&fm=253&app=120&size=w931&n=0&f=JPEG&fmt=auto?sec=1732813200&t=fa3d317bb04f7146b4142d1ad1460457",
-                role: 1,
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjEsInVzZXJuYW1lIjoiZmVuZ2ZlbmciLCJyb2xlIjoxLCJleHAiOjE3MzM1ODU3MjEsImlzcyI6ImZlbmdmZW5nIn0.nhveJ4e1OUx5nqyMyWydIfiBVHRhzJpaBSN47DXI96E",
+                nickName: "",
+                userName: "",
+                avatar: "",
+                role: 0,
+                token: "",
+                lookCount: 0,
+                articleCount: 0,
+                fansCount: 0,
+                followCount: 0,
+                place: ""
             },
             siteInfo: {
                 "qiNiu": {
@@ -98,6 +108,11 @@ export const userStorei = defineStore('userStore', {
                     avatar: res.data.avatar,
                     role: payLoad.role,
                     token: token,
+                    lookCount: res.data.lookCount,
+                    articleCount: res.data.articleCount,
+                    fansCount: res.data.fansCount,
+                    followCount: res.data.followCount,
+                    place: res.data.place,
                 }
                 // 持久化
                 localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
@@ -136,6 +151,11 @@ export const userStorei = defineStore('userStore', {
                 avatar: "",
                 role: 0,
                 token: "",
+                lookCount: 0,
+                articleCount: 0,
+                fansCount: 0,
+                followCount: 0,
+                place: ""
             }
             Message.success("用户注销成功")
             router.push({name: "web_home"})

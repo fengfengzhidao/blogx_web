@@ -1,7 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import NProgress from "nprogress";
 import {userStorei} from "@/stores/user_store";
-import {Message} from "@arco-design/web-vue"; // 导入 nprogress模块
+import {Message} from "@arco-design/web-vue";
+import {showLogin} from "@/components/web/f_login"; // 导入 nprogress模块
 
 
 const router = createRouter({
@@ -31,7 +32,7 @@ const router = createRouter({
             component: () => import("@/views/admin/index.vue"),
             meta: {
                 title: "首页",
-                role: [1, 2, 3]
+                role: [1, 3]
             },
             children: [
                 {
@@ -191,11 +192,7 @@ router.beforeEach((to, from, next) => {
         if (!store.isLogin) {
             // 没有登陆
             Message.warning("需要登陆")
-            router.push({
-                name: "login", query: {
-                    redirect: to.path
-                }
-            })
+            showLogin()
             return
         }
 
