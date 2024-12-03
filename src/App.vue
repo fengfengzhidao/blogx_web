@@ -4,7 +4,8 @@ import {loadTheme} from "@/components/common/f_theme";
 
 loadTheme()
 const store = userStorei()
-// store.loadUserInfo()
+store.loadUserInfo()
+store.loadSiteInfo()
 
 </script>
 

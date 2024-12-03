@@ -1,6 +1,9 @@
 import {type baseResponse, useAxios} from "@/api/index";
 
 export interface siteResponse {
+    "qiNiu": {
+        "enable": boolean
+    },
     "siteInfo": {
         "title": string
         "logo": string

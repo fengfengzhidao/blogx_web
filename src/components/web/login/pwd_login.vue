@@ -2,7 +2,9 @@
 import {pwdLoginApi, type pwdLoginRequest} from "@/api/user_api";
 import {Button, Form, FormItem, Input, Message} from "@arco-design/web-vue";
 import {reactive, ref} from "vue";
+import {userStorei} from "@/stores/user_store";
 
+const store = userStorei()
 const form = reactive<pwdLoginRequest>({
   val: "",
   password: "",
@@ -33,7 +35,7 @@ async function handler() {
     <FormItem field="password" :rules="[{required: true, message:'请输入密码'}]">
       <Input v-model="form.password" type="password" placeholder="密码"></Input>
     </FormItem>
-    <FormItem content-class="captcha_item">
+    <FormItem content-class="captcha_item" v-if="store.siteInfo.login.captcha">
       <Input v-model="form.captchaCode" placeholder="图形验证码"></Input>
       <img src="https://modao.cc/uploads7/images/13792/137926380/v2_sk3ooq.png" alt="">
     </FormItem>

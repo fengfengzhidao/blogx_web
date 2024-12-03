@@ -25,8 +25,8 @@ export interface userInfoType {
     "place": string
 }
 
-export function userInfoApi(): Promise<baseResponse<userInfoType>> {
-    return useAxios.get("/api/user/base")
+export function userInfoApi(userID: number): Promise<baseResponse<userInfoType>> {
+    return useAxios.get("/api/user/base", {params: {id: userID}})
 }
 
 export function userLogoutApi(): Promise<baseResponse<string>> {

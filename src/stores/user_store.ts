@@ -4,6 +4,7 @@ import {userInfoApi, userLogoutApi} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import {parseToken} from "@/utils/parse_token";
 import router from "@/router";
+import {siteApi, type siteResponse} from "@/api/site_api";
 
 interface userInfoType {
     userID: number
@@ -16,6 +17,7 @@ interface userInfoType {
 
 interface userStoreType {
     userInfo: userInfoType
+    siteInfo: siteResponse
 }
 
 
@@ -30,32 +32,75 @@ export const userStorei = defineStore('userStore', {
                 role: 1,
                 token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjEsInVzZXJuYW1lIjoiZmVuZ2ZlbmciLCJyb2xlIjoxLCJleHAiOjE3MzM1ODU3MjEsImlzcyI6ImZlbmdmZW5nIn0.nhveJ4e1OUx5nqyMyWydIfiBVHRhzJpaBSN47DXI96E",
             },
+            siteInfo: {
+                "qiNiu": {
+                    "enable": false
+                },
+                "siteInfo": {
+                    "title": "",
+                    "logo": "",
+                    "beian": "",
+                    "mode": 1
+                },
+                "project": {
+                    "title": "",
+                    "icon": "",
+                    "webPath": ""
+                },
+                "seo": {
+                    "keywords": "",
+                    "description": ""
+                },
+                "about": {
+                    "siteDate": "",
+                    "qq": "",
+                    "version": "",
+                    "wechat": "",
+                    "gitee": "",
+                    "bilibili": "",
+                    "github": ""
+                },
+                "login": {
+                    "qqLogin": false,
+                    "usernamePwdLogin": true,
+                    "emailLogin": false,
+                    "captcha": false
+                },
+                "indexRight": {
+                    "list": []
+                },
+                "article": {
+                    "noExamine": false,
+                    "commentLine": 4
+                }
+            }
         }
     },
     actions: {
-         saveUserInfo(token: string) {
+        saveUserInfo(token: string) {
             // 传一个token过来，然后重新去调用户信息接口
             this.userInfo.token = token
             const payLoad = parseToken(token)
-            this.userInfo.userID = payLoad.user_id
+            console.log(payLoad)
+            this.userInfo.userID = payLoad.userID
             this.userInfo.role = payLoad.role
 
-             userInfoApi().then(res=>{
+            userInfoApi(payLoad.userID).then(res => {
                 if (res.code) {
                     Message.error(res.msg)
                     return
                 }
 
-                 this.userInfo = {
-                     userID: res.data.userID,
-                     nickName: res.data.nickname,
-                     userName: res.data.nickname,
-                     avatar: res.data.avatar,
-                     role: payLoad.role,
-                     token: token,
-                 }
-                 // 持久化
-                 localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+                this.userInfo = {
+                    userID: res.data.userID,
+                    nickName: res.data.nickname,
+                    userName: res.data.nickname,
+                    avatar: res.data.avatar,
+                    role: payLoad.role,
+                    token: token,
+                }
+                // 持久化
+                localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
             })
         },
         loadUserInfo() {
@@ -94,6 +139,14 @@ export const userStorei = defineStore('userStore', {
             }
             Message.success("用户注销成功")
             router.push({name: "web_home"})
+        },
+        async loadSiteInfo() {
+            const res = await siteApi("site")
+            if (res.code) {
+                Message.error(res.msg)
+                return
+            }
+            Object.assign(this.siteInfo, res.data)
         }
 
     },

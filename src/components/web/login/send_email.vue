@@ -3,7 +3,9 @@
 import {Button, Form, FormItem, Input, Message} from "@arco-design/web-vue";
 import {reactive, ref} from "vue";
 import {sendEmailApi, type sendEmailType} from "@/api/user_api";
+import {userStorei} from "@/stores/user_store";
 
+const store = userStorei()
 const emits = defineEmits(["ok"])
 const form = reactive<sendEmailType>({
   type: 3,
@@ -33,7 +35,7 @@ async function handler() {
     <FormItem field="email" :rules="[{required: true, message:'请输入邮箱'}]">
       <Input v-model="form.email" placeholder="邮箱"></Input>
     </FormItem>
-    <FormItem content-class="captcha_item">
+    <FormItem content-class="captcha_item"  v-if="store.siteInfo.login.captcha">
       <Input v-model="form.captchaCode" placeholder="图形验证码"></Input>
       <img src="https://modao.cc/uploads7/images/13792/137926380/v2_sk3ooq.png" alt="">
     </FormItem>

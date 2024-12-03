@@ -46,19 +46,21 @@ async function handler(data: string) {
       <img src="@/assets/img/banner.png" alt="">
     </div>
 
-    <pwd_login v-if="type === 1" @ok="handler"></pwd_login>
-    <email_login v-if="type===2" @ok="handler"></email_login>
+    <pwd_login  v-if="store.siteInfo.login.usernamePwdLogin && type === 1" @ok="handler"></pwd_login>
+    <email_login v-if="store.siteInfo.login.emailLogin && type===2" @ok="handler"></email_login>
 
     <div class="form">
-      <div class="register">
+      <div class="register" v-if="store.siteInfo.login.emailLogin">
         <span v-if="type===1">还没有账号？ <a href="javascript:void 0" @click="type=2">去注册</a></span>
         <span v-if="type===2">已有账号 <a href="javascript:void 0" @click="type=1">去登录</a></span>
       </div>
-      <div class="other">第三方登录</div>
+      <template v-if="store.siteInfo.login.qqLogin">
+        <div class="other">第三方登录</div>
+        <div class="other_login">
+          <img src="@/assets/img/QQ.svg" alt="">
+        </div>
+      </template>
 
-      <div class="other_login">
-        <img src="@/assets/img/QQ.svg" alt="">
-      </div>
     </div>
   </Modal>
 </template>
