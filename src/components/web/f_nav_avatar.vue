@@ -7,6 +7,7 @@ const store = userStorei()
 
 function goRouter(name: string) {
   if (name === "exit") {
+    store.userLogout()
     return
   }
   router.push({name: name})

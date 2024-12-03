@@ -30,7 +30,7 @@ export function userInfoApi(userID: number): Promise<baseResponse<userInfoType>>
 }
 
 export function userLogoutApi(): Promise<baseResponse<string>> {
-    return useAxios.post("/api/logout")
+    return useAxios.delete("/api/user/logout")
 }
 
 export function articleCategoryOptionsApi(params?: paramsType): Promise<baseResponse<optionsType[]>> {
