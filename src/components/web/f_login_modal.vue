@@ -7,11 +7,14 @@ import {reactive, ref} from "vue";
 import {userStorei} from "@/stores/user_store";
 import Pwd_login from "@/components/web/login/pwd_login.vue";
 import Email_login from "@/components/web/login/email_login.vue";
+import router from "@/router";
 
 const store = userStorei()
 
 interface Props {
   visible: boolean
+  to?: string
+  reload?: boolean
 }
 
 const props = defineProps<Props>()
@@ -32,6 +35,15 @@ async function handler(data: string) {
   Message.success("登录成功")
   store.saveUserInfo(data)
   emits("update:visible", false)
+  if (props.to) {
+    // 跳转到指定页面
+    router.push(props.to)
+  }
+  if (props.reload) {
+    setTimeout(() => {
+      location.reload()
+    }, 500)
+  }
   setTimeout(() => {
     emits("destruction")
   }, 1000)
@@ -46,7 +58,7 @@ async function handler(data: string) {
       <img src="@/assets/img/banner.png" alt="">
     </div>
 
-    <pwd_login  v-if="store.siteInfo.login.usernamePwdLogin && type === 1" @ok="handler"></pwd_login>
+    <pwd_login v-if="store.siteInfo.login.usernamePwdLogin && type === 1" @ok="handler"></pwd_login>
     <email_login v-if="store.siteInfo.login.emailLogin && type===2" @ok="handler"></email_login>
 
     <div class="form">

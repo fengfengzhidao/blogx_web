@@ -1,17 +1,25 @@
 import F_login_modal from "@/components/web/f_login_modal.vue";
 import {createApp, defineComponent, h, ref} from "vue";
 
-const visible = ref<boolean|undefined>(undefined)
-export function showLogin() {
-    if (visible.value === undefined){
+const visible = ref<boolean | undefined>(undefined)
+
+interface options {
+    to?: string // 将要去哪里
+    reload?: boolean // 是否刷新页面
+}
+
+export function showLogin(options?: options) {
+    if (visible.value === undefined) {
         // 生成虚拟dom
         const component = defineComponent({
-            render: ()=>h(F_login_modal, {
+            render: () => h(F_login_modal, {
                 visible: visible.value,
-                "onUpdate:visible": ()=>{
+                to: options?.to,
+                reload: options?.reload,
+                "onUpdate:visible": () => {
                     visible.value = false
                 },
-                onDestruction(){
+                onDestruction() {
                     // 销毁组件
                     app.unmount()
                     document.getElementById("login_100")?.remove()
@@ -28,7 +36,6 @@ export function showLogin() {
         app.mount(div)
 
         document.body.append(div)
-
 
 
     }

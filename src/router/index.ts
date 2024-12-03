@@ -192,7 +192,7 @@ router.beforeEach((to, from, next) => {
         if (!store.isLogin) {
             // 没有登陆
             Message.warning("需要登陆")
-            showLogin()
+            showLogin({to: to.path, reload: true})
             return
         }
 
