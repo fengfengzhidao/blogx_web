@@ -19,6 +19,12 @@ const form = reactive<emailRegisterType>({
   rePwd: ""
 })
 
+function rePwdValida(value: string | undefined, callback: (error?: string) => void) {
+  if (value !== form.pwd) {
+    callback("两次密码不一致")
+  }
+}
+
 async function handler() {
   const val = await formRef.value.validate()
   if (val) return
@@ -34,14 +40,14 @@ async function handler() {
 
 <template>
   <Form ref="formRef" :model="form" :label-col-props="{span: 0}" :wrapper-col-props="{span: 24}">
-    <FormItem field="val" :rules="[{required: true, message:'请输入邮箱验证码'}]">
-      <Input v-model="form.emailCode" placeholder="用户名"></Input>
+    <FormItem field="emailCode" :rules="[{required: true, message:'请输入邮箱验证码'}]">
+      <Input v-model="form.emailCode" placeholder="邮箱验证码"></Input>
     </FormItem>
     <FormItem field="pwd" :rules="[{required: true, message:'请输入密码'}]">
       <Input v-model="form.pwd" type="password" placeholder="密码"></Input>
     </FormItem>
-    <FormItem field="rePwd" :rules="[{required: true, message:'请输入确认密码'}]">
-      <Input v-model="form.rePwd" type="password" placeholder="密码"></Input>
+    <FormItem field="rePwd" :rules="[{required: true, message:'请输入确认密码'}, {validator: rePwdValida}]">
+      <Input v-model="form.rePwd" type="password" placeholder="确认密码"></Input>
     </FormItem>
     <FormItem>
       <Button type="primary" @click="handler" long>注册</Button>

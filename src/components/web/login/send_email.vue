@@ -27,7 +27,7 @@ async function handler() {
     return
   }
   Message.success(res.msg)
-  emits("ok", res.data)
+  emits("ok", res.data.emailID)
 }
 
 
