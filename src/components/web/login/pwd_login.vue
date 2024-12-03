@@ -3,6 +3,7 @@ import {pwdLoginApi, type pwdLoginRequest} from "@/api/user_api";
 import {Button, Form, FormItem, Input, Message} from "@arco-design/web-vue";
 import {reactive, ref} from "vue";
 import {userStorei} from "@/stores/user_store";
+import F_captcha from "@/components/web/f_captcha.vue";
 
 const store = userStorei()
 const form = reactive<pwdLoginRequest>({
@@ -14,13 +15,15 @@ const form = reactive<pwdLoginRequest>({
 
 const formRef = ref()
 const emits = defineEmits(["ok"])
-
+const captchaRef = ref()
 async function handler() {
   const val = await formRef.value.validate()
   if (val) return
   const res = await pwdLoginApi(form)
   if (res.code) {
     Message.error(res.msg)
+    // 只要失败，图形验证码就得从来
+    captchaRef.value?.getData()
     return
   }
   emits("ok", res.data)
@@ -35,9 +38,9 @@ async function handler() {
     <FormItem field="password" :rules="[{required: true, message:'请输入密码'}]">
       <Input v-model="form.password" type="password" placeholder="密码"></Input>
     </FormItem>
-    <FormItem content-class="captcha_item" v-if="store.siteInfo.login.captcha">
+    <FormItem content-class="captcha_item" field="captchaCode"  :rules="[{required: true, message:'请输入图形验证码'}]" v-if="store.siteInfo.login.captcha">
       <Input v-model="form.captchaCode" placeholder="图形验证码"></Input>
-      <img src="https://modao.cc/uploads7/images/13792/137926380/v2_sk3ooq.png" alt="">
+      <f_captcha ref="captchaRef" v-model="form.captchaID"></f_captcha>
     </FormItem>
     <FormItem>
       <Button type="primary" @click="handler" long>登录</Button>

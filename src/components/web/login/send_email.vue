@@ -4,6 +4,7 @@ import {Button, Form, FormItem, Input, Message} from "@arco-design/web-vue";
 import {reactive, ref} from "vue";
 import {sendEmailApi, type sendEmailType} from "@/api/user_api";
 import {userStorei} from "@/stores/user_store";
+import F_captcha from "@/components/web/f_captcha.vue";
 
 const store = userStorei()
 const emits = defineEmits(["ok"])
@@ -14,6 +15,7 @@ const form = reactive<sendEmailType>({
   captchaCode: "",
 })
 const formRef = ref()
+const captchaRef = ref()
 
 async function handler() {
   const val = await formRef.value.validate()
@@ -21,6 +23,7 @@ async function handler() {
   const res = await sendEmailApi(form)
   if (res.code) {
     Message.error(res.msg)
+    captchaRef.value?.getData()
     return
   }
   Message.success(res.msg)
@@ -35,9 +38,10 @@ async function handler() {
     <FormItem field="email" :rules="[{required: true, message:'请输入邮箱'}]">
       <Input v-model="form.email" placeholder="邮箱"></Input>
     </FormItem>
-    <FormItem content-class="captcha_item"  v-if="store.siteInfo.login.captcha">
+    <FormItem content-class="captcha_item" v-if="store.siteInfo.login.captcha" field="captchaCode"
+              :rules="[{required: true, message:'请输入图形验证码'}]">
       <Input v-model="form.captchaCode" placeholder="图形验证码"></Input>
-      <img src="https://modao.cc/uploads7/images/13792/137926380/v2_sk3ooq.png" alt="">
+      <f_captcha ref="captchaRef" v-model="form.captchaID"></f_captcha>
     </FormItem>
     <FormItem>
       <Button type="primary" @click="handler" long>验证邮箱</Button>
@@ -46,7 +50,7 @@ async function handler() {
 </template>
 
 <style lang="less">
-.captcha_item{
+.captcha_item {
   img {
     width: 93px;
     height: 32px;
