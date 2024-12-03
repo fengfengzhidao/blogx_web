@@ -1,27 +1,20 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
-import {qqLoginApi} from "@/api/user_api";
-import {Message} from "@arco-design/web-vue";
-import {userStorei} from "@/stores/user_store";
 import router from "@/router";
 
-const store = userStorei()
 const route = useRoute()
-
 
 async function qqLogin() {
   const code = route.query.code
   if (!code) {
     return
   }
-  const res = await qqLoginApi(code as string)
-  if (res.code) {
-    Message.error(res.msg)
+  if (window.opener === null){
+    // 用户手动访问这个页面
+    router.push("/")
     return
   }
-  Message.success(res.msg)
-  store.saveUserInfo(res.data)
-  router.push("/")
+  window.opener.postMessage({code}, '*');
 }
 
 qqLogin()
