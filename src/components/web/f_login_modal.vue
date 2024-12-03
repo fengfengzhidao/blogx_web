@@ -8,6 +8,7 @@ import {userStorei} from "@/stores/user_store";
 import Pwd_login from "@/components/web/login/pwd_login.vue";
 import Email_login from "@/components/web/login/email_login.vue";
 import router from "@/router";
+import {siteQQLoginUrlApi} from "@/api/site_api";
 
 const store = userStorei()
 
@@ -49,6 +50,14 @@ async function handler(data: string) {
   }, 1000)
 }
 
+async function qqLogin() {
+  const res = await siteQQLoginUrlApi()
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  window.open(res.data)
+}
 </script>
 
 <template>
@@ -69,7 +78,7 @@ async function handler(data: string) {
       <template v-if="store.siteInfo.login.qqLogin">
         <div class="other">第三方登录</div>
         <div class="other_login">
-          <img src="@/assets/img/QQ.svg" alt="">
+          <img @click="qqLogin" src="@/assets/img/QQ.svg" alt="">
         </div>
       </template>
 

@@ -101,3 +101,8 @@ export interface emailRegisterType {
 export function emailRegisterApi(data: emailRegisterType): Promise<baseResponse<string>> {
     return useAxios.post("/api/user/email", data)
 }
+
+
+export function qqLoginApi(code:string):Promise<baseResponse<string>>{
+    return  useAxios.post("/api/user/qq", {code})
+}
