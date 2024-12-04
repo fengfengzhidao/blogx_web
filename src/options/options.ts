@@ -22,3 +22,9 @@ export const logLevelOptions = [
     {label: "warn", value: 2, color: "orange"},
     {label: "error", value: 3, color: "red"},
 ]
+
+export const registerSourceOptions = [
+    {label: "邮箱注册", value: 1, color: "blue"},
+    {label: "QQ注册", value: 2, color: "orange"},
+    {label: "命令行注册", value: 3, color: "red"},
+]

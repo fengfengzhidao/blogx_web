@@ -106,3 +106,25 @@ export function emailRegisterApi(data: emailRegisterType): Promise<baseResponse<
 export function qqLoginApi(code:string):Promise<baseResponse<string>>{
     return  useAxios.post("/api/user/qq", {code})
 }
+
+export interface userDetailType {
+    "id": number,
+    "createdAt": string
+    "username": string
+    "nickname":string
+    "avatar":string
+    "abstract": string
+    "registerSource":  number
+    "codeAge": number
+    "role":number
+    "userID":number
+    "likeTags"?: string[],
+    "updateUsernameDate"?: string,
+    "openCollect": boolean,
+    "openFollow": boolean,
+    "openFans": boolean,
+    "homeStyleID": number
+}
+export function userDetailApi():Promise<baseResponse<userDetailType>>{
+    return useAxios.get("/api/user/detail")
+}

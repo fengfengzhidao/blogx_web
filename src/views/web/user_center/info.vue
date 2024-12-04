@@ -1,20 +1,25 @@
 <script setup lang="ts">
 import {userStorei} from "@/stores/user_store";
+import {userCenterStorei} from "@/stores/user_center_store";
 
 const store = userStorei()
+const userCenterStore = userCenterStorei()
 import {IconEdit} from "@arco-design/web-vue/es/icon";
+import {dateTimeFormat} from "../../../utils/date";
+import F_label from "@/components/common/f_label.vue";
+import {registerSourceOptions} from "@/options/options";
 </script>
 
 <template>
   <div class="user_center_info_view">
     <div class="top">
       <div class="avatar">
-        <a-avatar :image-url="store.userInfo.avatar" :size="60"></a-avatar>
+        <a-avatar :image-url="userCenterStore.userDetail.avatar" :size="60"></a-avatar>
       </div>
       <div class="info">
-        <div class="title">{{ store.userInfo.nickName }}</div>
+        <div class="title">{{ userCenterStore.userDetail.nickname }}</div>
         <div class="code_age">
-          <a-tag>码龄1年</a-tag>
+          <a-tag>码龄{{ userCenterStore.userDetail.codeAge }}年</a-tag>
         </div>
       </div>
     </div>
@@ -22,22 +27,24 @@ import {IconEdit} from "@arco-design/web-vue/es/icon";
       <div class="head">基本信息</div>
       <div class="body">
         <a-form :label-col-props="{span: 2}" label-align="left" :wrapper-col-props="{span: 22}">
-          <a-form-item label="用户昵称">fengfeng <a href="javascript:void 0">
+          <a-form-item label="用户昵称">{{ userCenterStore.userDetail.nickname }} <a href="javascript:void 0">
             <IconEdit></IconEdit>
             编辑</a></a-form-item>
           <a-form-item label="用户名">
-            ffzd
+            {{ userCenterStore.userDetail.username }}
             <template #help>登录的唯一标识，30天内可修改一次</template>
           </a-form-item>
           <a-form-item label="简介">
-            <span>sdgdsgsdg</span>
+            <span>{{  userCenterStore.userDetail.abstract }}</span>
             <a href="javascript:void 0">
               <IconEdit></IconEdit>
               编辑</a>
 
           </a-form-item>
-          <a-form-item label="注册时间">2021-12-12 22:11:11</a-form-item>
-          <a-form-item label="注册来源">qq登录</a-form-item>
+          <a-form-item label="注册时间">{{ dateTimeFormat(userCenterStore.userDetail.createdAt)}}</a-form-item>
+          <a-form-item label="注册来源">
+            <f_label :options="registerSourceOptions" :value="userCenterStore.userDetail.registerSource"></f_label>
+          </a-form-item>
         </a-form>
       </div>
     </div>
@@ -95,6 +102,7 @@ import {IconEdit} from "@arco-design/web-vue/es/icon";
       border-bottom: @f_border;
       font-weight: 600;
       color: var(--color-text-1);
+      font-size: 16px;
     }
 
     .body {
@@ -114,8 +122,10 @@ import {IconEdit} from "@arco-design/web-vue/es/icon";
       .title {
         font-weight: 600;
         color: var(--color-text-1);
+        font-size: 16px;
       }
-      .abs{
+
+      .abs {
         margin-left: 10px;
         color: var(--color-text-2);
       }

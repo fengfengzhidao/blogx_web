@@ -2,6 +2,11 @@
 
 import F_nav from "@/components/web/f_nav.vue";
 import F_main from "@/components/web/f_main.vue";
+import {userCenterStorei} from "@/stores/user_center_store";
+
+const userCenterStore = userCenterStorei()
+userCenterStore.getUserDetail()
+
 </script>
 
 <template>
@@ -43,11 +48,12 @@ import F_main from "@/components/web/f_main.vue";
         align-items: center;
         color: var(--color-text-2);
       }
-      a:hover{
+
+      a:hover {
         background: var(--color-fill-1);
       }
 
-      a.router-link-active{
+      a.router-link-active {
         background: var(--color-fill-1);
         color: rgb(var(--arcoblue-6));
       }
