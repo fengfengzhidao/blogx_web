@@ -31,7 +31,7 @@ function goRouter(name: string) {
           <a-statistic extra="文章" :value="store.userInfo.articleCount"/>
         </div>
         <div class="menu">
-          <div class="item" @click="goRouter('userCenter')"><i class="iconfont icon-list"></i> <span>个人中心</span>
+          <div class="item" @click="goRouter('userCenterInfo')"><i class="iconfont icon-list"></i> <span>个人中心</span>
           </div>
           <div class="item" @click="goRouter('articleManage')"><i class="iconfont icon-wenzhangguanli"></i>
             <span>文章管理</span></div>

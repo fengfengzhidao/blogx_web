@@ -18,6 +18,23 @@ const router = createRouter({
                     name: "web_home",
                     path: "",
                     component: () => import("@/views/web/web_home.vue"),
+                },
+                {
+                    name: "userCenter",
+                    path: "center",
+                    component: () => import("@/views/web/user_center/index.vue"),
+                    children: [
+                        {
+                            name: "userCenterInfo",
+                            path: "info",
+                            component: () => import("@/views/web/user_center/info.vue"),
+                        },
+                        {
+                            name: "userCenterAccount",
+                            path: "account",
+                            component: () => import("@/views/web/user_center/account.vue"),
+                        }
+                    ]
                 }
             ]
         },
@@ -42,23 +59,6 @@ const router = createRouter({
                     meta: {
                         title: "数据统计",
                     }
-                },
-                {
-                    name: "userCenter",
-                    path: "user_center",
-                    meta: {
-                        title: "个人中心",
-                    },
-                    children: [
-                        {
-                            name: "userInfo",
-                            path: "user_info",
-                            meta: {
-                                title: "个人信息"
-                            },
-                            component: () => import("@/views/admin/user_center/index.vue"),
-                        }
-                    ]
                 },
                 {
                     name: "userManage",
