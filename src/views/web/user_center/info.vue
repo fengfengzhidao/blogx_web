@@ -8,6 +8,26 @@ import {IconEdit} from "@arco-design/web-vue/es/icon";
 import {dateTimeFormat} from "../../../utils/date";
 import F_label from "@/components/common/f_label.vue";
 import {registerSourceOptions} from "@/options/options";
+import {nextTick, ref} from "vue";
+
+
+const showEdit = ref(false)
+const inputRef = ref()
+function editClick() {
+  showEdit.value = true
+  nextTick(()=>{
+   inputRef.value.focus()
+  })
+}
+function inputBlur(){
+  showEdit.value = false
+}
+
+function inputChange(val: string){
+  console.log(val)
+}
+
+
 </script>
 
 <template>
@@ -27,7 +47,12 @@ import {registerSourceOptions} from "@/options/options";
       <div class="head">基本信息</div>
       <div class="body">
         <a-form :label-col-props="{span: 2}" label-align="left" :wrapper-col-props="{span: 22}">
-          <a-form-item label="用户昵称">{{ userCenterStore.userDetail.nickname }} <a href="javascript:void 0">
+          <a-form-item label="用户昵称">
+
+            <span v-if="!showEdit">{{ userCenterStore.userDetail.nickname }}</span>
+            <a-input @change="inputChange" @blur="inputBlur" ref="inputRef" v-else v-model="userCenterStore.userDetail.nickname" placeholder="用户昵称"></a-input>
+
+            <a class="edit" @click="editClick" href="javascript:void 0">
             <IconEdit></IconEdit>
             编辑</a></a-form-item>
           <a-form-item label="用户名">
@@ -35,13 +60,13 @@ import {registerSourceOptions} from "@/options/options";
             <template #help>登录的唯一标识，30天内可修改一次</template>
           </a-form-item>
           <a-form-item label="简介">
-            <span>{{  userCenterStore.userDetail.abstract }}</span>
-            <a href="javascript:void 0">
+            <span>{{ userCenterStore.userDetail.abstract }}</span>
+            <a class="edit" href="javascript:void 0">
               <IconEdit></IconEdit>
               编辑</a>
 
           </a-form-item>
-          <a-form-item label="注册时间">{{ dateTimeFormat(userCenterStore.userDetail.createdAt)}}</a-form-item>
+          <a-form-item label="注册时间">{{ dateTimeFormat(userCenterStore.userDetail.createdAt) }}</a-form-item>
           <a-form-item label="注册来源">
             <f_label :options="registerSourceOptions" :value="userCenterStore.userDetail.registerSource"></f_label>
           </a-form-item>
@@ -109,6 +134,15 @@ import {registerSourceOptions} from "@/options/options";
       padding: 10px 20px 20px 20px;
 
       color: var(--color-text-2);
+
+      .arco-form {
+        .edit {
+          margin-left: 5px;
+        }
+        .arco-input-wrapper{
+          width: fit-content;
+        }
+      }
     }
   }
 
