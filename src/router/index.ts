@@ -175,7 +175,7 @@ const router = createRouter({
         {
             name: "test",
             path: "/test",
-            component: () => import("@/test/echarts.vue"),
+            component: () => import("@/test/img_cutter.vue"),
         },
         {
             name: "notfound",
