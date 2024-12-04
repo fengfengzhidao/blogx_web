@@ -9,24 +9,23 @@ import {dateTimeFormat} from "../../../utils/date";
 import F_label from "@/components/common/f_label.vue";
 import {registerSourceOptions} from "@/options/options";
 import {nextTick, ref} from "vue";
+import F_edit_input from "@/components/common/input/f_edit_input.vue";
+import {userDetailUpdateApi, type userDetailUpdateRequest} from "@/api/user_api";
+import {Message} from "@arco-design/web-vue";
 
+async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "abstract", value: string) {
+  const data: userDetailUpdateRequest = {}
+  data[column] = value
 
-const showEdit = ref(false)
-const inputRef = ref()
-function editClick() {
-  showEdit.value = true
-  nextTick(()=>{
-   inputRef.value.focus()
-  })
+  const res = await userDetailUpdateApi(data)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  userCenterStore.getUserDetail()
+
 }
-function inputBlur(){
-  showEdit.value = false
-}
-
-function inputChange(val: string){
-  console.log(val)
-}
-
 
 </script>
 
@@ -48,23 +47,16 @@ function inputChange(val: string){
       <div class="body">
         <a-form :label-col-props="{span: 2}" label-align="left" :wrapper-col-props="{span: 22}">
           <a-form-item label="用户昵称">
-
-            <span v-if="!showEdit">{{ userCenterStore.userDetail.nickname }}</span>
-            <a-input @change="inputChange" @blur="inputBlur" ref="inputRef" v-else v-model="userCenterStore.userDetail.nickname" placeholder="用户昵称"></a-input>
-
-            <a class="edit" @click="editClick" href="javascript:void 0">
-            <IconEdit></IconEdit>
-            编辑</a></a-form-item>
+            <f_edit_input placeholder="用户昵称" @ok="userUpdateColumn('nickname', $event)"
+                          :value="userCenterStore.userDetail.nickname"></f_edit_input>
+          </a-form-item>
           <a-form-item label="用户名">
             {{ userCenterStore.userDetail.username }}
             <template #help>登录的唯一标识，30天内可修改一次</template>
           </a-form-item>
           <a-form-item label="简介">
-            <span>{{ userCenterStore.userDetail.abstract }}</span>
-            <a class="edit" href="javascript:void 0">
-              <IconEdit></IconEdit>
-              编辑</a>
-
+            <f_edit_input placeholder="用户简介" type="textarea" @ok="userUpdateColumn('abstract', $event)"
+                          :value="userCenterStore.userDetail.abstract"></f_edit_input>
           </a-form-item>
           <a-form-item label="注册时间">{{ dateTimeFormat(userCenterStore.userDetail.createdAt) }}</a-form-item>
           <a-form-item label="注册来源">
@@ -136,12 +128,7 @@ function inputChange(val: string){
       color: var(--color-text-2);
 
       .arco-form {
-        .edit {
-          margin-left: 5px;
-        }
-        .arco-input-wrapper{
-          width: fit-content;
-        }
+
       }
     }
   }
