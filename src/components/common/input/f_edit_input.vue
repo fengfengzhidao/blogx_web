@@ -6,6 +6,7 @@ interface Props {
   value: string
   type?: "textarea"
   placeholder?: string
+  noEdit?: boolean
 }
 
 const props = defineProps<Props>()
@@ -48,7 +49,7 @@ watch(() => props.value, () => {
     </template>
 
 
-    <a class="edit" @click="editClick" href="javascript:void 0">
+    <a class="edit" v-if="!props.noEdit" @click="editClick" href="javascript:void 0">
       <IconEdit></IconEdit>
       编辑</a>
   </div>

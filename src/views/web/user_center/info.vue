@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {userStorei} from "@/stores/user_store";
 import {userCenterStorei} from "@/stores/user_center_store";
+import {IconCamera} from "@arco-design/web-vue/es/icon";
 
 const store = userStorei()
 const userCenterStore = userCenterStorei()
@@ -12,10 +13,12 @@ import {nextTick, ref} from "vue";
 import F_edit_input from "@/components/common/input/f_edit_input.vue";
 import {userDetailUpdateApi, type userDetailUpdateRequest} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
+import F_avatar_cutter from "@/components/web/f_avatar_cutter.vue";
 
 async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "abstract", value: string) {
   const data: userDetailUpdateRequest = {}
   data[column] = value
+  console.log(column, value)
 
   const res = await userDetailUpdateApi(data)
   if (res.code) {
@@ -33,7 +36,14 @@ async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "ab
   <div class="user_center_info_view">
     <div class="top">
       <div class="avatar">
-        <a-avatar :image-url="userCenterStore.userDetail.avatar" :size="60"></a-avatar>
+        <div class="avatar_inner">
+          <f_avatar_cutter v-if="userCenterStore.userDetail.registerSource !== 2" @ok="userUpdateColumn('avatar', $event)">
+            <div class="camera_bg" title="头像上传">
+              <IconCamera></IconCamera>
+            </div>
+          </f_avatar_cutter>
+          <a-avatar :image-url="userCenterStore.userDetail.avatar" :size="60"></a-avatar>
+        </div>
       </div>
       <div class="info">
         <div class="title">{{ userCenterStore.userDetail.nickname }}</div>
@@ -45,9 +55,11 @@ async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "ab
     <div class="base_info">
       <div class="head">基本信息</div>
       <div class="body">
-        <a-form :label-col-props="{span: 2}" label-align="left" :wrapper-col-props="{span: 22}">
+        <a-form :model="userCenterStore.userDetail" :label-col-props="{span: 2}" label-align="left"
+                :wrapper-col-props="{span: 22}">
           <a-form-item label="用户昵称">
-            <f_edit_input placeholder="用户昵称" @ok="userUpdateColumn('nickname', $event)"
+            <f_edit_input placeholder="用户昵称" :no-edit="userCenterStore.userDetail.registerSource === 2"
+                          @ok="userUpdateColumn('nickname', $event)"
                           :value="userCenterStore.userDetail.nickname"></f_edit_input>
           </a-form-item>
           <a-form-item label="用户名">
@@ -55,7 +67,8 @@ async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "ab
             <template #help>登录的唯一标识，30天内可修改一次</template>
           </a-form-item>
           <a-form-item label="简介">
-            <f_edit_input placeholder="用户简介" type="textarea" @ok="userUpdateColumn('abstract', $event)"
+            <f_edit_input placeholder="用户简介"
+                          type="textarea" @ok="userUpdateColumn('abstract', $event)"
                           :value="userCenterStore.userDetail.abstract"></f_edit_input>
           </a-form-item>
           <a-form-item label="注册时间">{{ dateTimeFormat(userCenterStore.userDetail.createdAt) }}</a-form-item>
@@ -96,6 +109,34 @@ async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "ab
 
     .avatar {
       width: 80px;
+
+      .avatar_inner {
+        position: relative;
+        width: 60px;
+
+        .camera_bg {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 2;
+          background: rgba(0, 0, 0, 0.4);
+          opacity: 0;
+          transition: all .3s;
+          cursor: pointer;
+
+          svg {
+            color: white;
+            font-size: 20px;
+          }
+        }
+
+        &:hover {
+          .camera_bg {
+            opacity: 1;
+          }
+        }
+      }
     }
 
     .info {

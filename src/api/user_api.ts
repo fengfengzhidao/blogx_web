@@ -114,7 +114,7 @@ export interface userDetailType {
     "nickname": string
     "avatar": string
     "abstract": string
-    "registerSource": number
+    "registerSource": number // 1 email 2 qq 3
     "codeAge": number
     "role": number
     "userID": number
