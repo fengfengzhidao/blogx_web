@@ -14,10 +14,17 @@ import F_edit_input from "@/components/common/input/f_edit_input.vue";
 import {userDetailUpdateApi, type userDetailUpdateRequest} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import F_avatar_cutter from "@/components/web/f_avatar_cutter.vue";
+import F_tags_input from "@/components/common/input/f_tags_input.vue";
 
-async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "abstract", value: string) {
+async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "abstract" | "likeTags", value: string | string[]) {
   const data: userDetailUpdateRequest = {}
-  data[column] = value
+  if (column === "likeTags") {
+    value = value as string[]
+    data[column] = value
+  } else {
+    value = value as string
+    data[column] = value
+  }
   console.log(column, value)
 
   const res = await userDetailUpdateApi(data)
@@ -30,14 +37,27 @@ async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "ab
 
 }
 
-function isUpdateUsername(updateTime?: string):boolean{
-  if (!updateTime){
+const tags = ref<string[]>([])
+
+function editTag(val: string[]) {
+  tags.value = val
+}
+
+function updateTag(oldTags?: string[]) {
+  if (JSON.stringify(oldTags) === JSON.stringify(tags.value)){
+    return
+  }
+  userUpdateColumn("likeTags", tags.value)
+}
+
+function isUpdateUsername(updateTime?: string): boolean {
+  if (!updateTime) {
     return true
   }
   const t1 = new Date(updateTime)
   const t2 = new Date()
   const subDay = (t2 - t1) / 1000 / 60 / 60 / 24
-  if (subDay > 30){
+  if (subDay > 30) {
     return true
   }
   return false
@@ -52,7 +72,8 @@ function isUpdateUsername(updateTime?: string):boolean{
     <div class="top">
       <div class="avatar">
         <div class="avatar_inner">
-          <f_avatar_cutter v-if="userCenterStore.userDetail.registerSource !== 2" @ok="userUpdateColumn('avatar', $event)">
+          <f_avatar_cutter v-if="userCenterStore.userDetail.registerSource !== 2"
+                           @ok="userUpdateColumn('avatar', $event)">
             <div class="camera_bg" title="头像上传">
               <IconCamera></IconCamera>
             </div>
@@ -78,7 +99,9 @@ function isUpdateUsername(updateTime?: string):boolean{
                           :value="userCenterStore.userDetail.nickname"></f_edit_input>
           </a-form-item>
           <a-form-item label="用户名">
-            <f_edit_input placeholder="用户名"   @ok="userUpdateColumn('username', $event)" :no-edit="!isUpdateUsername(userCenterStore.userDetail.updateUsernameDate)" :value="userCenterStore.userDetail.username"></f_edit_input>
+            <f_edit_input placeholder="用户名" @ok="userUpdateColumn('username', $event)"
+                          :no-edit="!isUpdateUsername(userCenterStore.userDetail.updateUsernameDate)"
+                          :value="userCenterStore.userDetail.username"></f_edit_input>
             <template #help>登录的唯一标识，30天内可修改一次</template>
           </a-form-item>
           <a-form-item label="简介">
@@ -99,11 +122,13 @@ function isUpdateUsername(updateTime?: string):boolean{
         <div class="abs">请您选择感兴趣的技术领域，BlogX会根据您的标签帮您找到 更适合您的内容</div>
       </div>
       <div class="body">
-        <a-tag>后端开发</a-tag>
-        <a-tag>前端开发</a-tag>
-        <a-tag>django</a-tag>
-        <a-tag>gorm</a-tag>
-        <a-tag>mysql</a-tag>
+        <div>
+          <f_tags_input :value="userCenterStore.userDetail.likeTags"
+                        @ok="editTag"></f_tags_input>
+        </div>
+        <div>
+          <a-button type="primary" @click="updateTag(userCenterStore.userDetail.likeTags)" size="mini">更新</a-button>
+        </div>
       </div>
     </div>
   </div>
@@ -211,11 +236,6 @@ function isUpdateUsername(updateTime?: string):boolean{
     .body {
       padding: 10px 20px 20px 20px;
 
-      span {
-        margin-right: 10px;
-        margin-bottom: 10px;
-        cursor: pointer;
-      }
     }
   }
 }
