@@ -124,6 +124,8 @@ export interface userDetailType {
     "openFollow": boolean,
     "openFans": boolean,
     "homeStyleID": number
+    email: string
+    usePassword: boolean
 }
 
 export function userDetailApi(): Promise<baseResponse<userDetailType>> {
@@ -144,4 +146,14 @@ export interface userDetailUpdateRequest {
 
 export function userDetailUpdateApi(data: userDetailUpdateRequest): Promise<baseResponse<string>> {
     return useAxios.put("/api/user", data)
+}
+
+export interface userPwdUpdateType {
+    "oldPwd": string
+    "pwd": string
+    rePwd: string
+}
+
+export function userPwdUpdateApi(data: userPwdUpdateType):Promise<baseResponse<string>>{
+    return useAxios.put("/api/user/password", data)
 }

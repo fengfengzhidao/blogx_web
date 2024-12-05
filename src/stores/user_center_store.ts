@@ -25,7 +25,9 @@ export const userCenterStorei = defineStore('userCenterStore', {
                 "openCollect": false,
                 "openFollow": false,
                 "openFans": false,
-                "homeStyleID": 0
+                "homeStyleID": 0,
+                email: "",
+                usePassword: false,
             }
         }
     },
