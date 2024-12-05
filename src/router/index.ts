@@ -43,6 +43,11 @@ const router = createRouter({
                             name: "userCenterPrivacy",
                             path: "privacy",
                             component: () => import("@/views/web/user_center/privacy.vue"),
+                        },
+                        {
+                            name: "userCenterHome",
+                            path: "home",
+                            component: () => import("@/views/web/user_center/home.vue"),
                         }
                     ]
                 }
