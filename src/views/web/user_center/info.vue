@@ -30,6 +30,21 @@ async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "ab
 
 }
 
+function isUpdateUsername(updateTime?: string):boolean{
+  if (!updateTime){
+    return true
+  }
+  const t1 = new Date(updateTime)
+  const t2 = new Date()
+  const subDay = (t2 - t1) / 1000 / 60 / 60 / 24
+  if (subDay > 30){
+    return true
+  }
+  return false
+
+}
+
+
 </script>
 
 <template>
@@ -63,7 +78,7 @@ async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "ab
                           :value="userCenterStore.userDetail.nickname"></f_edit_input>
           </a-form-item>
           <a-form-item label="用户名">
-            {{ userCenterStore.userDetail.username }}
+            <f_edit_input placeholder="用户名"   @ok="userUpdateColumn('username', $event)" :no-edit="!isUpdateUsername(userCenterStore.userDetail.updateUsernameDate)" :value="userCenterStore.userDetail.username"></f_edit_input>
             <template #help>登录的唯一标识，30天内可修改一次</template>
           </a-form-item>
           <a-form-item label="简介">
