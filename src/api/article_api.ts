@@ -89,3 +89,7 @@ export interface articleHistoryListRequest extends paramsType {
 export function articleHistoryListApi(params: articleHistoryListRequest): Promise<baseResponse<listResponse<articleHistoryListType>>> {
     return useAxios.get("/api/article/history", {params})
 }
+
+export function articleHistoryRemoveApi(idList: number[]): Promise<baseResponse<string>> {
+    return useAxios.delete("/api/article/history", {data: {idList}})
+}

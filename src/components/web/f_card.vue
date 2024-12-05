@@ -9,7 +9,7 @@ const props = defineProps<Props>()
 <template>
   <div class="f_card_com">
     <div class="head">{{ props.title }}</div>
-    <div class="body">
+    <div class="body scrollbar">
       <slot></slot>
     </div>
   </div>

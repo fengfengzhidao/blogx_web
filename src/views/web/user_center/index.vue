@@ -30,6 +30,9 @@ userCenterStore.getUserDetail()
 
 <style lang="less">
 .user_center_view {
+  .f_main_com{
+    height: calc(100vh - 60px);
+  }
   .f_container {
     display: flex;
     justify-content: space-between;

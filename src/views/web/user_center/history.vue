@@ -3,7 +3,12 @@
 import F_card from "@/components/web/f_card.vue";
 import F_user from "@/components/common/f_user.vue";
 import {reactive} from "vue";
-import {articleHistoryListApi, type articleHistoryListRequest, type articleHistoryListType} from "@/api/article_api";
+import {
+  articleHistoryListApi,
+  type articleHistoryListRequest,
+  type articleHistoryListType,
+  articleHistoryRemoveApi
+} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import type {listResponse} from "@/api";
 import {dateFormat} from "@/utils/date";
@@ -32,7 +37,7 @@ async function getData() {
   }
   data.count = res.data.count
   data.list = []
-  const dateMap :Record<string, articleHistoryListType[]> = {}
+  const dateMap: Record<string, articleHistoryListType[]> = {}
   for (const re of res.data.list) {
     const date = dateFormat(re.lookDate)
     const item = dateMap[date]
@@ -59,8 +64,14 @@ async function getData() {
 }
 
 
-async function removeHistory(item: articleHistoryListType){
-  console.log(item)
+async function removeHistory(item: articleHistoryListType) {
+  const res = await articleHistoryRemoveApi([item.articleID])
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  getData()
 }
 
 getData()
@@ -86,15 +97,16 @@ getData()
                   </div>
                 </div>
                 <div class="action">
-                  <a-button @click.stop="removeHistory(item)" type="primary" status="danger" size="mini">删除</a-button>
+                  <a-button type="primary" @click.stop="removeHistory(item)" status="danger" size="mini">删除</a-button>
                 </div>
               </div>
             </div>
           </template>
         </a-timeline-item>
       </a-timeline>
-      <div class="page">
-        <a-pagination @change="getData" v-model:current="params.page" :page-size="params.limit"  :total="data.count" show-total></a-pagination>
+      <div class="page" v-if="data.count > 0">
+        <a-pagination @change="getData" v-model:current="params.page" :page-size="params.limit" :total="data.count"
+                      show-total></a-pagination>
       </div>
 
     </f_card>
@@ -103,6 +115,14 @@ getData()
 
 <style lang="less">
 .user_center_history_view {
+  .f_card_com {
+    .body {
+      overflow-y: auto;
+      max-height: calc(100vh - 160px);
+    }
+  }
+
+
   .article_list {
     .item {
       display: flex;
@@ -115,7 +135,7 @@ getData()
       &:hover {
         background: var(--color-fill-1);
 
-        .action{
+        .action {
           opacity: 1;
         }
       }
@@ -161,7 +181,7 @@ getData()
     }
   }
 
-  .page{
+  .page {
     display: flex;
     justify-content: center;
     margin-top: 10px;
