@@ -67,6 +67,25 @@ export interface articleExamineRequest {
     msg: string
 }
 
-export function articleExamineApi(data: articleExamineRequest):Promise<baseResponse<string>>{
+export function articleExamineApi(data: articleExamineRequest): Promise<baseResponse<string>> {
     return useAxios.post("/api/article/examine", data)
+}
+
+export interface articleHistoryListType {
+    "id": number
+    "lookDate": string
+    "title": string
+    "cover": string
+    "nickname": string
+    "avatar": string
+    "userID": number
+    "articleID": number
+}
+
+export interface articleHistoryListRequest extends paramsType {
+    type: 1 | 2
+}
+
+export function articleHistoryListApi(params: articleHistoryListRequest): Promise<baseResponse<listResponse<articleHistoryListType>>> {
+    return useAxios.get("/api/article/history", {params})
 }

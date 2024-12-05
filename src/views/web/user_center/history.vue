@@ -2,44 +2,78 @@
 
 import F_card from "@/components/web/f_card.vue";
 import F_user from "@/components/common/f_user.vue";
+import {reactive} from "vue";
+import {articleHistoryListApi, type articleHistoryListRequest, type articleHistoryListType} from "@/api/article_api";
+import {Message} from "@arco-design/web-vue";
+import type {listResponse} from "@/api";
+import {dateFormat} from "@/utils/date";
+
+interface historyType {
+  date: string
+  articleList: articleHistoryListType[]
+}
+const data = reactive<listResponse<historyType>>({
+  list: [],
+  count: 0
+})
+/*
+[
+{date:"". articleList: []}
+
+]
+ */
+const params = reactive<articleHistoryListRequest>({
+  type: 1,
+})
+
+async function getData() {
+  const res = await articleHistoryListApi(params)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  data.count = res.data.count
+  data.list = []
+  const dateMap = {}
+  for (const re of res.data.list) {
+    const date = dateFormat(re.lookDate)
+    const item = dateMap[date]
+    if (item){
+      dateMap[date].push(re)
+    }else {
+      dateMap[date] = [re]
+    }
+  }
+  for (const key in dateMap) {
+    const value = dateMap[key]
+    data.list.push({
+      date: key,
+      articleList: value
+    })
+  }
+}
+
+getData()
+
+
 </script>
 
 <template>
   <div class="user_center_history_view">
     <f_card title="足迹">
       <a-timeline>
-        <a-timeline-item lineType="dashed">
-          今日
+        <a-timeline-item v-for="date in data.list" lineType="dashed">
+          {{  date.date  }}
           <template #label>
             <div class="article_list">
-              <div class="item" v-for="item in 6">
+              <div class="item" v-for="item in date.articleList">
                 <div class="cover">
-                  <img src="http://image.fengfengzhidao.com/gvb_1009/20231019173356__wallhaven-kxj3l1.jpg" alt="">
+                  <img v-if="item.cover" :src="item.cover" alt="">
                 </div>
                 <div class="info">
-                  <div class="title">文章名称</div>
+                  <div class="title">{{ item.title }}</div>
                   <div class="user">
-                    <f_user :size="30" nickname="xxx"
-                            avatar="http://thirdqq.qlogo.cn/ek_qqapp/AQO1J0yjVaGJA3gc2NhYXG2kdGHibjf0r2EEcAS2dE1EyXIBqmGiaJeFiaciaqKGmnCxQ1ekLK7CVm6rZYbu098RyuLKv10qm39DxiaCbowL2Ptrr7XVKBtw/0"></f_user>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </template>
-        </a-timeline-item>
-        <a-timeline-item lineType="dashed">
-          今日
-          <template #label>
-            <div class="article_list">
-              <div class="item" v-for="item in 6">
-                <div class="cover">
-                  <img src="http://image.fengfengzhidao.com/gvb_1009/20231019173356__wallhaven-kxj3l1.jpg" alt="">
-                </div>
-                <div class="info">
-                  <div class="title">文章名称</div>
-                  <div class="user">
-                    <f_user :size="30" nickname="xxx"
-                            avatar="http://thirdqq.qlogo.cn/ek_qqapp/AQO1J0yjVaGJA3gc2NhYXG2kdGHibjf0r2EEcAS2dE1EyXIBqmGiaJeFiaciaqKGmnCxQ1ekLK7CVm6rZYbu098RyuLKv10qm39DxiaCbowL2Ptrr7XVKBtw/0"></f_user>
+                    <f_user :size="30" :nickname="item.nickname" :avatar="item.avatar"></f_user>
                   </div>
                 </div>
               </div>
