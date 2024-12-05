@@ -7,23 +7,21 @@ import {articleHistoryListApi, type articleHistoryListRequest, type articleHisto
 import {Message} from "@arco-design/web-vue";
 import type {listResponse} from "@/api";
 import {dateFormat} from "@/utils/date";
+import {goArticle} from "@/utils/go_router";
 
 interface historyType {
   date: string
   articleList: articleHistoryListType[]
 }
+
 const data = reactive<listResponse<historyType>>({
   list: [],
   count: 0
 })
-/*
-[
-{date:"". articleList: []}
 
-]
- */
 const params = reactive<articleHistoryListRequest>({
   type: 1,
+  limit: 10,
 })
 
 async function getData() {
@@ -34,13 +32,13 @@ async function getData() {
   }
   data.count = res.data.count
   data.list = []
-  const dateMap = {}
+  const dateMap :Record<string, articleHistoryListType[]> = {}
   for (const re of res.data.list) {
     const date = dateFormat(re.lookDate)
     const item = dateMap[date]
-    if (item){
+    if (item) {
       dateMap[date].push(re)
-    }else {
+    } else {
       dateMap[date] = [re]
     }
   }
@@ -51,10 +49,21 @@ async function getData() {
       articleList: value
     })
   }
+
+  data.list.sort((a, b) => {
+    const ad = new Date(a.date).valueOf()
+    const bd = new Date(b.date).valueOf()
+    return bd - ad
+
+  })
+}
+
+
+async function removeHistory(item: articleHistoryListType){
+  console.log(item)
 }
 
 getData()
-
 
 </script>
 
@@ -63,10 +72,10 @@ getData()
     <f_card title="足迹">
       <a-timeline>
         <a-timeline-item v-for="date in data.list" lineType="dashed">
-          {{  date.date  }}
+          {{ date.date }}
           <template #label>
             <div class="article_list">
-              <div class="item" v-for="item in date.articleList">
+              <div class="item" @click="goArticle(item.articleID)" v-for="item in date.articleList">
                 <div class="cover">
                   <img v-if="item.cover" :src="item.cover" alt="">
                 </div>
@@ -76,11 +85,18 @@ getData()
                     <f_user :size="30" :nickname="item.nickname" :avatar="item.avatar"></f_user>
                   </div>
                 </div>
+                <div class="action">
+                  <a-button @click.stop="removeHistory(item)" type="primary" status="danger" size="mini">删除</a-button>
+                </div>
               </div>
             </div>
           </template>
         </a-timeline-item>
       </a-timeline>
+      <div class="page">
+        <a-pagination @change="getData" v-model:current="params.page" :page-size="params.limit"  :total="data.count" show-total></a-pagination>
+      </div>
+
     </f_card>
   </div>
 </template>
@@ -89,9 +105,29 @@ getData()
 .user_center_history_view {
   .article_list {
     .item {
-      height: 60px;
-      margin-bottom: 20px;
       display: flex;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      position: relative;
+      transition: all .3s;
+
+      &:hover {
+        background: var(--color-fill-1);
+
+        .action{
+          opacity: 1;
+        }
+      }
+
+      .action {
+        opacity: 0;
+        transition: all .3s;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
 
       .cover {
         img {
@@ -123,6 +159,12 @@ getData()
         }
       }
     }
+  }
+
+  .page{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
   }
 }
 </style>
