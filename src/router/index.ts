@@ -38,6 +38,11 @@ const router = createRouter({
                             name: "userCenterLoginRecord",
                             path: "login_record",
                             component: () => import("@/views/web/user_center/login_record.vue"),
+                        },
+                        {
+                            name: "userCenterPrivacy",
+                            path: "privacy",
+                            component: () => import("@/views/web/user_center/privacy.vue"),
                         }
                     ]
                 }

@@ -25,7 +25,6 @@ async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "ab
     value = value as string
     data[column] = value
   }
-  console.log(column, value)
 
   const res = await userDetailUpdateApi(data)
   if (res.code) {
@@ -54,8 +53,8 @@ function isUpdateUsername(updateTime?: string): boolean {
   if (!updateTime) {
     return true
   }
-  const t1 = new Date(updateTime)
-  const t2 = new Date()
+  const t1 = new Date(updateTime).valueOf()
+  const t2 = new Date().valueOf()
   const subDay = (t2 - t1) / 1000 / 60 / 60 / 24
   if (subDay > 30) {
     return true
