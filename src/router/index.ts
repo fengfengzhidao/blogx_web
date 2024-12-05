@@ -48,6 +48,11 @@ const router = createRouter({
                             name: "userCenterHome",
                             path: "home",
                             component: () => import("@/views/web/user_center/home.vue"),
+                        },
+                        {
+                            name: "userCenterHistory",
+                            path: "history",
+                            component: () => import("@/views/web/user_center/history.vue"),
                         }
                     ]
                 }
