@@ -70,6 +70,11 @@ const router = createRouter({
                             name: "platformArticleAdd",
                             path: "article_add",
                             component: () => import("@/views/web/platform/platform_article_add.vue"),
+                        },
+                        {
+                            name: "platformArticleEdit",
+                            path: "article/:id",
+                            component: () => import("@/views/web/platform/platform_article_edit.vue"),
                         }
                     ]
                 }
