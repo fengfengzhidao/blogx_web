@@ -7,6 +7,8 @@ import {reactive} from "vue";
 import {articleAddApi, type articleAddType} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import router from "@/router";
+import F_cover_cutter from "@/components/web/f_cover_cutter.vue";
+import {IconImage} from "@arco-design/web-vue/es/icon";
 
 const form = reactive<articleAddType>({
   title: "",
@@ -15,7 +17,7 @@ const form = reactive<articleAddType>({
   // categoryID: null,
   cover: "",
   tagList: [],
-  openComment: false
+  openComment: true
 })
 
 const formRef = ref()
@@ -33,6 +35,10 @@ async function create(status: 1 | 2) {
   router.push({name: 'platformArticle'})
 }
 
+function coverBack(data: string) {
+  form.cover = data
+}
+
 
 </script>
 
@@ -46,6 +52,36 @@ async function create(status: 1 | 2) {
         <a-form-item field="content" validate-trigger="blur" :rules="[{required: true, message:'请输入文章内容'}]">
           <MdEditor v-model="form.content" placeholder="请输入文章内容"></MdEditor>
         </a-form-item>
+        <a-collapse :default-active-key="[1]" :bordered="false">
+          <a-collapse-item header="更多设置" :key="1">
+            <a-form :label-col-props="{span: 4}" :wrapper-col-props="{span: 8}" class="form2" label-align="left"
+                    :model="form">
+              <a-form-item label="请选择文章分类">
+                <a-select v-model="form.categoryID" placeholder="文章分类"></a-select>
+              </a-form-item>
+              <a-form-item content-class="article_cover_col" label="设置文章封面">
+                <div class="up">
+                  <f_cover_cutter style="width: 100%" @ok="coverBack">
+                    <div class="cover_mask">
+                      <IconImage></IconImage>
+                      <span>点击上传封面图（选填）</span>
+                    </div>
+                  </f_cover_cutter>
+                </div>
+                <div class="show" v-if="form.cover">
+                  <a-image :src="form.cover" :height="60"></a-image>
+                </div>
+              </a-form-item>
+              <a-form-item label="文章标签">
+                <a-input-tag v-model="form.tagList" placeholder="请输入标签"></a-input-tag>
+              </a-form-item>
+              <a-form-item label="设置评论状态">
+                <a-checkbox v-model="form.openComment">开启评论</a-checkbox>
+              </a-form-item>
+            </a-form>
+          </a-collapse-item>
+        </a-collapse>
+
         <div class="actions">
           <a-button type="primary" @click="create(2)">发布文章</a-button>
           <a-button @click="create(1)">存为草稿</a-button>
@@ -57,6 +93,72 @@ async function create(status: 1 | 2) {
 
 <style lang="less">
 .platform_article_add_view {
+  .f_card_com {
+    .body {
+      overflow-y: auto;
+      max-height: calc(100vh - 160px);
+    }
+  }
+
+  .arco-collapse{
+    margin-bottom: 10px;
+  }
+  .arco-collapse-item {
+    .arco-collapse-item-header {
+      padding: 0;
+      border: none;
+
+      .arco-collapse-item-icon-hover {
+        left: 62px;
+      }
+    }
+
+    .arco-collapse-item-content {
+      padding-right: 0;
+      background: transparent;
+      padding-left: 0;
+    }
+  }
+
+  .form2 {
+    .arco-row {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cover_mask {
+      width: 100%;
+      height: 120px;
+      cursor: pointer;
+      border: @f_border;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-2);
+
+      span {
+        font-size: 12px;
+      }
+
+      svg {
+        font-size: 30px;
+      }
+    }
+
+    .article_cover_col {
+      flex-direction: column;
+
+      > div {
+        width: 100%;
+      }
+      .show{
+        margin-top: 10px;
+      }
+    }
+  }
+
   .actions {
     .arco-btn {
       margin-right: 10px;
