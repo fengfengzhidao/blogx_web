@@ -1,6 +1,7 @@
 import axios from "axios";
 import {Message} from "@arco-design/web-vue";
 import {userStorei} from "@/stores/user_store";
+import type {Ref} from "vue";
 
 export interface baseResponse<T> {
     code: number
@@ -57,3 +58,9 @@ export interface optionsType {
 }
 
 export type optionsFunc = (params?: paramsType) => Promise<baseResponse<optionsType[]>>
+
+export function getOptions(ref: Ref<optionsType[]>, func: optionsFunc, params?: paramsType){
+    func(params).then((res)=>{
+        ref.value = res.data
+    })
+}

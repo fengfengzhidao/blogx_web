@@ -4,11 +4,13 @@ import {MdEditor} from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import F_card from "@/components/web/f_card.vue";
 import {reactive} from "vue";
-import {articleAddApi, type articleAddType} from "@/api/article_api";
+import {articleAddApi, type articleAddType, articleTagOptionsApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import router from "@/router";
 import F_cover_cutter from "@/components/web/f_cover_cutter.vue";
 import {IconImage} from "@arco-design/web-vue/es/icon";
+import {getOptions, type optionsType} from "@/api";
+import {articleCategoryOptionsApi} from "@/api/article_api";
 
 const form = reactive<articleAddType>({
   title: "",
@@ -19,6 +21,13 @@ const form = reactive<articleAddType>({
   tagList: [],
   openComment: true
 })
+
+const categoryOptions = ref<optionsType[]>([])
+const tagOptions = ref<optionsType[]>([])
+
+getOptions(categoryOptions, articleCategoryOptionsApi)
+getOptions(tagOptions, articleTagOptionsApi)
+
 
 const formRef = ref()
 
@@ -57,7 +66,7 @@ function coverBack(data: string) {
             <a-form :label-col-props="{span: 4}" :wrapper-col-props="{span: 8}" class="form2" label-align="left"
                     :model="form">
               <a-form-item label="请选择文章分类">
-                <a-select v-model="form.categoryID" placeholder="文章分类"></a-select>
+                <a-select v-model="form.categoryID" placeholder="文章分类" :options="categoryOptions"></a-select>
               </a-form-item>
               <a-form-item content-class="article_cover_col" label="设置文章封面">
                 <div class="up">
@@ -73,7 +82,7 @@ function coverBack(data: string) {
                 </div>
               </a-form-item>
               <a-form-item label="文章标签">
-                <a-input-tag v-model="form.tagList" placeholder="请输入标签"></a-input-tag>
+                <a-select allow-create allow-clear multiple :options="tagOptions"  v-model="form.tagList" placeholder="请输入标签"></a-select>
               </a-form-item>
               <a-form-item label="设置评论状态">
                 <a-checkbox v-model="form.openComment">开启评论</a-checkbox>
@@ -100,9 +109,10 @@ function coverBack(data: string) {
     }
   }
 
-  .arco-collapse{
+  .arco-collapse {
     margin-bottom: 10px;
   }
+
   .arco-collapse-item {
     .arco-collapse-item-header {
       padding: 0;
@@ -153,7 +163,8 @@ function coverBack(data: string) {
       > div {
         width: 100%;
       }
-      .show{
+
+      .show {
         margin-top: 10px;
       }
     }

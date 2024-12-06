@@ -52,7 +52,7 @@ getData()
                         placeholder="搜索文章"></a-input-search>
       </div>
     </div>
-    <div class="body">
+    <div class="body scrollbar">
       <div class="menu">
         <f_a :class="{active: params.status === 3}" @click="checkStatus(3)">已发布</f_a>
         <f_a :class="{active: params.status === 2}" @click="checkStatus(2)">审核中</f_a>
@@ -99,6 +99,11 @@ getData()
 .platform_article_view {
   background: var(--color-bg-1);
   border-radius: 5px;
+
+ > .body {
+    overflow-y: auto;
+    max-height: calc(100vh - 160px);
+  }
 
   .head {
     display: flex;

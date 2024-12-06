@@ -1,4 +1,4 @@
-import {type baseResponse, type listResponse, type paramsType, useAxios} from "@/api/index";
+import {type baseResponse, type listResponse, type optionsType, type paramsType, useAxios} from "@/api/index";
 
 export interface articleListType {
     "id": number
@@ -97,14 +97,22 @@ export function articleHistoryRemoveApi(idList: number[]): Promise<baseResponse<
 
 export interface articleAddType {
     "title": string
-    "content":string
-    "status": 1|2
+    "content": string
+    "status": 1 | 2
     "categoryID"?: number
     "cover": string
     "tagList": string[]
     "openComment": boolean
 }
 
-export function articleAddApi(data: articleAddType):Promise<baseResponse<string>>{
-    return  useAxios.post("/api/article", data)
+export function articleAddApi(data: articleAddType): Promise<baseResponse<string>> {
+    return useAxios.post("/api/article", data)
+}
+
+export function articleCategoryOptionsApi(): Promise<baseResponse<optionsType[]>> {
+    return useAxios.get("/api/category/options")
+}
+
+export function articleTagOptionsApi(): Promise<baseResponse<optionsType[]>> {
+    return useAxios.get("/api/article/tag/options")
 }
