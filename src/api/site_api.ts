@@ -1,6 +1,9 @@
 import {type baseResponse, useAxios} from "@/api/index";
 
 export interface siteResponse {
+    "ai": {
+        "enable": boolean
+    },
     "qiNiu": {
         "enable": boolean
     },

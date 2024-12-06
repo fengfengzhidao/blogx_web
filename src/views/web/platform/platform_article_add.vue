@@ -11,10 +11,14 @@ import F_cover_cutter from "@/components/web/f_cover_cutter.vue";
 import {IconImage} from "@arco-design/web-vue/es/icon";
 import {getOptions, type optionsType} from "@/api";
 import {articleCategoryOptionsApi} from "@/api/article_api";
+import {userStorei} from "@/stores/user_store";
+import {aiAnalysisApi, type aiAnalysisType} from "@/api/ai_api";
 
+const store = userStorei()
 const form = reactive<articleAddType>({
   title: "",
   content: "",
+  abstract: "",
   status: 1, // 2是发布，1是草稿
   // categoryID: null,
   cover: "",
@@ -48,6 +52,38 @@ function coverBack(data: string) {
   form.cover = data
 }
 
+const aiData = reactive<aiAnalysisType>({
+  title: "",
+  abstract: "",
+  category: "",
+  tag: []
+})
+
+async function paste(e: any) {
+  if (!store.siteInfo.ai.enable){
+    return
+  }
+
+  const res = await aiAnalysisApi(form.content)
+  if (res.code){
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  Object.assign(aiData, res.data)
+  if (form.title == ""){
+    form.title = aiData.title
+  }
+  if (form.abstract == ""){
+    form.abstract = aiData.abstract
+  }
+  if (form.tagList.length == 0){
+    form.tagList = aiData.tag
+  }
+
+}
+
+
 
 </script>
 
@@ -58,8 +94,11 @@ function coverBack(data: string) {
         <a-form-item field="title" validate-trigger="blur" :rules="[{required: true, message:'请输入文章标题'}]">
           <a-input v-model="form.title" placeholder="请输入标题（建议20字以内）"></a-input>
         </a-form-item>
+        <a-form-item>
+          <a-textarea v-model="form.abstract" :auto-size="{minRows: 3, maxRows: 4}" placeholder="文章简介"></a-textarea>
+        </a-form-item>
         <a-form-item field="content" validate-trigger="blur" :rules="[{required: true, message:'请输入文章内容'}]">
-          <MdEditor v-model="form.content" placeholder="请输入文章内容"></MdEditor>
+          <MdEditor @paste="paste" v-model="form.content" placeholder="请输入文章内容"></MdEditor>
         </a-form-item>
         <a-collapse :default-active-key="[1]" :bordered="false">
           <a-collapse-item header="更多设置" :key="1">
@@ -67,6 +106,9 @@ function coverBack(data: string) {
                     :model="form">
               <a-form-item label="请选择文章分类">
                 <a-select v-model="form.categoryID" placeholder="文章分类" :options="categoryOptions"></a-select>
+                <template #help>
+                  <span v-if="aiData.category">基于ai推荐 适合的分类名称： {{ aiData.category }}</span>
+                </template>
               </a-form-item>
               <a-form-item content-class="article_cover_col" label="设置文章封面">
                 <div class="up">

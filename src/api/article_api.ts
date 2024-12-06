@@ -98,6 +98,7 @@ export function articleHistoryRemoveApi(idList: number[]): Promise<baseResponse<
 export interface articleAddType {
     "title": string
     "content": string
+    abstract: string
     "status": 1 | 2
     "categoryID"?: number
     "cover": string
