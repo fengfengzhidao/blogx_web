@@ -60,14 +60,18 @@ const aiData = reactive<aiAnalysisType>({
   tag: []
 })
 
-async function paste(e: Event) {
+async function paste(e: ClipboardEvent) {
   if (!store.siteInfo.ai.enable){
     return
   }
-  const target = e.target
-  console.log(e)
-  return
-
+  // const text = e.clipboardData?.getData('text');
+  // 获取图片
+  // 读取到图片对象
+  const file = e.clipboardData?.files[0];
+  if (file){
+    // 粘贴的是图片
+    return
+  }
   const res = await aiAnalysisApi(form.content)
   if (res.code){
     Message.error(res.msg)
