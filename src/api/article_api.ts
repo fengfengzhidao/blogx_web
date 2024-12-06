@@ -117,3 +117,9 @@ export function articleCategoryOptionsApi(): Promise<baseResponse<optionsType[]>
 export function articleTagOptionsApi(): Promise<baseResponse<optionsType[]>> {
     return useAxios.get("/api/article/tag/options")
 }
+export interface articleEditType extends articleAddType {
+    id: number
+}
+export function articleUpdateApi(data: articleEditType):Promise<baseResponse<string>>{
+    return  useAxios.put("/api/article", data)
+}

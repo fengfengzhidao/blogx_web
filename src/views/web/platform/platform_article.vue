@@ -260,6 +260,7 @@ function handleSelect(id:number, val: string) {
       .page {
         display: flex;
         justify-content: center;
+        margin-bottom: 10px;
       }
     }
   }
