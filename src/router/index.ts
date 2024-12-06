@@ -55,6 +55,18 @@ const router = createRouter({
                             component: () => import("@/views/web/user_center/history.vue"),
                         }
                     ]
+                },
+                {
+                    name: "platform",
+                    path: "platform",
+                    component: () => import("@/views/web/platform/index.vue"),
+                    children: [
+                        {
+                            name: "platformArticle",
+                            path: "article",
+                            component: () => import("@/views/web/platform/platform_article.vue"),
+                        }
+                    ]
                 }
             ]
         },
