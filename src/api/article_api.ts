@@ -93,3 +93,18 @@ export function articleHistoryListApi(params: articleHistoryListRequest): Promis
 export function articleHistoryRemoveApi(idList: number[]): Promise<baseResponse<string>> {
     return useAxios.delete("/api/article/history", {data: {idList}})
 }
+
+
+export interface articleAddType {
+    "title": string
+    "content":string
+    "status": 1|2
+    "categoryID"?: number
+    "cover": string
+    "tagList": string[]
+    "openComment": boolean
+}
+
+export function articleAddApi(data: articleAddType):Promise<baseResponse<string>>{
+    return  useAxios.post("/api/article", data)
+}
