@@ -13,6 +13,7 @@ import {getOptions, type optionsType} from "@/api";
 import {articleCategoryOptionsApi} from "@/api/article_api";
 import {userStorei} from "@/stores/user_store";
 import {aiAnalysisApi, type aiAnalysisType} from "@/api/ai_api";
+import {onUploadImg} from "@/api/image_api";
 
 const store = userStorei()
 const form = reactive<articleAddType>({
@@ -59,10 +60,13 @@ const aiData = reactive<aiAnalysisType>({
   tag: []
 })
 
-async function paste(e: any) {
+async function paste(e: Event) {
   if (!store.siteInfo.ai.enable){
     return
   }
+  const target = e.target
+  console.log(e)
+  return
 
   const res = await aiAnalysisApi(form.content)
   if (res.code){
@@ -98,7 +102,7 @@ async function paste(e: any) {
           <a-textarea v-model="form.abstract" :auto-size="{minRows: 3, maxRows: 4}" placeholder="文章简介"></a-textarea>
         </a-form-item>
         <a-form-item field="content" validate-trigger="blur" :rules="[{required: true, message:'请输入文章内容'}]">
-          <MdEditor @paste="paste" v-model="form.content" placeholder="请输入文章内容"></MdEditor>
+          <MdEditor @onUploadImg="onUploadImg" @paste="paste" v-model="form.content" placeholder="请输入文章内容"></MdEditor>
         </a-form-item>
         <a-collapse :default-active-key="[1]" :bordered="false">
           <a-collapse-item header="更多设置" :key="1">
