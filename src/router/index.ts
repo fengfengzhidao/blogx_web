@@ -65,6 +65,11 @@ const router = createRouter({
                             name: "platformArticle",
                             path: "article",
                             component: () => import("@/views/web/platform/platform_article.vue"),
+                        },
+                        {
+                            name: "platformArticleAdd",
+                            path: "article_add",
+                            component: () => import("@/views/web/platform/platform_article_add.vue"),
                         }
                     ]
                 }

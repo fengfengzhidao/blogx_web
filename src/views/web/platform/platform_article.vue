@@ -14,6 +14,8 @@ const data = reactive<listResponse<articleListType>>({
 
 const params = reactive<articleListRequest>({
   type: 2,
+  status: 3,
+  limit: 10,
 })
 
 async function getData() {
@@ -25,6 +27,12 @@ async function getData() {
   Object.assign(data, res.data)
 }
 
+function checkStatus(status: number) {
+  params.status = status
+  getData()
+}
+
+
 getData()
 
 
@@ -35,17 +43,20 @@ getData()
     <div class="head">
       <div class="left">
         <div class="title">我的文章</div>
-        <a-button type="primary">发布文章</a-button>
+        <router-link :to="{name: 'platformArticleAdd'}">
+          <a-button type="primary">发布文章</a-button>
+        </router-link>
       </div>
       <div class="right">
-        <a-input-search placeholder="搜索文章"></a-input-search>
+        <a-input-search @search="getData" @keydown.enter="getData" v-model="params.key"
+                        placeholder="搜索文章"></a-input-search>
       </div>
     </div>
     <div class="body">
       <div class="menu">
-        <f_a>已发布</f_a>
-        <f_a>审核中</f_a>
-        <f_a>草稿箱</f_a>
+        <f_a :class="{active: params.status === 3}" @click="checkStatus(3)">已发布</f_a>
+        <f_a :class="{active: params.status === 2}" @click="checkStatus(2)">审核中</f_a>
+        <f_a :class="{active: params.status === 1}" @click="checkStatus(1)">草稿箱</f_a>
       </div>
       <div class="article_list">
         <div class="item" v-for="item in data.list">
@@ -70,6 +81,14 @@ getData()
               <div class="date">最后更新于{{ dateCurrentFormat(item.updatedAt) }}</div>
             </div>
           </div>
+        </div>
+
+        <div class="page" v-if="data.count">
+          <a-pagination @change="getData" v-model:current="params.page" :page-size="params.limit" :total="data.count"
+                        show-total></a-pagination>
+        </div>
+        <div class="no_data" v-if="data.list.length === 0">
+          <a-empty></a-empty>
         </div>
       </div>
     </div>
@@ -121,6 +140,10 @@ getData()
           margin-right: 0;
         }
       }
+
+      a.active {
+        color: rgb(var(--arcoblue-6));
+      }
     }
 
     .article_list {
@@ -161,22 +184,31 @@ getData()
 
             .look, .comment {
               margin-right: 10px;
-              span{
+
+              span {
                 margin-left: 5px;
               }
             }
-            .tags{
+
+            .tags {
               margin-right: 10px;
-              .arco-tag{
+
+              .arco-tag {
                 margin-right: 5px;
               }
             }
-            .date{
+
+            .date {
               font-size: 12px;
               color: var(--color-text-2);
             }
           }
         }
+      }
+
+      .page {
+        display: flex;
+        justify-content: center;
       }
     }
   }

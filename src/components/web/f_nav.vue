@@ -50,8 +50,10 @@ if (!noScroll) {
       <div class="right">
         <f_nav_avatar></f_nav_avatar>
         <f_nav_msg></f_nav_msg>
-        <a href="javascript:void 0">历史</a>
-        <a-button type="primary"><i class="iconfont icon-jia"></i> <span>发布</span></a-button>
+        <a class="history" href="javascript:void 0">历史</a>
+        <router-link :to="{name: 'platformArticleAdd'}">
+          <a-button type="primary"><i class="iconfont icon-jia"></i> <span>发布</span></a-button>
+        </router-link>
       </div>
     </div>
   </div>
@@ -140,7 +142,7 @@ if (!noScroll) {
       align-items: center;
       justify-content: end;
 
-      > a {
+      .history {
         margin-right: 20px;
       }
 
