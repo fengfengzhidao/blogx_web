@@ -14,6 +14,7 @@ import {articleCategoryOptionsApi} from "@/api/article_api";
 import {userStorei} from "@/stores/user_store";
 import {aiAnalysisApi, type aiAnalysisType} from "@/api/ai_api";
 import {onUploadImg} from "@/api/image_api";
+import {IconDelete} from "@arco-design/web-vue/es/icon";
 
 const store = userStorei()
 const form = reactive<articleAddType>({
@@ -40,6 +41,7 @@ async function getData(){
   form.title = res.data.title
   form.content = res.data.content
   form.abstract = res.data.abstract
+  form.categoryID = res.data.categoryID
   // form.status = res.data.status as 1 | 2
   form.cover = res.data.cover
   form.tagList = res.data.tagList
@@ -112,6 +114,9 @@ async function paste(e: ClipboardEvent) {
   }
 
 }
+function coverRemove(){
+  form.cover = ""
+}
 
 
 </script>
@@ -149,7 +154,11 @@ async function paste(e: ClipboardEvent) {
               </f_cover_cutter>
             </div>
             <div class="show" v-if="form.cover">
-              <a-image :src="form.cover" :height="60"></a-image>
+              <a-image :src="form.cover" :height="100">
+                <template #extra>
+                  <IconDelete @click="coverRemove"></IconDelete>
+                </template>
+              </a-image>
             </div>
           </a-form-item>
           <a-form-item label="文章标签">
@@ -230,6 +239,17 @@ async function paste(e: ClipboardEvent) {
 
       .show {
         margin-top: 10px;
+        .arco-image-footer{
+          display: flex;
+          justify-content: center;
+          .arco-image-footer-extra{
+            padding-left: 0;
+            svg{
+              font-size: 20px;
+              cursor: pointer;
+            }
+          }
+        }
       }
     }
   }

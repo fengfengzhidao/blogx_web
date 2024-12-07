@@ -80,7 +80,11 @@ function handleSelect(id:number, val: string) {
           </div>
           <div class="info">
             <div class="title" @click="goArticle(item.id)">{{ item.title }}</div>
-            <div class="abs">{{ item.abstract }}</div>
+            <div class="abs">
+              <a-typography-text :ellipsis="{rows: 2, css: true}">
+                {{ item.abstract }}
+              </a-typography-text>
+            </div>
             <div class="data">
               <div class="look">
                 <IconEye></IconEye>
@@ -91,7 +95,12 @@ function handleSelect(id:number, val: string) {
                 <span>{{ item.commentCount }}</span>
               </div>
               <div class="tags">
-                <a-tag v-for="tag in item.tagList">{{ tag }}</a-tag>
+                <template v-if="item.tagList.length <= 3">
+                  <a-tag class="tag" v-for="tag in item.tagList">{{ tag }}</a-tag>
+                </template>
+                <a-overflow-list v-else :min="5">
+                  <a-tag v-for="tag in item.tagList">{{ tag }}</a-tag>
+                </a-overflow-list>
               </div>
               <div class="date">最后更新于{{ dateCurrentFormat(item.updatedAt) }}</div>
             </div>
@@ -187,7 +196,7 @@ function handleSelect(id:number, val: string) {
 
 
         &:hover {
-          background: var(--color-fill-2);
+          background: var(--color-fill-1);
 
           .more {
             opacity: 1;
@@ -215,7 +224,6 @@ function handleSelect(id:number, val: string) {
           }
 
           .abs {
-            height: 2rem;
             margin: 5px 0;
           }
 
@@ -234,9 +242,10 @@ function handleSelect(id:number, val: string) {
 
             .tags {
               margin-right: 10px;
+              max-width: 400px;
 
-              .arco-tag {
-                margin-right: 5px;
+              .tag{
+                margin-right: 10px;
               }
             }
 
