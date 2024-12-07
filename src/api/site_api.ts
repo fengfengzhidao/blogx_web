@@ -111,3 +111,15 @@ export function siteUpdateApi<T extends siteName>(name: T, data: siteBaseRespons
 export function siteQQLoginUrlApi():Promise<baseResponse<string>>{
     return useAxios.get("/api/site/qq_url")
 }
+
+export interface qiniuUploadConfigType {
+    "token": string
+    "key": string
+    "region": string
+    "url": string
+    "size": number
+}
+
+export function qiniuUploadConfigApi():Promise<baseResponse<qiniuUploadConfigType>>{
+    return useAxios.post("/api/images/qiniu")
+}

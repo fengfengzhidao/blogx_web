@@ -160,6 +160,11 @@ function coverRemove(){
                 </template>
               </a-image>
             </div>
+            <template #help>
+              <div v-if="store.siteInfo.qiNiu.enable">
+                将上传图片到七牛云上
+              </div>
+            </template>
           </a-form-item>
           <a-form-item label="文章标签">
             <a-select allow-create allow-clear multiple :options="tagOptions" v-model="form.tagList"
