@@ -123,3 +123,6 @@ export interface articleEditType extends articleAddType {
 export function articleUpdateApi(data: articleEditType):Promise<baseResponse<string>>{
     return  useAxios.put("/api/article", data)
 }
+export function articleRemoveApi(id: number):Promise<baseResponse<string>>{
+    return useAxios.delete("/api/article/" + id.toString())
+}

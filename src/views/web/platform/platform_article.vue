@@ -2,7 +2,7 @@
 import F_a from "@/components/common/f_a.vue";
 import {reactive} from "vue";
 import type {listResponse} from "@/api";
-import {articleListApi, type articleListRequest, type articleListType} from "@/api/article_api";
+import {articleListApi, type articleListRequest, type articleListType, articleRemoveApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import {IconEye, IconMessage} from "@arco-design/web-vue/es/icon";
 import {dateCurrentFormat} from "../../../utils/date";
@@ -38,8 +38,15 @@ function checkStatus(status: number) {
 
 getData()
 
-function handleSelect(id:number, val: string) {
+async function handleSelect(id: number, val: string) {
   if (val === "delete") {
+    const res = await articleRemoveApi(id)
+    if (res.code) {
+      Message.error(res.msg)
+      return
+    }
+    Message.success(res.msg)
+    getData()
     return
   }
   router.push({
@@ -244,7 +251,7 @@ function handleSelect(id:number, val: string) {
               margin-right: 10px;
               max-width: 400px;
 
-              .tag{
+              .tag {
                 margin-right: 10px;
               }
             }
