@@ -28,3 +28,10 @@ export const registerSourceOptions = [
     {label: "QQ注册", value: 2, color: "orange"},
     {label: "命令行注册", value: 3, color: "red"},
 ]
+
+export const relationOptions = [
+    {label: "陌生人", value: 1, color: "red"},
+    {label: "已关注", value: 2, color: "orange"},
+    {label: "粉丝", value: 3, color: "green"},
+    {label: "好友", value: 4, color: "blue"},
+]
