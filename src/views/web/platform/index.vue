@@ -11,6 +11,7 @@ import F_main from "@/components/web/f_main.vue";
 
       <div class="menu">
         <router-link :to="{name: 'platformArticle'}">文章管理</router-link>
+        <router-link :to="{name: 'platformComment'}">评论管理</router-link>
       </div>
       <div class="view">
         <router-view></router-view>
