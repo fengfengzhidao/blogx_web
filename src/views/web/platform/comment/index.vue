@@ -1,11 +1,27 @@
 <script setup lang="ts">
+import {ref} from "vue";
+import router from "@/router";
+import {useRoute} from "vue-router";
+
+const route = useRoute()
+const key = ref("")
+
+
+async function search(){
+  router.push({
+    name: route.name as string,
+    query: {
+      key: key.value
+    }
+  })
+}
 </script>
 
 <template>
   <div class="comment_view">
     <div class="head">
       <div class="title">评论管理</div>
-      <a-input-search placeholder="搜索文章评论"></a-input-search>
+      <a-input-search v-model="key" @search="search" @keydown.enter="search" placeholder="搜索文章评论"></a-input-search>
     </div>
     <div class="body scrollbar">
       <div class="menu">

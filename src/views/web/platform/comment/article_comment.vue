@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import type {listResponse} from "@/api";
 import {commentListApi, type commentListRequest, type commentListType, commentRemoveApi} from "@/api/comment_api";
 import {Message} from "@arco-design/web-vue";
@@ -7,7 +7,8 @@ import {dateTimeFormat} from "../../../../utils/date";
 import F_a from "@/components/common/f_a.vue";
 import F_label from "@/components/common/f_label.vue";
 import {relationOptions} from "@/options/options";
-
+import {useRoute} from "vue-router";
+const route = useRoute()
 const data = reactive<listResponse<commentListType>>({
   list: [],
   count: 0
@@ -52,6 +53,15 @@ async function checkAll(val: boolean) {
 }
 
 const isCheckAll = ref(false)
+
+
+watch(()=>route.query.key, ()=>{
+  if (route.query.key){
+    params.key = route.query.key as string
+    getData()
+  }
+})
+
 
 </script>
 
