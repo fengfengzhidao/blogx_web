@@ -22,3 +22,7 @@ export interface commentListRequest extends paramsType {
 export function commentListApi(params: commentListRequest): Promise<baseResponse<listResponse<commentListType>>> {
     return useAxios.get("/api/comment", {params})
 }
+
+export function commentRemoveApi(id: number):Promise<baseResponse<string>>{
+    return  useAxios.delete("/api/comment/" + id.toString())
+}

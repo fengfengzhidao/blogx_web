@@ -44,6 +44,7 @@
   >.body{
     padding: 10px 20px 20px 20px;
     max-height: calc(100vh - 160px);
+    overflow-y: auto;
     .menu{
       a{
         margin-right: 20px;

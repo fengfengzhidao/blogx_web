@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import type {listResponse} from "@/api";
-import {commentListApi, type commentListRequest, type commentListType} from "@/api/comment_api";
+import {commentListApi, type commentListRequest, type commentListType, commentRemoveApi} from "@/api/comment_api";
 import {Message} from "@arco-design/web-vue";
 import {dateTimeFormat} from "../../../../utils/date";
 import F_a from "@/components/common/f_a.vue";
@@ -14,7 +14,10 @@ const data = reactive<listResponse<commentListType>>({
 })
 const params = reactive<commentListRequest>({
   type: 1,
+  limit: 10,
 })
+
+const checkIdList = ref<number[]>([])
 
 async function getData() {
   const res = await commentListApi(params)
@@ -27,52 +30,82 @@ async function getData() {
 
 getData()
 
+async function removeComment() {
+
+  const resList = await Promise.all(checkIdList.value.map((item) => commentRemoveApi(item)))
+  resList.forEach((res) => {
+    if (res.code) {
+      Message.error(res.msg)
+      return
+    }
+    Message.success(res.msg)
+  })
+  getData()
+}
+
+async function checkAll(val: boolean) {
+  if (val) {
+    checkIdList.value = data.list.map((item) => item.id)
+    return
+  }
+  checkIdList.value = []
+}
+
+const isCheckAll = ref(false)
+
 </script>
 
 <template>
   <div class="article_comment_view">
     <div class="actions">
-      <a-checkbox>全选</a-checkbox>
-      <a-button size="mini">删除</a-button>
+      <a-checkbox v-model="isCheckAll" @change="checkAll">全选</a-checkbox>
+      <a-button @click="removeComment" type="primary" status="danger" v-if="checkIdList.length" size="mini">删除
+      </a-button>
     </div>
     <div class="comment_list">
-      <div class="item" v-for="item in data.list">
-        <div class="check">
-          <a-checkbox></a-checkbox>
-        </div>
-        <div class="user">
-          <a-avatar :image-url="item.userAvatar"></a-avatar>
-        </div>
-        <div class="info">
-          <div class="nickname">
-            <span class="nick">{{ item.userNickname }}</span>
-            <span v-if="!item.isMe">
+      <a-checkbox-group v-model="checkIdList">
+        <div class="item" v-for="item in data.list">
+          <div class="check">
+            <a-checkbox :value="item.id"></a-checkbox>
+          </div>
+          <div class="user">
+            <a-avatar :image-url="item.userAvatar"></a-avatar>
+          </div>
+          <div class="info">
+            <div class="nickname">
+              <span class="nick">{{ item.userNickname }}</span>
+              <span v-if="!item.isMe">
               <f_label :options="relationOptions" :value="item.relation"></f_label>
             </span>
-            <span class="article" v-if="!item.articleCover">
+              <span class="article" v-if="!item.articleCover">
               评论了文章： <router-link to="">{{ item.articleTitle }}</router-link>
             </span>
-          </div>
-          <div class="content">
-            <a-typography-text :ellipsis="{rows: 2, css: true}">
-              {{ item.content }}
-            </a-typography-text>
-          </div>
-          <div class="data">
-            <span class="date">{{ dateTimeFormat(item.createdAt) }}</span>
-            <span class="digg">
+            </div>
+            <div class="content">
+              <a-typography-text :ellipsis="{rows: 2, css: true}">
+                {{ item.content }}
+              </a-typography-text>
+            </div>
+            <div class="data">
+              <span class="date">{{ dateTimeFormat(item.createdAt) }}</span>
+              <span class="digg">
               <i title="点赞" class="iconfont icon-dianzanliang"></i>
               <span>{{ item.diggCount }}</span>
             </span>
-            <f_a class="apply">回复</f_a>
+              <f_a class="apply">回复</f_a>
+            </div>
           </div>
-        </div>
-        <div class="cover" v-if="item.articleCover">
-          <img :src="item.articleCover" alt="">
-          <span>
+          <div class="cover" v-if="item.articleCover">
+            <img :src="item.articleCover" alt="">
+            <span>
             <a-typography-text :ellipsis="{rows: 1, css: true}">文章：{{ item.articleTitle }}</a-typography-text>
           </span>
+          </div>
         </div>
+      </a-checkbox-group>
+      <div class="page" v-if="data.list.length">
+        <a-pagination :total="data.count" show-total v-model:current="params.page" :page-size="params.limit"
+                      @change="getData"></a-pagination>
       </div>
     </div>
   </div>
@@ -83,6 +116,7 @@ getData()
   .actions {
     display: flex;
     align-items: center;
+    height: 24px;
 
     .arco-btn {
       margin-left: 10px;
@@ -90,6 +124,10 @@ getData()
   }
 
   .comment_list {
+    .arco-checkbox-group {
+      width: 100%;
+    }
+
     .item {
       display: flex;
       margin-top: 10px;
@@ -118,7 +156,8 @@ getData()
           border-radius: 5px;
           margin-bottom: 5px;
         }
-        span{
+
+        span {
           color: var(--color-text-2);
         }
       }
@@ -128,10 +167,12 @@ getData()
 
         .nickname {
           color: var(--color-text-2);
+
           .nick {
             margin-right: 10px;
           }
-          .article{
+
+          .article {
 
           }
         }
@@ -167,6 +208,12 @@ getData()
           }
         }
       }
+    }
+
+    .page {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
     }
   }
 }
