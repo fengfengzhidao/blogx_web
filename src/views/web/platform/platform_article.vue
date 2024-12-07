@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import F_a from "@/components/common/f_a.vue";
 import {reactive} from "vue";
-import type {listResponse} from "@/api";
+import type {baseResponse, listResponse} from "@/api";
 import {articleListApi, type articleListRequest, type articleListType, articleRemoveApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import {IconEye, IconMessage} from "@arco-design/web-vue/es/icon";
@@ -9,6 +9,7 @@ import {dateCurrentFormat} from "../../../utils/date";
 import {IconMore} from "@arco-design/web-vue/es/icon";
 import {goArticle} from "@/utils/go_router";
 import router from "@/router";
+import {userArticleTopApi} from "@/api/user_api";
 
 const data = reactive<listResponse<articleListType>>({
   list: [],
@@ -39,23 +40,30 @@ function checkStatus(status: number) {
 getData()
 
 async function handleSelect(id: number, val: string) {
-  if (val === "delete") {
-    const res = await articleRemoveApi(id)
-    if (res.code) {
-      Message.error(res.msg)
-      return
-    }
-    Message.success(res.msg)
-    getData()
+  if (val === "platformArticleEdit") {
+    router.push({
+      name: val,
+      params: {id}
+    })
     return
   }
-  router.push({
-    name: val,
-    params: {id}
-  })
-
-
+  let res: baseResponse<string> = {code: 0, msg: "", data: ""}
+  if (val === "delete") {
+    res = await articleRemoveApi(id)
+  } else {
+    res = await userArticleTopApi({
+      type: 1,
+      articleID: id
+    })
+  }
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  getData()
 }
+
 
 
 </script>
@@ -84,6 +92,9 @@ async function handleSelect(id: number, val: string) {
         <div class="item" v-for="item in data.list">
           <div class="cover">
             <img @click="goArticle(item.id)" v-if="item.cover" :src="item.cover" alt="">
+          </div>
+          <div v-if="item.userTop" class="user_top">
+            <a-tag color="blue">用户置顶</a-tag>
           </div>
           <div class="info">
             <div class="title" @click="goArticle(item.id)">{{ item.title }}</div>
@@ -115,6 +126,8 @@ async function handleSelect(id: number, val: string) {
               <a-dropdown @select="handleSelect(item.id, $event)">
                 <IconMore></IconMore>
                 <template #content>
+                  <a-doption v-if="item.userTop" value="cancelTop">取消置顶</a-doption>
+                  <a-doption v-if="!item.userTop && item.status === 3" value="top">置顶文章</a-doption>
                   <a-doption value="platformArticleEdit">编辑文章</a-doption>
                   <a-doption value="delete" style="color: red">删除文章</a-doption>
                 </template>
@@ -200,6 +213,12 @@ async function handleSelect(id: number, val: string) {
         display: flex;
         position: relative;
         padding: 10px 20px;
+
+        .user_top {
+          position: absolute;
+          right: 10px;
+          top: 5px;
+        }
 
 
         &:hover {
