@@ -30,7 +30,9 @@ async function apply(item: commentListType) {
   }
   Message.success(res.msg)
   form.content = ""
+  item.visible = false
   commentListRef.value.getData()
+
 }
 const textareaRef = ref()
 
@@ -70,7 +72,7 @@ function hide() {
               <i title="点赞" class="iconfont icon-dianzanliang"></i>
               <span>{{ item.diggCount }}</span>
             </span>
-          <a-trigger @show="show" @hide="hide" trigger="click" content-class="apply_comment_trigger" :unmount-on-close="false">
+          <a-trigger v-model:popup-visible="item.visible" @show="show" @hide="hide" trigger="click" content-class="apply_comment_trigger" :unmount-on-close="false">
             <f_a class="apply">回复</f_a>
             <template #content>
               <a-button type="primary" size="mini" @click="apply(item)">回复</a-button>

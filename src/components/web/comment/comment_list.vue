@@ -27,14 +27,19 @@ const params = reactive<commentListRequest>({
 
 
 const checkIdList = ref<number[]>([])
-
+const loading = ref(false)
 async function getData() {
+  loading.value = true
+  data.list = []
   const res = await commentListApi(params)
   if (res.code) {
     Message.error(res.msg)
+    loading.value = false
     return
   }
-  Object.assign(data, res.data)
+  data.count = res.data.count
+  data.list = res.data.list
+  loading.value = false
 }
 
 getData()
@@ -49,6 +54,7 @@ async function removeComment() {
     }
     Message.success(res.msg)
   })
+  checkIdList.value = []
   getData()
 }
 
@@ -84,14 +90,16 @@ defineExpose({
       </a-button>
     </div>
     <div class="comment_list">
-      <a-checkbox-group v-model="checkIdList">
-        <div class="item" v-for="item in data.list">
-          <div class="check">
-            <a-checkbox :value="item.id"></a-checkbox>
+      <a-spin style="width: 100%" :loading="loading">
+        <a-checkbox-group v-model="checkIdList">
+          <div class="item" v-for="item in data.list">
+            <div class="check">
+              <a-checkbox :value="item.id"></a-checkbox>
+            </div>
+            <slot :item="item"></slot>
           </div>
-          <slot :item="item"></slot>
-        </div>
-      </a-checkbox-group>
+        </a-checkbox-group>
+      </a-spin>
       <div class="page" v-if="data.list.length">
         <a-pagination :total="data.count" show-total v-model:current="params.page" :page-size="params.limit"
                       @change="getData"></a-pagination>
@@ -113,6 +121,7 @@ defineExpose({
   }
 
   > .comment_list {
+    min-height: 400px;
     .arco-checkbox-group {
       width: 100%;
     }

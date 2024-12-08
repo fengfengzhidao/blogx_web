@@ -13,6 +13,7 @@ export interface commentListType {
     "diggCount": number
     "relation"?: 1 | 2 | 3 | 4  // 陌生人 已关注  粉丝  好友
     "isMe": true
+    visible?: boolean
 }
 
 export interface commentListRequest extends paramsType {
