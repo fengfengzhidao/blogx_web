@@ -26,3 +26,14 @@ export function commentListApi(params: commentListRequest): Promise<baseResponse
 export function commentRemoveApi(id: number):Promise<baseResponse<string>>{
     return  useAxios.delete("/api/comment/" + id.toString())
 }
+
+
+export interface commentCreateRequest {
+    "content": string
+    "articleID": number
+    "parentID"?: number
+}
+
+export function commentCreateApi(data: commentCreateRequest):Promise<baseResponse<string>>{
+    return useAxios.post("/api/comment", data)
+}

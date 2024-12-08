@@ -70,6 +70,10 @@ watch(() => route.query.key, () => {
   }
 })
 
+defineExpose({
+  getData
+})
+
 </script>
 
 <template>

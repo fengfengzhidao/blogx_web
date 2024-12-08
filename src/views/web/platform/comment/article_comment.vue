@@ -1,16 +1,51 @@
 <script setup lang="ts">
-import {type commentListType} from "@/api/comment_api";
+import {type commentCreateRequest, type commentListType} from "@/api/comment_api";
 import {dateTimeFormat} from "@/utils/date";
 import F_a from "@/components/common/f_a.vue";
 import F_label from "@/components/common/f_label.vue";
 import {relationOptions} from "@/options/options";
 import Comment_list from "@/components/web/comment/comment_list.vue";
+import {reactive, ref} from "vue";
+import {commentCreateApi} from "@/api/comment_api";
+import {Message} from "@arco-design/web-vue";
+
+const form = reactive<commentCreateRequest>({
+  articleID: 0,
+  parentID: 0,
+  content: "",
+})
+const commentListRef = ref()
+
+async function apply(item: commentListType) {
+  form.articleID = item.articleID
+  form.parentID = item.id
+  if (form.content.trim() === "") {
+    Message.warning("请输入回复内容")
+    return
+  }
+  const res = await commentCreateApi(form)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  form.content = ""
+  commentListRef.value.getData()
+}
+const textareaRef = ref()
+
+function show() {
+  textareaRef.value?.focus()
+}
+function hide() {
+
+}
 
 </script>
 
 <template>
   <div class="article_comment_view">
-    <comment_list :type="1" v-slot="{item}:{item: commentListType}">
+    <comment_list ref="commentListRef" :type="1" v-slot="{item}:{item: commentListType}">
       <div class="user">
         <a-avatar :image-url="item.userAvatar"></a-avatar>
       </div>
@@ -35,7 +70,15 @@ import Comment_list from "@/components/web/comment/comment_list.vue";
               <i title="点赞" class="iconfont icon-dianzanliang"></i>
               <span>{{ item.diggCount }}</span>
             </span>
-          <f_a class="apply">回复</f_a>
+          <a-trigger @show="show" @hide="hide" trigger="click" content-class="apply_comment_trigger" :unmount-on-close="false">
+            <f_a class="apply">回复</f_a>
+            <template #content>
+              <a-button type="primary" size="mini" @click="apply(item)">回复</a-button>
+              <a-textarea ref="textareaRef" :auto-size="{minRows: 3}" placeholder="请输入回复的内容" @keydown.enter="apply(item)"
+                          v-model="form.content"></a-textarea>
+            </template>
+          </a-trigger>
+
         </div>
       </div>
       <div class="cover" v-if="item.articleCover">
@@ -133,5 +176,25 @@ import Comment_list from "@/components/web/comment/comment_list.vue";
   }
 
 
+}
+
+.apply_comment_trigger {
+  width: 300px;
+  border-radius: 5px;
+  border: @f_border;
+  background: var(--color-bg-1);
+  position: relative;
+  padding: 5px;
+
+  .arco-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 2;
+  }
+
+  .arco-textarea-wrapper {
+
+  }
 }
 </style>
