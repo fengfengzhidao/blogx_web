@@ -2,16 +2,21 @@
 import F_nav from "@/components/web/f_nav.vue";
 import F_main from "@/components/web/f_main.vue";
 import {useRoute} from "vue-router";
+import {userStorei} from "@/stores/user_store";
+import {IconPlus} from "@arco-design/web-vue/es/icon";
+import {IconMessage} from "@arco-design/web-vue/es/icon";
 
+const store = userStorei()
 const route = useRoute()
 import {userBaseStorei} from "@/stores/user_base_store";
+import F_a from "@/components/common/f_a.vue";
 
 const baseStore = userBaseStorei()
 baseStore.getUserBaseInfo(Number(route.params.id))
 </script>
 
 <template>
-  <div class="user_view">
+  <div class="user_view" :class="`user_style_${baseStore.userBase.homeStyleID}`">
     <f_nav no-scroll></f_nav>
     <f_main>
       <div class="user_info">
@@ -39,14 +44,42 @@ baseStore.getUserBaseInfo(Number(route.params.id))
           </div>
           <div class="place">ip归属： {{ baseStore.userBase.place }}</div>
         </div>
+        <div class="actions">
+          <template v-if="baseStore.userBase.userID != store.userInfo.userID">
+            <f_a>
+              <a-button size="mini" type="outline">
+                <template #icon>
+                  <icon-plus />
+                </template>
+                关注
+              </a-button>
+            </f_a>
+
+            <router-link to="">
+              <a-button size="mini" type="outline">
+                <template #icon>
+                  <icon-message />
+                </template>
+                私信</a-button>
+            </router-link>
+          </template>
+          <template v-else>
+            <router-link :to="{name: 'userCenterInfo'}">
+              <a-button size="mini" type="outline">编辑资料</a-button>
+            </router-link>
+            <router-link :to="{name: 'platformArticle'}">
+              <a-button size="mini"  type="outline">管理博文</a-button>
+            </router-link>
+          </template>
+        </div>
       </div>
       <div class="user_sub_view">
         <div class="head">
           <div class="left">
-            <router-link to="">他的文章</router-link>
-            <router-link to="">他的收藏</router-link>
-            <router-link to="">他的关注</router-link>
-            <router-link to="">他的粉丝</router-link>
+            <router-link :to="{name: 'userArticle'}">{{ baseStore.isMe ? '我的文章' : '他的文章' }}</router-link>
+            <router-link v-if="baseStore.isMe || baseStore.userBase.openCollect" to="">{{ baseStore.isMe ? '我的收藏' : '他的收藏' }}</router-link>
+            <router-link v-if="baseStore.isMe || baseStore.userBase.openFollow" to="">{{ baseStore.isMe ? '我的关注' : '他的关注' }}</router-link>
+            <router-link v-if="baseStore.isMe || baseStore.userBase.openFans" to="">{{ baseStore.isMe ? '我的粉丝' : '他的粉丝' }}</router-link>
           </div>
           <a-input-search placeholder="搜TA的内容"></a-input-search>
         </div>
@@ -63,7 +96,7 @@ baseStore.getUserBaseInfo(Number(route.params.id))
 .user_view {
   height: calc(100vh - 60px);
 
-  .f_main_com{
+  .f_main_com {
     height: 100%;
   }
 
@@ -121,6 +154,18 @@ baseStore.getUserBaseInfo(Number(route.params.id))
         font-size: 12px;
       }
     }
+
+    .actions{
+      position: absolute;
+      right: 10px;
+      a{
+        margin-left: 10px;
+
+        .arco-btn{
+          border-radius: 100px;
+        }
+      }
+    }
   }
 
   .user_sub_view {
@@ -146,13 +191,14 @@ baseStore.getUserBaseInfo(Number(route.params.id))
           font-size: 15px;
           margin-right: 30px;
         }
-        a.router-link-active{
+
+        a.router-link-active {
           color: rgb(var(--arcoblue-6));
         }
       }
     }
 
-    .body{
+    .body {
       height: calc(100vh - 270px);
     }
   }

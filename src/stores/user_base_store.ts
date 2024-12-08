@@ -1,6 +1,9 @@
 import {defineStore} from 'pinia'
-import { userInfoApi, type userInfoType} from "@/api/user_api";
+import {userInfoApi, type userInfoType} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
+import {userStorei} from "@/stores/user_store";
+
+const store = userStorei()
 interface userBaseType {
     userBase: userInfoType
 }
@@ -19,13 +22,17 @@ export const userBaseStorei = defineStore('userBaseStore', {
                 fansCount: 0,
                 followCount: 0,
                 place: "",
+                "openCollect": false,
+                "openFollow": false,
+                "openFans": false,
+                "homeStyleID": 0
             }
         }
     },
     actions: {
-        async getUserBaseInfo(id: number){
+        async getUserBaseInfo(id: number) {
             const res = await userInfoApi(id)
-            if (res.code){
+            if (res.code) {
                 Message.error(res.msg)
                 return
             }
@@ -34,6 +41,8 @@ export const userBaseStorei = defineStore('userBaseStore', {
         }
     },
     getters: {
-
+        isMe(): boolean {
+            return this.userBase.userID === store.userInfo.userID
+        }
     }
 })

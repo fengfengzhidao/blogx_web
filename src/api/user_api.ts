@@ -23,6 +23,10 @@ export interface userInfoType {
     "fansCount": number
     "followCount": number
     "place": string
+    "openCollect": boolean,
+    "openFollow": boolean,
+    "openFans": boolean,
+    "homeStyleID": number
 }
 
 export function userInfoApi(userID: number): Promise<baseResponse<userInfoType>> {
@@ -181,7 +185,7 @@ export interface loginRecordType {
 }
 
 export interface loginRecordRequest extends paramsType {
-type: 1|2
+    type: 1 | 2
 }
 
 export function loginRecordApi(params: loginRecordRequest): Promise<baseResponse<listResponse<loginRecordType>>> {
