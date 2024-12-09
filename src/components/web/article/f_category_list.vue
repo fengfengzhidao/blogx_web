@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue";
-import type {listResponse} from "@/api";
+import type {listResponse, baseResponse} from "@/api";
 import {
   categoryCreateApi,
   type categoryCreateRequest,
   categoryListApi,
-  type categoryListType
+  type categoryListType, categoryRemoveApi
 } from "@/api/category_api";
 import {Message} from "@arco-design/web-vue";
 import {useRoute} from "vue-router";
@@ -37,11 +37,20 @@ async function getCategoryData() {
 }
 
 const form = reactive<categoryCreateRequest>({
+  id: 0,
   title: ""
 })
 const visible = ref(false)
 
 function addCategory() {
+  form.id = 0
+  form.title = ""
+  visible.value = true
+}
+
+function showEdit(item: categoryListType) {
+  form.id = item.id
+  form.title = item.title
   visible.value = true
 }
 
@@ -50,7 +59,8 @@ async function addCategoryHandler() {
     Message.warning("请输入分类名称")
     return
   }
-  const res = await categoryCreateApi(form)
+  let res: baseResponse<string>
+  res = await categoryCreateApi(form)
   if (res.code) {
     Message.error(res.msg)
     return
@@ -59,6 +69,15 @@ async function addCategoryHandler() {
   getCategoryData()
 }
 
+async function remove(item: categoryListType) {
+  const res = await categoryRemoveApi([item.id])
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  getCategoryData()
+}
 getCategoryData()
 </script>
 
@@ -72,15 +91,25 @@ getCategoryData()
         创建
       </a-button>
     </div>
-    <a-modal width="30%" title="创建分类" v-model:visible="visible" :on-before-ok="addCategoryHandler">
+    <a-modal width="30%" :title="form.id ? '编辑分类' : '创建分类'" v-model:visible="visible"
+             :on-before-ok="addCategoryHandler">
       <a-input placeholder="分类名称" v-model="form.title"></a-input>
     </a-modal>
     <div class="list">
       <div class="item" :class="{active: item.id===Number(route.query.categoryID)}" v-for="item in categoryData.list">
-        <router-link :to="{name: 'userArticle', params: {id:  props.userId}, query: {categoryID: item.id}}">
-          <span>{{ item.title }}</span>
-          <span>{{ item.articleCount }}</span>
-        </router-link>
+        <a-trigger content-class="category_trigger" trigger="contextMenu" align-point>
+          <router-link :to="{name: 'userArticle', params: {id:  props.userId}, query: {categoryID: item.id}}">
+            <span>
+              <a-typography-text :ellipsis="{css: true, rows: 1}">{{ item.title }}</a-typography-text>
+            </span>
+            <span>{{ item.articleCount }}</span>
+          </router-link>
+          <template #content>
+            <div class="item" @click="showEdit(item)">编辑</div>
+            <div class="item delete" @click="remove(item)">删除</div>
+          </template>
+        </a-trigger>
+
       </div>
     </div>
   </div>
@@ -112,9 +141,15 @@ getCategoryData()
 
       a {
         width: 100%;
+        height: 100%;
         display: flex;
+        align-items: center;
         justify-content: space-around;
         color: var(--color-text-2);
+
+        span:nth-child(1){
+          width: 5rem;
+        }
       }
     }
 
@@ -123,6 +158,27 @@ getCategoryData()
         color: rgb(var(--arcoblue-6));
       }
     }
+  }
+}
+
+.category_trigger {
+  background: var(--color-bg-1);
+  border-radius: 5px;
+  border: @f_border;
+  padding: 5px 0;
+
+  .item {
+    padding: 10px 20px;
+    cursor: pointer;
+
+
+    &:hover {
+      background: var(--color-fill-1)
+    }
+  }
+
+  .delete {
+    color: red;
   }
 }
 </style>

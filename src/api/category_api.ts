@@ -19,9 +19,14 @@ export function categoryListApi(params: categoryListRequest): Promise<baseRespon
 }
 
 export interface categoryCreateRequest {
+    id: number
     title: string
 }
 
 export function categoryCreateApi(data: categoryCreateRequest): Promise<baseResponse<string>> {
     return useAxios.post("/api/category", data)
+}
+
+export function categoryRemoveApi(idList: number[]): Promise<baseResponse<string>> {
+    return useAxios.delete("/api/category", {data: {idList}})
 }
