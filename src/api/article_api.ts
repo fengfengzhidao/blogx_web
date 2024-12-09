@@ -28,6 +28,7 @@ export interface articleListRequest extends paramsType {
     userID?: number
     collectID?: number
     status?: number
+    categoryID?:number
 }
 
 export function articleListApi(params: articleListRequest): Promise<baseResponse<listResponse<articleListType>>> {

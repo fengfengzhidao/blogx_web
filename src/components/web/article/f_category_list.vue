@@ -9,11 +9,14 @@ import {
 } from "@/api/category_api";
 import {Message} from "@arco-design/web-vue";
 import {useRoute} from "vue-router";
+import F_a from "@/components/common/f_a.vue";
+import router from "@/router";
 
 const route = useRoute()
 
 interface Props {
   userId: number
+  isMe: boolean
 }
 
 const props = defineProps<Props>()
@@ -78,12 +81,32 @@ async function remove(item: categoryListType) {
   Message.success(res.msg)
   getCategoryData()
 }
+
+function go(item:categoryListType) {
+
+  // 判断现在是不是已经点了它
+  const  categoryID = Number(route.query.categoryID)
+  let _id : number|undefined  = item.id
+  if (categoryID === item.id){
+    _id = undefined
+  }
+
+  router.push({
+    name: route.name as string,
+    query: {
+      ...route.query,
+      categoryID: _id,
+    },
+    params: route.params
+  })
+}
+
 getCategoryData()
 </script>
 
 <template>
   <div class="f_category_list_com">
-    <div class="add">
+    <div class="add" v-if="props.isMe">
       <a-button long type="outline" @click="addCategory">
         <template #icon>
           <icon-plus></icon-plus>
@@ -91,24 +114,30 @@ getCategoryData()
         创建
       </a-button>
     </div>
-    <a-modal width="30%" :title="form.id ? '编辑分类' : '创建分类'" v-model:visible="visible"
+    <a-modal v-if="props.isMe" width="30%" :title="form.id ? '编辑分类' : '创建分类'" v-model:visible="visible"
              :on-before-ok="addCategoryHandler">
       <a-input placeholder="分类名称" v-model="form.title"></a-input>
     </a-modal>
     <div class="list">
       <div class="item" :class="{active: item.id===Number(route.query.categoryID)}" v-for="item in categoryData.list">
-        <a-trigger content-class="category_trigger" trigger="contextMenu" align-point>
-          <router-link :to="{name: 'userArticle', params: {id:  props.userId}, query: {categoryID: item.id}}">
+        <a-trigger v-if="props.isMe" content-class="category_trigger" trigger="contextMenu" align-point>
+          <f_a @click="go(item)" >
             <span>
               <a-typography-text :ellipsis="{css: true, rows: 1}">{{ item.title }}</a-typography-text>
             </span>
             <span>{{ item.articleCount }}</span>
-          </router-link>
+          </f_a>
           <template #content>
             <div class="item" @click="showEdit(item)">编辑</div>
             <div class="item delete" @click="remove(item)">删除</div>
           </template>
         </a-trigger>
+        <f_a v-else @click="go(item)">
+            <span>
+              <a-typography-text :ellipsis="{css: true, rows: 1}">{{ item.title }}</a-typography-text>
+            </span>
+          <span>{{ item.articleCount }}</span>
+        </f_a>
 
       </div>
     </div>
@@ -156,6 +185,9 @@ getCategoryData()
     .item.active {
       a {
         color: rgb(var(--arcoblue-6));
+        span{
+          color: rgb(var(--arcoblue-6));
+        }
       }
     }
   }

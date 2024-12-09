@@ -8,13 +8,8 @@ import {IconEye, IconMessage, IconMore} from "@arco-design/web-vue/es/icon";
 import {useRoute} from "vue-router";
 import {Message} from "@arco-design/web-vue";
 import {userBaseStorei} from "@/stores/user_base_store";
-import {
-  type categoryListType,
-  categoryListApi,
-  categoryCreateApi,
-  type categoryCreateRequest
-} from "@/api/category_api";
 import F_category_list from "@/components/web/article/f_category_list.vue";
+import {watch} from "vue";
 
 const baseStore = userBaseStorei()
 const route = useRoute()
@@ -40,11 +35,26 @@ async function getData() {
 
 getData()
 
+watch(() => route.query, () => {
+  const categoryID = Number(route.query.categoryID)
+  if (isNaN(categoryID)) {
+    params.categoryID = undefined
+  } else {
+    params.categoryID = categoryID
+  }
+
+  if (route.query.key !== undefined) {
+    params.key = route.query.key as string
+  }
+  getData()
+}, {deep: true})
+
+
 </script>
 
 <template>
   <div class="user_article_list_view">
-    <f_category_list :user-id="Number(route.params.id)"></f_category_list>
+    <f_category_list :user-id="Number(route.params.id)" :is-me="baseStore.isMe"></f_category_list>
     <div class="article_list">
       <div class="item" v-for="item in data.list">
         <div class="cover">
