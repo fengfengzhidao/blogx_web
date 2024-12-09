@@ -140,6 +140,7 @@ baseStore.getUserBaseInfo(Number(route.params.id))
           span:nth-child(1) {
             font-size: 18px;
             color: var(--color-text-1);
+            font-weight: 600;
           }
 
           span:nth-child(2) {
@@ -175,7 +176,7 @@ baseStore.getUserBaseInfo(Number(route.params.id))
 
     .head {
       border-bottom: @f_border;
-      padding: 20px 20px 10px 20px;
+      padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
