@@ -10,9 +10,25 @@ const store = userStorei()
 const route = useRoute()
 import {userBaseStorei} from "@/stores/user_base_store";
 import F_a from "@/components/common/f_a.vue";
+import {ref} from "vue";
+import router from "@/router";
 
 const baseStore = userBaseStorei()
 baseStore.getUserBaseInfo(Number(route.params.id))
+
+const text = ref("")
+
+async function search(){
+  router.push({
+    name: route.name as string,
+    query: {
+      ...route.query,
+      key: text.value,
+    },
+    params: route.params,
+  })
+}
+
 </script>
 
 <template>
@@ -81,7 +97,7 @@ baseStore.getUserBaseInfo(Number(route.params.id))
             <router-link v-if="baseStore.isMe || baseStore.userBase.openFollow" to="">{{ baseStore.isMe ? '我的关注' : '他的关注' }}</router-link>
             <router-link v-if="baseStore.isMe || baseStore.userBase.openFans" to="">{{ baseStore.isMe ? '我的粉丝' : '他的粉丝' }}</router-link>
           </div>
-          <a-input-search placeholder="搜TA的内容"></a-input-search>
+          <a-input-search v-model="text" @keydown.enter="search" @search="search" placeholder="搜TA的内容"></a-input-search>
         </div>
         <div class="body">
           <router-view></router-view>

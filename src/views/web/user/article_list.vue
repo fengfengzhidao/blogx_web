@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import {articleListApi, type articleListRequest, type articleListType} from "@/api/article_api";
 import type {listResponse} from "@/api";
 import {goArticle} from "@/utils/go_router";
@@ -8,6 +8,13 @@ import {IconEye, IconMessage, IconMore} from "@arco-design/web-vue/es/icon";
 import {useRoute} from "vue-router";
 import {Message} from "@arco-design/web-vue";
 import {userBaseStorei} from "@/stores/user_base_store";
+import {
+  type categoryListType,
+  categoryListApi,
+  categoryCreateApi,
+  type categoryCreateRequest
+} from "@/api/category_api";
+import F_category_list from "@/components/web/article/f_category_list.vue";
 
 const baseStore = userBaseStorei()
 const route = useRoute()
@@ -30,22 +37,14 @@ async function getData() {
   data.count = res.data.count
 }
 
+
 getData()
 
 </script>
 
 <template>
   <div class="user_article_list_view">
-    <div class="category">
-      <div class="add">
-        <a-button long type="outline">
-          <template #icon>
-            <icon-plus></icon-plus>
-          </template>
-          创建
-        </a-button>
-      </div>
-    </div>
+    <f_category_list :user-id="Number(route.params.id)"></f_category_list>
     <div class="article_list">
       <div class="item" v-for="item in data.list">
         <div class="cover">
@@ -99,14 +98,9 @@ getData()
   display: flex;
   height: 100%;
 
-  .category {
-    width: 150px;
-    border-right: @f_border;
-    padding: 10px;
 
-    .arco-btn {
-      border-radius: 100px;
-    }
+  .f_category_list_com {
+    width: 150px;
   }
 
   .article_list {

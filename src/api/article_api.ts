@@ -126,3 +126,4 @@ export function articleUpdateApi(data: articleEditType):Promise<baseResponse<str
 export function articleRemoveApi(id: number):Promise<baseResponse<string>>{
     return useAxios.delete("/api/article/" + id.toString())
 }
+
