@@ -94,8 +94,8 @@ async function search(){
           <div class="left">
             <router-link :to="{name: 'userArticle'}">{{ baseStore.isMe ? '我的文章' : '他的文章' }}</router-link>
             <router-link :to="{name: 'userArticleCollect'}" v-if="baseStore.isMe || baseStore.userBase.openCollect" to="">{{ baseStore.isMe ? '我的收藏' : '他的收藏' }}</router-link>
-            <router-link v-if="baseStore.isMe || baseStore.userBase.openFollow" to="">{{ baseStore.isMe ? '我的关注' : '他的关注' }}</router-link>
-            <router-link v-if="baseStore.isMe || baseStore.userBase.openFans" to="">{{ baseStore.isMe ? '我的粉丝' : '他的粉丝' }}</router-link>
+            <router-link :to="{name: 'userFocusList'}" v-if="baseStore.isMe || baseStore.userBase.openFollow" to="">{{ baseStore.isMe ? '我的关注' : '他的关注' }}</router-link>
+            <router-link :to="{name: 'userFansList'}" v-if="baseStore.isMe || baseStore.userBase.openFans" to="">{{ baseStore.isMe ? '我的粉丝' : '他的粉丝' }}</router-link>
           </div>
           <a-input-search v-model="text" @keydown.enter="search" @search="search" placeholder="搜TA的内容"></a-input-search>
         </div>
