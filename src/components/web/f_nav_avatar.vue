@@ -2,6 +2,7 @@
 import {userStorei} from "@/stores/user_store";
 import router from "@/router";
 import {showLogin} from "@/components/web/f_login";
+import {goUser} from "@/utils/go_router";
 
 const store = userStorei()
 
@@ -22,7 +23,7 @@ function goRouter(name: string) {
     <template #content>
       <div class="f_nav_avatar_com">
         <div class="avatar">
-          <a-avatar :image-url="store.userInfo.avatar"  :size="60">{{ store.userInfo.nickName[0] }}</a-avatar>
+          <a-avatar @click="goUser(store.userInfo.userID)" :image-url="store.userInfo.avatar"  :size="60">{{ store.userInfo.nickName[0] }}</a-avatar>
         </div>
         <div class="nickname">{{ store.userInfo.nickName }}</div>
         <div class="data">

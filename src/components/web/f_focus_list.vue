@@ -1,12 +1,24 @@
 <script setup lang="ts">
-import {fansListApi, type fansListRequest, focusListApi, type userListType} from "@/api/focus_api";
-import {reactive} from "vue";
+import {
+  fansListApi,
+  type fansListRequest,
+  focusListApi,
+  focusUserApi,
+  focusUserRemoveApi,
+  type userListType
+} from "@/api/focus_api";
+import {reactive, watch} from "vue";
 import type {listResponse} from "@/api";
 import {userStorei} from "@/stores/user_store";
 import {Message} from "@arco-design/web-vue";
 import F_label from "@/components/common/f_label.vue";
 import {relationOptions} from "@/options/options";
 import type {baseResponse} from "@/api";
+import router from "@/router";
+import {useRoute} from "vue-router";
+import {goUser} from "@/utils/go_router";
+
+const route = useRoute()
 
 interface Props {
   userId: number
@@ -43,7 +55,31 @@ async function getData() {
   data.count = res.data.count
 }
 
+async function focus(userID: number, isFocus: boolean) {
+  let res: baseResponse<string>
+  if (isFocus) {
+    res = await focusUserApi({focusUserID: userID})
+  } else {
+    res = await focusUserRemoveApi({focusUserID: userID})
+  }
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  getData()
+}
+
+
 getData()
+
+watch(() => route.query.key, ()=>{
+  if (route.query.key !== undefined){
+    params.key = route.query.key as string
+    getData()
+  }
+})
+
 
 </script>
 
@@ -51,19 +87,20 @@ getData()
   <div class="f_focus_list_com">
     <div class="user_list">
       <div class="item" v-for="item in data.list">
-        <a-avatar :size="60" :image-url="item.userAvatar">{{ item.userNickname[0] }}</a-avatar>
+        <a-avatar @click="goUser(item.userID)" :size="60" :image-url="item.userAvatar">{{ item.userNickname[0] }}</a-avatar>
         <div class="info">
-          <div class="nick">{{ item.userNickname }}
-
+          <div class="nick">
+            <span @click="goUser(item.userID)" class="nickname">{{ item.userNickname }}</span>
             <f_label v-if="item.relationship !== 1" :options="relationOptions" :value="item.relationship"></f_label>
           </div>
           <div class="abs">
             <a-typography-text :ellipsis="{rows: 1, css: true}">{{ item.userAbstract }}</a-typography-text>
           </div>
           <div class="action">
-            <a-button v-if="item.relationship === 2 || item.relationship === 4" type="primary" size="mini">已关注
+            <a-button v-if="item.relationship === 2 || item.relationship === 4" type="primary" size="mini"
+                      @click="focus(item.userID, false)">已关注
             </a-button>
-            <a-button v-else type="outline" size="mini">关注</a-button>
+            <a-button v-else type="outline" size="mini" @click="focus(item.userID, true)">关注</a-button>
           </div>
         </div>
       </div>
@@ -105,6 +142,10 @@ getData()
           height: 1.5rem;
           display: flex;
           align-items: center;
+
+          .nickname{
+            cursor: pointer;
+          }
         }
 
         .arco-tag {

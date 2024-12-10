@@ -28,3 +28,15 @@ export function focusListApi(params: fansListRequest): Promise<baseResponse<list
     }
     return useAxios.get("/api/focus/my_focus", {params})
 }
+
+export interface focusType {
+    focusUserID: number
+}
+
+export function focusUserApi(data: focusType): Promise<baseResponse<string>> {
+    return useAxios.post("/api/focus", data)
+}
+
+export function focusUserRemoveApi(data: focusType): Promise<baseResponse<string>> {
+    return useAxios.delete("/api/focus", {data})
+}
