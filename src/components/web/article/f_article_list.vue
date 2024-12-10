@@ -139,6 +139,7 @@ defineExpose({
 
 <style lang="less">
 .f_article_list_parent_com {
+  width: calc(100% - 150px);
   .actions {
     height: 35px;
     display: flex;
@@ -151,99 +152,100 @@ defineExpose({
       cursor: pointer;
     }
   }
-}
+  .f_article_list_com {
 
-.f_article_list_com {
-  width: calc(100% - 150px);
-  margin-top: 10px;
+    margin-top: 10px;
 
-  .item {
-    display: flex;
-    position: relative;
-    padding: 10px 20px;
+    .item {
+      display: flex;
+      position: relative;
+      padding: 10px 20px;
 
-    .user_top {
-      position: absolute;
-      right: 10px;
-      top: 5px;
-    }
+      .user_top {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+      }
 
 
-    &:hover {
-      background: var(--color-fill-1);
+      &:hover {
+        background: var(--color-fill-1);
+
+        .more {
+          opacity: 1;
+        }
+      }
+
+      .cover {
+        img {
+          width: 160px;
+          border-radius: 5px;
+          margin-right: 10px;
+        }
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .title {
+          font-size: 15px;
+          font-weight: 600;
+          color: var(--color-text-1);
+          cursor: pointer;
+        }
+
+        .abs {
+          margin: 5px 0;
+        }
+
+        .data {
+          display: flex;
+          align-items: center;
+          color: var(--color-text-2);
+
+          .look, .comment {
+            margin-right: 10px;
+
+            span {
+              margin-left: 5px;
+            }
+          }
+
+          .tags {
+            margin-right: 10px;
+            max-width: 400px;
+
+            .tag {
+              margin-right: 10px;
+            }
+          }
+
+          .date {
+            font-size: 12px;
+            color: var(--color-text-2);
+          }
+        }
+      }
 
       .more {
-        opacity: 1;
-      }
-    }
-
-    .cover {
-      img {
-        width: 160px;
-        border-radius: 5px;
-        margin-right: 10px;
-      }
-    }
-
-    .info {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-
-      .title {
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--color-text-1);
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
         cursor: pointer;
-      }
-
-      .abs {
-        margin: 5px 0;
-      }
-
-      .data {
-        display: flex;
-        align-items: center;
-        color: var(--color-text-2);
-
-        .look, .comment {
-          margin-right: 10px;
-
-          span {
-            margin-left: 5px;
-          }
-        }
-
-        .tags {
-          margin-right: 10px;
-          max-width: 400px;
-
-          .tag {
-            margin-right: 10px;
-          }
-        }
-
-        .date {
-          font-size: 12px;
-          color: var(--color-text-2);
-        }
+        opacity: 0;
       }
     }
 
-    .more {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      opacity: 0;
+    .page {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
     }
-  }
-
-  .page {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
   }
 }
+
+
 </style>

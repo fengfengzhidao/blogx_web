@@ -34,3 +34,7 @@ export function collectCreateApi(data: collectCreateRequest): Promise<baseRespon
 export function collectRemoveApi(idList: number[]): Promise<baseResponse<string>> {
     return useAxios.delete("/api/collect", {data: {idList}})
 }
+
+export function collectArticleRemoveApi(idList: number[]): Promise<baseResponse<string>> {
+    return useAxios.delete("/api/article/collect", {data: {idList}})
+}
