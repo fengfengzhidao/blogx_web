@@ -17,6 +17,7 @@ import type {baseResponse} from "@/api";
 import router from "@/router";
 import {useRoute} from "vue-router";
 import {goUser} from "@/utils/go_router";
+import {showLogin} from "@/components/web/f_login";
 
 const route = useRoute()
 
@@ -56,6 +57,11 @@ async function getData() {
 }
 
 async function focus(userID: number, isFocus: boolean) {
+  if (!store.isLogin){
+    Message.warning("请登录")
+    showLogin({reload: true})
+    return
+  }
   let res: baseResponse<string>
   if (isFocus) {
     res = await focusUserApi({focusUserID: userID})
@@ -90,8 +96,10 @@ watch(() => route.query.key, ()=>{
         <a-avatar @click="goUser(item.userID)" :size="60" :image-url="item.userAvatar">{{ item.userNickname[0] }}</a-avatar>
         <div class="info">
           <div class="nick">
-            <span @click="goUser(item.userID)" class="nickname">{{ item.userNickname }}</span>
-            <f_label v-if="item.relationship !== 1" :options="relationOptions" :value="item.relationship"></f_label>
+            <span @click="goUser(item.userID)" class="nickname">
+              <a-typography-text :ellipsis="{rows: 1, css: true}">{{ item.userNickname }}</a-typography-text>
+            </span>
+            <f_label v-if="item.relationship !== 1 && item.relationship !== 0" :options="relationOptions" :value="item.relationship"></f_label>
           </div>
           <div class="abs">
             <a-typography-text :ellipsis="{rows: 1, css: true}">{{ item.userAbstract }}</a-typography-text>
@@ -145,6 +153,7 @@ watch(() => route.query.key, ()=>{
 
           .nickname{
             cursor: pointer;
+            max-width: 6rem;
           }
         }
 

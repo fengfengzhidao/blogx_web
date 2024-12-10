@@ -10,11 +10,11 @@ const store = userStorei()
 const route = useRoute()
 import {userBaseStorei} from "@/stores/user_base_store";
 import F_a from "@/components/common/f_a.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import router from "@/router";
 
 const baseStore = userBaseStorei()
-baseStore.getUserBaseInfo(Number(route.params.id))
+
 
 const text = ref("")
 
@@ -28,6 +28,14 @@ async function search(){
     params: route.params,
   })
 }
+
+
+watch(()=>route.params.id, ()=>{
+  const id = Number(route.params.id)
+  if (!isNaN(id)){
+    baseStore.getUserBaseInfo(id)
+  }
+}, {immediate: true})
 
 </script>
 
