@@ -5,6 +5,7 @@ import {useRoute} from "vue-router";
 import {userStorei} from "@/stores/user_store";
 import {IconPlus} from "@arco-design/web-vue/es/icon";
 import {IconMessage} from "@arco-design/web-vue/es/icon";
+import {IconCheck} from "@arco-design/web-vue/es/icon";
 
 const store = userStorei()
 const route = useRoute()
@@ -12,6 +13,11 @@ import {userBaseStorei} from "@/stores/user_base_store";
 import F_a from "@/components/common/f_a.vue";
 import {ref, watch} from "vue";
 import router from "@/router";
+import {Message} from "@arco-design/web-vue";
+import {showLogin} from "@/components/web/f_login";
+import type {baseResponse} from "@/api";
+import {focusUserApi, focusUserRemoveApi} from "@/api/focus_api";
+import {goUser} from "@/utils/go_router";
 
 const baseStore = userBaseStorei()
 
@@ -37,6 +43,27 @@ watch(()=>route.params.id, ()=>{
   }
 }, {immediate: true})
 
+
+async function focus(isFocus: boolean) {
+  if (!store.isLogin){
+    Message.warning("请登录")
+    showLogin({reload: true})
+    return
+  }
+  let res: baseResponse<string>
+  if (isFocus) {
+    res = await focusUserApi({focusUserID: baseStore.userBase.userID})
+  } else {
+    res = await focusUserRemoveApi({focusUserID: baseStore.userBase.userID})
+  }
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  baseStore.getUserBaseInfo(baseStore.userBase.userID)
+}
+
 </script>
 
 <template>
@@ -45,7 +72,7 @@ watch(()=>route.params.id, ()=>{
     <f_main>
       <div class="user_info">
         <div class="avatar">
-          <a-avatar :size="65" :image-url="baseStore.userBase.avatar"></a-avatar>
+          <a-avatar @click="goUser(baseStore.userBase.userID)" :size="65" :image-url="baseStore.userBase.avatar"></a-avatar>
         </div>
         <div class="info">
           <div class="nick">
@@ -71,11 +98,17 @@ watch(()=>route.params.id, ()=>{
         <div class="actions">
           <template v-if="baseStore.userBase.userID != store.userInfo.userID">
             <f_a>
-              <a-button size="mini" type="outline">
+              <a-button @click="focus(true)" size="mini" type="outline" v-if="!(baseStore.userBase.relation === 2 || baseStore.userBase.relation === 4)">
                 <template #icon>
                   <icon-plus />
                 </template>
                 关注
+              </a-button>
+              <a-button @click="focus(false)" v-else size="mini" type="primary">
+                <template #icon>
+                  <icon-check />
+                </template>
+                已关注
               </a-button>
             </f_a>
 

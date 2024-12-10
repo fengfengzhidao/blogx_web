@@ -27,6 +27,7 @@ export interface userInfoType {
     "openFollow": boolean,
     "openFans": boolean,
     "homeStyleID": number
+    "relation": 0| 1 | 2 | 3 | 4
 }
 
 export function userInfoApi(userID: number): Promise<baseResponse<userInfoType>> {

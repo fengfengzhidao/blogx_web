@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import type {listResponse, baseResponse} from "@/api";
 import {
   categoryCreateApi,
   type categoryCreateRequest,
-  categoryListApi,
+  categoryListApi, type categoryListRequest,
   type categoryListType, categoryRemoveApi
 } from "@/api/category_api";
 import {Message} from "@arco-design/web-vue";
@@ -26,11 +26,13 @@ const categoryData = reactive<listResponse<categoryListType>>({
   count: 0
 })
 
+const params = reactive<categoryListRequest>({
+  userID: props.userId,
+  type: 2,
+})
+
 async function getCategoryData() {
-  const res = await categoryListApi({
-    userID: props.userId,
-    type: 2,
-  })
+  const res = await categoryListApi(params)
   if (res.code) {
     Message.error(res.msg)
     return
@@ -82,12 +84,12 @@ async function remove(item: categoryListType) {
   getCategoryData()
 }
 
-function go(item:categoryListType) {
+function go(item: categoryListType) {
 
   // 判断现在是不是已经点了它
-  const  categoryID = Number(route.query.categoryID)
-  let _id : number|undefined  = item.id
-  if (categoryID === item.id){
+  const categoryID = Number(route.query.categoryID)
+  let _id: number | undefined = item.id
+  if (categoryID === item.id) {
     _id = undefined
   }
 
@@ -101,6 +103,13 @@ function go(item:categoryListType) {
   })
 }
 
+watch(() => props.userId, () => {
+  const userID = Number(props.userId)
+  if (!isNaN(userID)) {
+    params.userID = userID
+    getCategoryData()
+  }
+})
 getCategoryData()
 </script>
 
@@ -121,7 +130,7 @@ getCategoryData()
     <div class="list">
       <div class="item" :class="{active: item.id===Number(route.query.categoryID)}" v-for="item in categoryData.list">
         <a-trigger v-if="props.isMe" content-class="category_trigger" trigger="contextMenu" align-point>
-          <f_a @click="go(item)" >
+          <f_a @click="go(item)">
             <span>
               <a-typography-text :ellipsis="{css: true, rows: 1}">{{ item.title }}</a-typography-text>
             </span>
@@ -176,7 +185,7 @@ getCategoryData()
         justify-content: space-around;
         color: var(--color-text-2);
 
-        span:nth-child(1){
+        span:nth-child(1) {
           width: 5rem;
         }
       }
@@ -185,7 +194,8 @@ getCategoryData()
     .item.active {
       a {
         color: rgb(var(--arcoblue-6));
-        span{
+
+        span {
           color: rgb(var(--arcoblue-6));
         }
       }

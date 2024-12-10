@@ -4,6 +4,7 @@ import {Message} from "@arco-design/web-vue";
 import {userStorei} from "@/stores/user_store";
 
 const store = userStorei()
+
 interface userBaseType {
     userBase: userInfoType
 }
@@ -25,7 +26,8 @@ export const userBaseStorei = defineStore('userBaseStore', {
                 "openCollect": false,
                 "openFollow": false,
                 "openFans": false,
-                "homeStyleID": 0
+                "homeStyleID": 0,
+                relation: 0
             }
         }
     },
