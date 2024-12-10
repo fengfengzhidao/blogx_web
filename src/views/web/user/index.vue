@@ -24,7 +24,7 @@ const baseStore = userBaseStorei()
 
 const text = ref("")
 
-async function search(){
+async function search() {
   router.push({
     name: route.name as string,
     query: {
@@ -36,16 +36,16 @@ async function search(){
 }
 
 
-watch(()=>route.params.id, ()=>{
+watch(() => route.params.id, () => {
   const id = Number(route.params.id)
-  if (!isNaN(id)){
+  if (!isNaN(id)) {
     baseStore.getUserBaseInfo(id)
   }
 }, {immediate: true})
 
 
 async function focus(isFocus: boolean) {
-  if (!store.isLogin){
+  if (!store.isLogin) {
     Message.warning("请登录")
     showLogin({reload: true})
     return
@@ -68,11 +68,13 @@ async function focus(isFocus: boolean) {
 
 <template>
   <div class="user_view" :class="`user_style_${baseStore.userBase.homeStyleID}`">
+    <div class="banner"></div>
     <f_nav no-scroll></f_nav>
     <f_main>
       <div class="user_info">
         <div class="avatar">
-          <a-avatar @click="goUser(baseStore.userBase.userID)" :size="65" :image-url="baseStore.userBase.avatar"></a-avatar>
+          <a-avatar @click="goUser(baseStore.userBase.userID)" :size="65"
+                    :image-url="baseStore.userBase.avatar"></a-avatar>
         </div>
         <div class="info">
           <div class="nick">
@@ -98,15 +100,16 @@ async function focus(isFocus: boolean) {
         <div class="actions">
           <template v-if="baseStore.userBase.userID != store.userInfo.userID">
             <f_a>
-              <a-button @click="focus(true)" size="mini" type="outline" v-if="!(baseStore.userBase.relation === 2 || baseStore.userBase.relation === 4)">
+              <a-button @click="focus(true)" size="mini" type="outline"
+                        v-if="!(baseStore.userBase.relation === 2 || baseStore.userBase.relation === 4)">
                 <template #icon>
-                  <icon-plus />
+                  <icon-plus/>
                 </template>
                 关注
               </a-button>
               <a-button @click="focus(false)" v-else size="mini" type="primary">
                 <template #icon>
-                  <icon-check />
+                  <icon-check/>
                 </template>
                 已关注
               </a-button>
@@ -115,9 +118,10 @@ async function focus(isFocus: boolean) {
             <router-link to="">
               <a-button size="mini" type="outline">
                 <template #icon>
-                  <icon-message />
+                  <icon-message/>
                 </template>
-                私信</a-button>
+                私信
+              </a-button>
             </router-link>
           </template>
           <template v-else>
@@ -125,7 +129,7 @@ async function focus(isFocus: boolean) {
               <a-button size="mini" type="outline">编辑资料</a-button>
             </router-link>
             <router-link :to="{name: 'platformArticle'}">
-              <a-button size="mini"  type="outline">管理博文</a-button>
+              <a-button size="mini" type="outline">管理博文</a-button>
             </router-link>
           </template>
         </div>
@@ -134,11 +138,18 @@ async function focus(isFocus: boolean) {
         <div class="head">
           <div class="left">
             <router-link :to="{name: 'userArticle'}">{{ baseStore.isMe ? '我的文章' : '他的文章' }}</router-link>
-            <router-link :to="{name: 'userArticleCollect'}" v-if="baseStore.isMe || baseStore.userBase.openCollect" to="">{{ baseStore.isMe ? '我的收藏' : '他的收藏' }}</router-link>
-            <router-link :to="{name: 'userFocusList'}" v-if="baseStore.isMe || baseStore.userBase.openFollow" to="">{{ baseStore.isMe ? '我的关注' : '他的关注' }}</router-link>
-            <router-link :to="{name: 'userFansList'}" v-if="baseStore.isMe || baseStore.userBase.openFans" to="">{{ baseStore.isMe ? '我的粉丝' : '他的粉丝' }}</router-link>
+            <router-link :to="{name: 'userArticleCollect'}" v-if="baseStore.isMe || baseStore.userBase.openCollect"
+                         to="">{{ baseStore.isMe ? '我的收藏' : '他的收藏' }}
+            </router-link>
+            <router-link :to="{name: 'userFocusList'}" v-if="baseStore.isMe || baseStore.userBase.openFollow" to="">
+              {{ baseStore.isMe ? '我的关注' : '他的关注' }}
+            </router-link>
+            <router-link :to="{name: 'userFansList'}" v-if="baseStore.isMe || baseStore.userBase.openFans" to="">
+              {{ baseStore.isMe ? '我的粉丝' : '他的粉丝' }}
+            </router-link>
           </div>
-          <a-input-search v-model="text" @keydown.enter="search" @search="search" placeholder="搜TA的内容"></a-input-search>
+          <a-input-search v-model="text" @keydown.enter="search" @search="search"
+                          placeholder="搜TA的内容"></a-input-search>
         </div>
         <div class="body">
           <router-view></router-view>
@@ -152,9 +163,15 @@ async function focus(isFocus: boolean) {
 <style lang="less">
 .user_view {
   height: calc(100vh - 60px);
+  position: relative;
 
   .f_main_com {
-    height: 100%;
+    min-height: 100%;
+
+    .f_container {
+      z-index: 1;
+      margin-bottom: 20px;
+    }
   }
 
   .user_info {
@@ -213,13 +230,14 @@ async function focus(isFocus: boolean) {
       }
     }
 
-    .actions{
+    .actions {
       position: absolute;
       right: 10px;
-      a{
+
+      a {
         margin-left: 10px;
 
-        .arco-btn{
+        .arco-btn {
           border-radius: 100px;
         }
       }
@@ -259,6 +277,40 @@ async function focus(isFocus: boolean) {
     .body {
       height: calc(100vh - 270px);
     }
+  }
+}
+
+.user_style_2 {
+  .banner {
+    position: absolute;
+    width: 100%;
+    height: 200px;
+    background-image: url("@/assets/img/banner/1.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -350px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 50px;
+  }
+}
+
+.user_style_3 {
+  .banner {
+    position: absolute;
+    width: 100%;
+    height: 200px;
+    background-image: url("@/assets/img/banner/3.webp");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -350px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 30px;
   }
 }
 </style>
