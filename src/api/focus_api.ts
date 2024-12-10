@@ -1,10 +1,11 @@
 import {type baseResponse, type listResponse, type paramsType, useAxios} from "@/api/index";
 
-export interface fansListType {
-    "fansUserID": number
-    "fansUserNickname": string
-    "fansUserAvatar": string
-    "fansUserAbstract": string
+export interface userListType {
+    "userID": number
+    "userNickname": string
+    "userAvatar": string
+    "userAbstract": string
+    "relationship": 1 | 2 | 3 | 4
     "createdAt": string
 }
 
@@ -14,22 +15,14 @@ export interface fansListRequest extends paramsType {
 
 }
 
-export function fansListApi(params: fansListRequest): Promise<baseResponse<listResponse<fansListType>>> {
+export function fansListApi(params: fansListRequest): Promise<baseResponse<listResponse<userListType>>> {
     if (params.isMe) {
         params.userID = undefined
     }
     return useAxios.get("/api/focus/my_fans", {params})
 }
 
-export interface focusListType {
-    "focusUserID": number
-    "focusUserNickname": string
-    "focusUserAvatar": string
-    "focusUserAbstract": string
-    "createdAt": string
-}
-
-export function focusListApi(params: fansListRequest): Promise<baseResponse<listResponse<focusListType>>> {
+export function focusListApi(params: fansListRequest): Promise<baseResponse<listResponse<userListType>>> {
     if (params.isMe) {
         params.userID = undefined
     }
