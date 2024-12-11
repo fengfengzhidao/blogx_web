@@ -39,7 +39,7 @@ function addModal() {
   collectVisible.value = true
 }
 
-const collectVisible = ref()
+const collectVisible = ref(false)
 
 function select(item: collectListType) {
   emits("select", item.id)

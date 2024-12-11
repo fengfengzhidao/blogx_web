@@ -112,7 +112,7 @@ getCollectData()
         创建
       </a-button>
     </div>
-   <f_collect_form_modal @ok="getCollectData" :id="form.id" v-model:title="form.title" v-model:abstract="form.abstract" v-model:visible="visible"></f_collect_form_modal>
+   <f_collect_form_modal  v-if="props.isMe" @ok="getCollectData" :id="form.id" v-model:title="form.title" v-model:abstract="form.abstract" v-model:visible="visible"></f_collect_form_modal>
     <div class="list">
       <div class="item" :class="{active: item.id===Number(route.query.collectID)}" v-for="item in categoryData.list">
         <a-trigger v-if="props.isMe" content-class="category_trigger" trigger="contextMenu" align-point>

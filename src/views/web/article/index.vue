@@ -103,6 +103,23 @@ async function collectArticle(id: number) {
   return
 }
 
+function goTop() {
+  document.documentElement.scrollTo({top: 0, behavior: "smooth"})
+}
+
+const textareaRef = ref()
+
+function goComment() {
+  const div = document.querySelector(".add_comment") as HTMLDivElement
+  const top = div.offsetTop
+  document.documentElement.scrollTo({top: top, behavior: "smooth"})
+
+  setTimeout(() => {
+    textareaRef.value.focus()
+  }, 800)
+}
+
+
 </script>
 
 <template>
@@ -126,8 +143,12 @@ async function collectArticle(id: number) {
 
         <div class="article_comment">
           <div class="add_comment">
-            <a-textarea :auto-size="{minRows: 5, maxRows: 6}" placeholder="请输入评论内容"></a-textarea>
+            <a-textarea ref="textareaRef" :auto-size="{minRows: 5, maxRows: 6}"
+                        placeholder="请输入评论内容"></a-textarea>
             <a-button type="primary" size="mini">发布评论</a-button>
+          </div>
+          <div class="comment_list">
+
           </div>
         </div>
       </div>
@@ -168,8 +189,8 @@ async function collectArticle(id: number) {
           <div class="article_action">
             <i title="点赞" @click="digg" class="iconfont icon-dianzan_kuai" :class="{active: data.isDigg}"></i>
             <i title="收藏" @click="collect" class="iconfont icon-shoucang1" :class="{active: data.isCollect}"></i>
-            <i title="回到顶部" class="iconfont icon-zhiding"></i>
-            <i title="去评论" class="iconfont icon-pinglun1"></i>
+            <i title="回到顶部" @click="goTop" class="iconfont icon-zhiding"></i>
+            <i title="去评论" @click="goComment" class="iconfont icon-pinglun1"></i>
           </div>
         </div>
 
@@ -185,6 +206,7 @@ async function collectArticle(id: number) {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+    margin-bottom: 20px;
   }
 
   .article_container {
@@ -246,6 +268,7 @@ async function collectArticle(id: number) {
           position: absolute;
           right: 30px;
           bottom: 30px;
+          z-index: 2;
         }
       }
     }
