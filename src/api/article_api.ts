@@ -56,6 +56,8 @@ export interface articleDetailType {
     "username": string
     "nickname": string
     "userAvatar": string
+    "isDigg": boolean
+    "isCollect": boolean
 }
 
 export function articleDetailApi(id: number): Promise<baseResponse<articleDetailType>> {
@@ -128,3 +130,7 @@ export function articleRemoveApi(id: number):Promise<baseResponse<string>>{
     return useAxios.delete("/api/article/" + id.toString())
 }
 
+
+export function articleDiggApi(id: number):Promise<baseResponse<string>>{
+    return  useAxios.get("/api/article/digg/" + id.toString())
+}

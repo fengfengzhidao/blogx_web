@@ -3,7 +3,7 @@ import F_nav from "@/components/web/f_nav.vue";
 import F_main from "@/components/web/f_main.vue";
 import {MdPreview, MdCatalog} from "md-editor-v3";
 import "md-editor-v3/lib/preview.css"
-import {articleDetailApi, type articleDetailType} from "@/api/article_api";
+import {articleDetailApi, type articleDetailType, articleDiggApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 
 const scrollElement = document.documentElement;
@@ -34,6 +34,8 @@ const data = reactive<articleDetailType>({
   username: "",
   nickname: "",
   userAvatar: "",
+  "isDigg": false,
+  "isCollect": false
 })
 
 async function getData() {
@@ -51,16 +53,33 @@ watch(() => route.params.id, () => {
 
 
 const isFixed = ref(false)
-function scroll(){
+
+function scroll() {
   const top = document.documentElement.scrollTop
-  if (top >= 210){
+  if (top >= 210) {
     isFixed.value = true
-  }else {
+  } else {
     isFixed.value = false
   }
 }
 
 window.addEventListener("scroll", scroll)
+
+
+async function digg() {
+  const res = await articleDiggApi(data.id)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  data.isDigg = !data.isDigg
+  if (data.isDigg){
+    data.diggCount ++
+  }else {
+    data.diggCount --
+  }
+}
 
 </script>
 
@@ -98,19 +117,19 @@ window.addEventListener("scroll", scroll)
           <div class="data">
             <div class="item">
               <span>{{ data.lookCount }}</span>
-              <span><i class="iconfont icon-jia"></i></span>
+              <span><i class="iconfont icon-liulan"></i></span>
             </div>
             <div class="item">
               <span>{{ data.diggCount }}</span>
-              <span><i class="iconfont icon-jia"></i></span>
+              <span><i class="iconfont icon-dianzan_kuai"></i></span>
             </div>
             <div class="item">
               <span>{{ data.collectCount }}</span>
-              <span><i class="iconfont icon-jia"></i></span>
+              <span><i class="iconfont icon-shoucang1"></i></span>
             </div>
             <div class="item">
               <span>{{ data.commentCount }}</span>
-              <span><i class="iconfont icon-jia"></i></span>
+              <span><i class="iconfont icon-pinglun1"></i></span>
             </div>
           </div>
         </div>
@@ -118,15 +137,16 @@ window.addEventListener("scroll", scroll)
           <div class="catalog">
             <div class="head">文章目录</div>
             <div class="body">
-              <MdCatalog :offsetTop="61" :scrollElementOffsetTop="60" :editorId="`md_${data.id}`" :scrollElement="scrollElement"
+              <MdCatalog :offsetTop="61" :scrollElementOffsetTop="60" :editorId="`md_${data.id}`"
+                         :scrollElement="scrollElement"
                          :theme="theme"></MdCatalog>
             </div>
           </div>
           <div class="article_action">
-            <i class="iconfont icon-dianzanliang"></i>
-            <i class="iconfont icon-dianzanliang"></i>
-            <i class="iconfont icon-dianzanliang"></i>
-            <i class="iconfont icon-dianzanliang"></i>
+            <i title="点赞" @click="digg" class="iconfont icon-dianzan_kuai" :class="{active: data.isDigg}"></i>
+            <i title="收藏" class="iconfont icon-shoucang1" :class="{active: data.isCollect}"></i>
+            <i title="回到顶部" class="iconfont icon-zhiding"></i>
+            <i title="去评论" class="iconfont icon-pinglun1"></i>
           </div>
         </div>
 
@@ -246,15 +266,25 @@ window.addEventListener("scroll", scroll)
             font-size: 18px;
             color: var(--color-text-2);
           }
+
+          .icon-liulan {
+            font-size: 20px;
+          }
+
+          .icon-pinglun1 {
+            font-size: 20px;
+            margin-top: 3px;
+          }
         }
       }
     }
 
-    .catalog_action{
-      .md-editor-catalog{
+    .catalog_action {
+      .md-editor-catalog {
         position: relative;
       }
-      &.isFixed{
+
+      &.isFixed {
         position: fixed;
         top: 60px;
         width: 260px;
@@ -275,14 +305,17 @@ window.addEventListener("scroll", scroll)
 
       .body {
         padding: 10px 20px 20px 20px;
+
         .md-editor-catalog-active > span {
           color: rgb(var(--arcoblue-6));
         }
+
         .md-editor-catalog-link span:hover {
           color: rgb(var(--arcoblue-5));
         }
+
         .md-editor-catalog-indicator {
-          background-color:  rgb(var(--arcoblue-6));
+          background-color: rgb(var(--arcoblue-6));
         }
       }
     }
@@ -302,10 +335,14 @@ window.addEventListener("scroll", scroll)
         padding: 10px;
         cursor: pointer;
         border-radius: 5px;
-        color: var(--color-text-1);
+        color: var(--color-text-2);
 
         &:hover {
           background: var(--color-fill-1);
+        }
+
+        &.active {
+          color: rgb(var(--arcoblue-6));
         }
       }
     }
