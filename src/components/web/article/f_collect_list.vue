@@ -14,6 +14,7 @@ import router from "@/router";
 
 import {type collectListType, collectListApi} from "@/api/collect_api";
 import {type collectCreateRequest, collectRemoveApi, collectCreateApi} from "@/api/collect_api";
+import F_collect_form_modal from "@/components/web/article/f_collect_form_modal.vue";
 
 const route = useRoute()
 
@@ -65,18 +66,6 @@ function showEdit(item: collectListType) {
 
 const formRef = ref()
 
-async function addCategoryHandler() {
-  const val = await formRef.value.validate()
-  if (val) return
-  let res: baseResponse<string>
-  res = await collectCreateApi(form)
-  if (res.code) {
-    Message.error(res.msg)
-    return
-  }
-  Message.success(res.msg)
-  getCollectData()
-}
 
 async function remove(item: collectListType) {
   const res = await collectRemoveApi([item.id])
@@ -108,6 +97,9 @@ function go(item: categoryListType) {
 }
 
 getCollectData()
+
+
+
 </script>
 
 <template>
@@ -120,19 +112,7 @@ getCollectData()
         创建
       </a-button>
     </div>
-    <a-modal v-if="props.isMe" width="30%" :title="form.id ? '编辑收藏夹' : '创建收藏夹'" v-model:visible="visible"
-             :on-before-ok="addCategoryHandler">
-      <a-form ref="formRef" :model="form" :label-col-props="{span: 7}" :wrapper-col-props="{span: 17}">
-        <a-form-item label="收藏夹标题" field="title" :validate-trigger="'blur'"
-                     :rules="[{required: true, message:'请输入收藏夹标题'}]">
-          <a-input placeholder="收藏夹标题" v-model="form.title"></a-input>
-        </a-form-item>
-        <a-form-item label="收藏夹简介">
-          <a-textarea placeholder="收藏夹简介" :auto-size="{minRows: 2, maxRows: 4}"
-                      v-model="form.abstract"></a-textarea>
-        </a-form-item>
-      </a-form>
-    </a-modal>
+   <f_collect_form_modal @ok="getCollectData" :id="form.id" v-model:title="form.title" v-model:abstract="form.abstract" v-model:visible="visible"></f_collect_form_modal>
     <div class="list">
       <div class="item" :class="{active: item.id===Number(route.query.collectID)}" v-for="item in categoryData.list">
         <a-trigger v-if="props.isMe" content-class="category_trigger" trigger="contextMenu" align-point>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {reactive} from "vue";
+import {collectCreateApi} from "@/api/collect_api";
 
 interface Props {
   visible: boolean
@@ -30,6 +31,14 @@ async function beforeOpen() {
   }
   Object.assign(data, res.data)
 }
+
+const form = reactive({
+
+})
+async function add(){
+  const res = await collectCreateApi()
+}
+
 </script>
 
 <template>
