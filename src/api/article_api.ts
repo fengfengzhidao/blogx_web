@@ -134,3 +134,10 @@ export function articleRemoveApi(id: number):Promise<baseResponse<string>>{
 export function articleDiggApi(id: number):Promise<baseResponse<string>>{
     return  useAxios.get("/api/article/digg/" + id.toString())
 }
+export interface articleCollectRequest{
+    "articleID": number
+    "collectID"?: number
+}
+export function articleCollectApi(data: articleCollectRequest):Promise<baseResponse<string>>{
+    return useAxios.post("/api/article/collect", data)
+}

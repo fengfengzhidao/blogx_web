@@ -5,12 +5,14 @@ import {MdPreview, MdCatalog} from "md-editor-v3";
 import "md-editor-v3/lib/preview.css"
 import {articleDetailApi, type articleDetailType, articleDiggApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
+import {type articleCollectRequest, articleCollectApi} from "@/api/article_api";
 
 const scrollElement = document.documentElement;
 import {useRoute} from "vue-router";
 import {reactive, ref, watch} from "vue";
 import {dateTimeFormat} from "@/utils/date";
 import {theme} from "@/components/common/f_theme";
+import F_article_collect_modal from "@/components/web/article/f_article_collect_modal.vue";
 
 const route = useRoute()
 const data = reactive<articleDetailType>({
@@ -81,12 +83,22 @@ async function digg() {
   }
 }
 
+const visible= ref(false)
+async function collect(){
+  if (data.isCollect){
+    // 取消收藏
+    // const res = await articleCollectApi({articleID: data.id, collectID: 1})
+  }
+  visible.value = true
+}
+
 </script>
 
 <template>
   <div class="article_detail_view">
     <f_nav no-scroll></f_nav>
     <f_main>
+      <f_article_collect_modal v-model:visible="visible"></f_article_collect_modal>
       <div class="article_container">
         <div class="article_content">
           <div class="head">
@@ -144,7 +156,7 @@ async function digg() {
           </div>
           <div class="article_action">
             <i title="点赞" @click="digg" class="iconfont icon-dianzan_kuai" :class="{active: data.isDigg}"></i>
-            <i title="收藏" class="iconfont icon-shoucang1" :class="{active: data.isCollect}"></i>
+            <i title="收藏" @click="collect" class="iconfont icon-shoucang1" :class="{active: data.isCollect}"></i>
             <i title="回到顶部" class="iconfont icon-zhiding"></i>
             <i title="去评论" class="iconfont icon-pinglun1"></i>
           </div>
