@@ -1,8 +1,55 @@
 <script setup lang="ts">
 import F_nav from "@/components/web/f_nav.vue";
 import F_main from "@/components/web/f_main.vue";
-import {MdPreview} from "md-editor-v3";
+import {MdPreview, MdCatalog} from "md-editor-v3";
 import "md-editor-v3/lib/preview.css"
+import {articleDetailApi, type articleDetailType} from "@/api/article_api";
+import {Message} from "@arco-design/web-vue";
+
+const scrollElement = document.documentElement;
+import {useRoute} from "vue-router";
+import {reactive, watch} from "vue";
+import {dateTimeFormat} from "@/utils/date";
+import {theme} from "@/components/common/f_theme";
+
+const route = useRoute()
+const data = reactive<articleDetailType>({
+  id: 0,
+  createdAt: "",
+  updatedAt: "",
+  title: "",
+  abstract: "",
+  content: "",
+  categoryID: 0,
+  categoryTitle: "",
+  tagList: [],
+  cover: "",
+  userID: 0,
+  lookCount: 0,
+  diggCount: 0,
+  commentCount: 0,
+  collectCount: 0,
+  openComment: false,
+  status: 0,
+  username: "",
+  nickname: "",
+  userAvatar: "",
+})
+
+async function getData() {
+  const res = await articleDetailApi(Number(route.params.id))
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Object.assign(data, res.data)
+}
+
+watch(() => route.params.id, () => {
+  getData()
+}, {immediate: true})
+
+
 </script>
 
 <template>
@@ -12,14 +59,14 @@ import "md-editor-v3/lib/preview.css"
       <div class="article_container">
         <div class="article_content">
           <div class="head">
-            <div class="title">xxx</div>
-            <div class="date">xxx</div>
+            <div class="title">{{ data.title }}</div>
+            <div class="date">{{ dateTimeFormat(data.createdAt) }}</div>
             <div class="tags">
-              <a-tag>xxx</a-tag>
+              <a-tag v-for="item in data.tagList">{{ item }}</a-tag>
             </div>
           </div>
           <div class="body">
-            <MdPreview :model-value="'# 标题'"></MdPreview>
+            <MdPreview :id="`md_${data.id}`" :theme="theme" :model-value="data.content"></MdPreview>
           </div>
         </div>
 
@@ -33,31 +80,34 @@ import "md-editor-v3/lib/preview.css"
       <div class="article_info">
         <div class="user_info">
           <div class="user">
-            <a-avatar :size="60"></a-avatar>
+            <a-avatar :size="60" :image-url="data.userAvatar"></a-avatar>
           </div>
-          <div class="nick">xxx</div>
+          <div class="nick">{{ data.nickname }}</div>
           <div class="data">
             <div class="item">
-              <span>331</span>
+              <span>{{ data.lookCount }}</span>
               <span><i class="iconfont icon-jia"></i></span>
             </div>
             <div class="item">
-              <span>331</span>
+              <span>{{ data.diggCount }}</span>
               <span><i class="iconfont icon-jia"></i></span>
             </div>
             <div class="item">
-              <span>331</span>
+              <span>{{ data.collectCount }}</span>
               <span><i class="iconfont icon-jia"></i></span>
             </div>
             <div class="item">
-              <span>331</span>
+              <span>{{ data.commentCount }}</span>
               <span><i class="iconfont icon-jia"></i></span>
             </div>
           </div>
         </div>
         <div class="catalog">
           <div class="head">文章目录</div>
-          <div class="body"></div>
+          <div class="body">
+            <MdCatalog :editorId="`md_${data.id}`" :scrollElement="scrollElement"
+                       :theme="theme"></MdCatalog>
+          </div>
         </div>
         <div class="article_action">
           <i class="iconfont icon-dianzanliang"></i>
@@ -96,12 +146,23 @@ import "md-editor-v3/lib/preview.css"
         .title {
           font-size: 20px;
           font-weight: 600;
+          color: var(--color-text-1);
         }
 
         .date {
           color: var(--color-text-2);
-          font-size: 14px;
-          margin: 5px 0;
+          font-size: 12px;
+          margin: 10px 0;
+        }
+
+        .tags {
+          span {
+            margin-right: 10px;
+
+            &:last-child {
+              margin-right: 0;
+            }
+          }
         }
       }
 
@@ -114,15 +175,16 @@ import "md-editor-v3/lib/preview.css"
       }
     }
 
-    .article_comment{
+    .article_comment {
       margin-top: 20px;
       border-radius: 5px;
       background: var(--color-bg-1);
-      .add_comment{
+
+      .add_comment {
         padding: 20px;
         position: relative;
 
-        .arco-btn{
+        .arco-btn {
           position: absolute;
           right: 30px;
           bottom: 30px;
@@ -187,6 +249,15 @@ import "md-editor-v3/lib/preview.css"
 
       .body {
         padding: 10px 20px 20px 20px;
+        .md-editor-catalog-active > span {
+          color: rgb(var(--arcoblue-6));
+        }
+        .md-editor-catalog-link span:hover {
+          color: rgb(var(--arcoblue-5));
+        }
+        .md-editor-catalog-indicator {
+          background-color:  rgb(var(--arcoblue-6));
+        }
       }
     }
 
@@ -204,7 +275,7 @@ import "md-editor-v3/lib/preview.css"
         border-radius: 5px;
         color: var(--color-text-1);
 
-        &:hover{
+        &:hover {
           background: var(--color-fill-1);
         }
       }
