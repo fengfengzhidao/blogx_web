@@ -8,7 +8,7 @@ import {Message} from "@arco-design/web-vue";
 
 const scrollElement = document.documentElement;
 import {useRoute} from "vue-router";
-import {reactive, watch} from "vue";
+import {reactive, ref, watch} from "vue";
 import {dateTimeFormat} from "@/utils/date";
 import {theme} from "@/components/common/f_theme";
 
@@ -49,6 +49,18 @@ watch(() => route.params.id, () => {
   getData()
 }, {immediate: true})
 
+
+const isFixed = ref(false)
+function scroll(){
+  const top = document.documentElement.scrollTop
+  if (top >= 210){
+    isFixed.value = true
+  }else {
+    isFixed.value = false
+  }
+}
+
+window.addEventListener("scroll", scroll)
 
 </script>
 
@@ -102,19 +114,22 @@ watch(() => route.params.id, () => {
             </div>
           </div>
         </div>
-        <div class="catalog">
-          <div class="head">文章目录</div>
-          <div class="body">
-            <MdCatalog :editorId="`md_${data.id}`" :scrollElement="scrollElement"
-                       :theme="theme"></MdCatalog>
+        <div class="catalog_action" :class="{isFixed: isFixed}">
+          <div class="catalog">
+            <div class="head">文章目录</div>
+            <div class="body">
+              <MdCatalog :offsetTop="61" :scrollElementOffsetTop="60" :editorId="`md_${data.id}`" :scrollElement="scrollElement"
+                         :theme="theme"></MdCatalog>
+            </div>
+          </div>
+          <div class="article_action">
+            <i class="iconfont icon-dianzanliang"></i>
+            <i class="iconfont icon-dianzanliang"></i>
+            <i class="iconfont icon-dianzanliang"></i>
+            <i class="iconfont icon-dianzanliang"></i>
           </div>
         </div>
-        <div class="article_action">
-          <i class="iconfont icon-dianzanliang"></i>
-          <i class="iconfont icon-dianzanliang"></i>
-          <i class="iconfont icon-dianzanliang"></i>
-          <i class="iconfont icon-dianzanliang"></i>
-        </div>
+
       </div>
     </f_main>
   </div>
@@ -196,16 +211,14 @@ watch(() => route.params.id, () => {
   .article_info {
     width: 260px;
 
-    > div {
-      background: var(--color-bg-1);
-      border-radius: 5px;
-    }
 
     .user_info {
       padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      background: var(--color-bg-1);
+      border-radius: 5px;
 
       .nick {
         margin: 10px 0 20px 0;
@@ -237,7 +250,20 @@ watch(() => route.params.id, () => {
       }
     }
 
+    .catalog_action{
+      .md-editor-catalog{
+        position: relative;
+      }
+      &.isFixed{
+        position: fixed;
+        top: 60px;
+        width: 260px;
+      }
+    }
+
     .catalog {
+      background: var(--color-bg-1);
+      border-radius: 5px;
       margin-top: 20px;
 
       .head {
@@ -261,7 +287,10 @@ watch(() => route.params.id, () => {
       }
     }
 
+
     .article_action {
+      background: var(--color-bg-1);
+      border-radius: 5px;
       margin-top: 20px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
