@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {reactive} from "vue";
-import {collectCreateApi} from "@/api/collect_api";
+import {reactive, ref} from "vue";
 
 interface Props {
   visible: boolean
@@ -9,9 +8,10 @@ interface Props {
 import {collectListApi, type collectListType} from "@/api/collect_api";
 import type {listResponse} from "@/api";
 import {Message} from "@arco-design/web-vue";
+import F_collect_form_modal from "@/components/web/article/f_collect_form_modal.vue";
 
 const props = defineProps<Props>()
-const emits = defineEmits(["update:visible"])
+const emits = defineEmits(["update:visible", "select"])
 const data = reactive<listResponse<collectListType>>({
   list: [],
   count: 0
@@ -32,11 +32,18 @@ async function beforeOpen() {
   Object.assign(data, res.data)
 }
 
-const form = reactive({
+const form = reactive({})
+const title = ref("")
 
-})
-async function add(){
-  const res = await collectCreateApi()
+function addModal() {
+  collectVisible.value = true
+}
+
+const collectVisible = ref()
+
+function select(item: collectListType) {
+  emits("select", item.id)
+  cancel()
 }
 
 </script>
@@ -44,8 +51,10 @@ async function add(){
 <template>
   <a-modal :footer="false" body-class="collect_modal_body" title="收藏文章" @before-open="beforeOpen" @cancel="cancel"
            :visible="props.visible">
+    <f_collect_form_modal v-model:title="title" v-model:visible="collectVisible"
+                          @ok="beforeOpen"></f_collect_form_modal>
     <div class="add">
-      <div class="inner">
+      <div class="inner" @click="addModal">
         <i class="iconfont icon-jia"></i>
         <span>创建收藏夹</span>
       </div>
@@ -56,7 +65,7 @@ async function add(){
           <div class="title">{{ item.title }}</div>
           <div class="count">{{ item.articleCount }}篇文章</div>
         </div>
-        <a-button type="primary" size="mini">收藏</a-button>
+        <a-button @click="select(item)" type="primary" size="mini">收藏</a-button>
       </div>
     </div>
   </a-modal>
@@ -77,7 +86,8 @@ async function add(){
       display: flex;
       align-items: center;
       color: var(--color-text-2);
-      span{
+
+      span {
         margin-left: 5px;
       }
     }

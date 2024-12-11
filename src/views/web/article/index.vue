@@ -76,20 +76,31 @@ async function digg() {
   }
   Message.success(res.msg)
   data.isDigg = !data.isDigg
-  if (data.isDigg){
-    data.diggCount ++
-  }else {
-    data.diggCount --
+  if (data.isDigg) {
+    data.diggCount++
+  } else {
+    data.diggCount--
   }
 }
 
-const visible= ref(false)
-async function collect(){
-  if (data.isCollect){
+const visible = ref(false)
+
+async function collect() {
+  if (data.isCollect) {
     // 取消收藏
     // const res = await articleCollectApi({articleID: data.id, collectID: 1})
   }
   visible.value = true
+}
+
+async function collectArticle(id: number) {
+  const res = await articleCollectApi({articleID: data.id, collectID: id})
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  return
 }
 
 </script>
@@ -98,7 +109,7 @@ async function collect(){
   <div class="article_detail_view">
     <f_nav no-scroll></f_nav>
     <f_main>
-      <f_article_collect_modal v-model:visible="visible"></f_article_collect_modal>
+      <f_article_collect_modal @select="collectArticle" v-model:visible="visible"></f_article_collect_modal>
       <div class="article_container">
         <div class="article_content">
           <div class="head">
