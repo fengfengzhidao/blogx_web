@@ -122,6 +122,11 @@ const router = createRouter({
                             component: () => import("@/views/web/user/focus_list.vue"),
                         }
                     ]
+                },
+                {
+                    name: "articleDetail",
+                    path: "article/:id",
+                    component: () => import("@/views/web/article/index.vue"),
                 }
             ]
         },
