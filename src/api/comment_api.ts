@@ -38,3 +38,21 @@ export interface commentCreateRequest {
 export function commentCreateApi(data: commentCreateRequest):Promise<baseResponse<string>>{
     return useAxios.post("/api/comment", data)
 }
+
+export interface commentTreeType {
+    "id": number
+    "createdAt": string
+    "content": string
+    "userID": number
+    "userNickname": string
+    "userAvatar": string
+    "articleID": number
+    "parentID"?: number
+    "diggCount":number
+    "applyCount": number
+    "subComments": commentTreeType[]
+}
+
+export function commentTreeApi(id: number):Promise<baseResponse<listResponse<commentTreeType>>>{
+    return useAxios.get("/api/comment/tree/" + id.toString())
+}

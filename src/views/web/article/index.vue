@@ -13,6 +13,7 @@ import {reactive, ref, watch} from "vue";
 import {dateTimeFormat} from "@/utils/date";
 import {theme} from "@/components/common/f_theme";
 import F_article_collect_modal from "@/components/web/article/f_article_collect_modal.vue";
+import Article_comment from "@/components/web/comment/article_comment.vue";
 
 const route = useRoute()
 const data = reactive<articleDetailType>({
@@ -141,16 +142,9 @@ function goComment() {
           </div>
         </div>
 
-        <div class="article_comment">
-          <div class="add_comment">
-            <a-textarea ref="textareaRef" :auto-size="{minRows: 5, maxRows: 6}"
-                        placeholder="请输入评论内容"></a-textarea>
-            <a-button type="primary" size="mini">发布评论</a-button>
-          </div>
-          <div class="comment_list">
+        <article_comment :article-id="Number(route.params.id)"></article_comment>
 
-          </div>
-        </div>
+
       </div>
       <div class="article_info">
         <div class="user_info">
@@ -255,23 +249,7 @@ function goComment() {
       }
     }
 
-    .article_comment {
-      margin-top: 20px;
-      border-radius: 5px;
-      background: var(--color-bg-1);
 
-      .add_comment {
-        padding: 20px;
-        position: relative;
-
-        .arco-btn {
-          position: absolute;
-          right: 30px;
-          bottom: 30px;
-          z-index: 2;
-        }
-      }
-    }
   }
 
   .article_info {
