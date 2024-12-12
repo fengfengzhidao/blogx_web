@@ -74,7 +74,7 @@ defineExpose({focus})
       <a-button type="primary" @click="create" size="mini">发布评论</a-button>
     </div>
     <div class="comment_list">
-      <comment_tree :list="data.list"></comment_tree>
+      <comment_tree :line="1" @ok="getData" :list="data.list"></comment_tree>
     </div>
   </div>
 </template>
