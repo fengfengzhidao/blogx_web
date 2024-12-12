@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue";
+import {userStorei} from "@/stores/user_store";
+
+const store = userStorei()
 
 interface Props {
   visible: boolean
+  articleId?: number
 }
 
 import {collectListApi, type collectListType} from "@/api/collect_api";
@@ -24,12 +28,27 @@ function cancel() {
 async function beforeOpen() {
   data.list = []
   data.count = 0
-  const res = await collectListApi({type: 1})
+  const res = await collectListApi({type: 1, articleID: props.articleId})
   if (res.code) {
     Message.error(res.msg)
     return
   }
   Object.assign(data, res.data)
+  if (data.list.length === 0) {
+    // 没有收藏夹
+    data.list.push({
+      "id": 0,
+      "createdAt": "",
+      "updatedAt": "",
+      "title": "默认收藏夹",
+      "abstract": "",
+      "cover": "",
+      "userID": store.userInfo.userID,
+      "isDefault": true,
+      "articleCount": 0,
+      "articleUse": false
+    })
+  }
 }
 
 const form = reactive({})
@@ -49,7 +68,8 @@ function select(item: collectListType) {
 </script>
 
 <template>
-  <a-modal :footer="false" body-class="collect_modal_body" title="收藏文章" @before-open="beforeOpen" @cancel="cancel"
+  <a-modal :footer="false" body-class="collect_modal_body scrollbar" title="收藏文章" @before-open="beforeOpen"
+           @cancel="cancel"
            :visible="props.visible">
     <f_collect_form_modal v-model:title="title" v-model:visible="collectVisible"
                           @ok="beforeOpen"></f_collect_form_modal>
@@ -62,10 +82,14 @@ function select(item: collectListType) {
     <div class="list">
       <div class="item" v-for="item in data.list">
         <div class="left">
-          <div class="title">{{ item.title }}</div>
+          <div class="title">{{ item.title }}
+            <a-tag color="blue" v-if="item.isDefault">默认收藏夹</a-tag>
+          </div>
           <div class="count">{{ item.articleCount }}篇文章</div>
         </div>
-        <a-button @click="select(item)" type="primary" size="mini">收藏</a-button>
+        <a-button @click="select(item)" type="primary" :status="item.articleUse ? 'danger' : ''" size="mini">
+          {{ item.articleUse ? '取消收藏' : '收藏' }}
+        </a-button>
       </div>
     </div>
   </a-modal>
@@ -74,6 +98,8 @@ function select(item: collectListType) {
 <style lang="less">
 .collect_modal_body {
   padding: 0;
+  max-height: 70vh;
+  overflow-y: auto;
 
   .add {
     padding: 10px 20px;

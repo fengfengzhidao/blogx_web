@@ -15,7 +15,10 @@ import {theme} from "@/components/common/f_theme";
 import F_article_collect_modal from "@/components/web/article/f_article_collect_modal.vue";
 import Article_comment from "@/components/web/comment/article_comment.vue";
 import {goUser} from "@/utils/go_router";
+import {userStorei} from "@/stores/user_store";
+import {showLogin} from "@/components/web/f_login";
 
+const store = userStorei()
 const route = useRoute()
 const data = reactive<articleDetailType>({
   id: 0,
@@ -71,6 +74,10 @@ window.addEventListener("scroll", scroll)
 
 
 async function digg() {
+  if (!store.isLogin) {
+    showLogin({reload: true})
+    return
+  }
   const res = await articleDiggApi(data.id)
   if (res.code) {
     Message.error(res.msg)
@@ -88,9 +95,9 @@ async function digg() {
 const visible = ref(false)
 
 async function collect() {
-  if (data.isCollect) {
-    // 取消收藏
-    // const res = await articleCollectApi({articleID: data.id, collectID: 1})
+  if (!store.isLogin) {
+    showLogin({reload: true})
+    return
   }
   visible.value = true
 }
@@ -102,6 +109,12 @@ async function collectArticle(id: number) {
     return
   }
   Message.success(res.msg)
+  if (res.msg === "收藏成功") {
+    data.isCollect = true
+    data.collectCount++
+  } else {
+    data.collectCount--
+  }
   return
 }
 
@@ -128,7 +141,8 @@ function goComment() {
   <div class="article_detail_view">
     <f_nav no-scroll></f_nav>
     <f_main>
-      <f_article_collect_modal @select="collectArticle" v-model:visible="visible"></f_article_collect_modal>
+      <f_article_collect_modal :article-id="data.id" @select="collectArticle"
+                               v-model:visible="visible"></f_article_collect_modal>
       <div class="article_container">
         <div class="article_content">
           <div class="head">
@@ -143,7 +157,8 @@ function goComment() {
           </div>
         </div>
 
-        <article_comment v-if="data.openComment" ref="articleCommentRef" :article-id="Number(route.params.id)"></article_comment>
+        <article_comment v-if="data.openComment" ref="articleCommentRef"
+                         :article-id="Number(route.params.id)"></article_comment>
         <div v-else class="no_comment">作者已关闭文章评论</div>
       </div>
       <div class="article_info">
@@ -251,7 +266,7 @@ function goComment() {
     }
 
 
-    .no_comment{
+    .no_comment {
       margin-top: 20px;
       padding: 20px;
       text-align: center;

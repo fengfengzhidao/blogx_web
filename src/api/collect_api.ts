@@ -10,11 +10,13 @@ export interface collectListType {
     "userID": number
     "isDefault": boolean
     "articleCount": number
+    "articleUse": boolean
 }
 
 export interface collectListRequest extends paramsType {
     type: 1 | 2 | 3
     userID?: number
+    articleID?: number
 }
 
 export function collectListApi(params: collectListRequest): Promise<baseResponse<listResponse<collectListType>>> {
