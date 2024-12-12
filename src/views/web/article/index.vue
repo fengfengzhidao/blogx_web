@@ -108,7 +108,7 @@ function goTop() {
   document.documentElement.scrollTo({top: 0, behavior: "smooth"})
 }
 
-const textareaRef = ref()
+const articleCommentRef = ref()
 
 function goComment() {
   const div = document.querySelector(".add_comment") as HTMLDivElement
@@ -116,7 +116,7 @@ function goComment() {
   document.documentElement.scrollTo({top: top, behavior: "smooth"})
 
   setTimeout(() => {
-    textareaRef.value.focus()
+    articleCommentRef.value.focus()
   }, 800)
 }
 
@@ -142,7 +142,7 @@ function goComment() {
           </div>
         </div>
 
-        <article_comment :article-id="Number(route.params.id)"></article_comment>
+        <article_comment ref="articleCommentRef" :article-id="Number(route.params.id)"></article_comment>
 
 
       </div>

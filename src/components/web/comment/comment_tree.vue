@@ -13,19 +13,10 @@ const props = defineProps<Props>()
   <a-comment v-for="item in props.list" :author="item.userNickname" :datetime="dateCurrentFormat(item.createdAt)">
     <template #actions>
       <span class="action" key="heart">
-        <span>
-          <IconHeartFill :style="{ color: '#f53f3f' }" />
-        </span>
-        {{ item.diggCount }}
-      </span>
-      <span class="action" key="star">
-        <span>
-          <IconStarFill/>
-        </span>
-         {{ item.applyCount }}
+          <i class="iconfont icon-dianzan_kuai"></i> 点赞（{{ item.diggCount }}）
       </span>
       <span class="action" key="reply">
-        <IconMessage /> Reply
+        <i class="iconfont icon-pinglun1"/> 回复（{{ item.applyCount }}）
       </span>
     </template>
     <template #avatar>
@@ -45,6 +36,6 @@ const props = defineProps<Props>()
   </a-comment>
 </template>
 
-<style scoped lang="less">
+<style lang="less">
 
 </style>
