@@ -2,8 +2,14 @@
 
 import Comment_tree from "@/components/web/comment/comment_tree.vue";
 import {reactive, ref, watch} from "vue";
-import type {listResponse} from "@/api";
-import {commentCreateApi, type commentCreateRequest, commentTreeApi, type commentTreeType} from "@/api/comment_api";
+import type {listResponse, paramsType} from "@/api";
+import {
+  commentCreateApi,
+  type commentCreateRequest,
+  commentTreeApi,
+  type commentTreeRequest,
+  type commentTreeType
+} from "@/api/comment_api";
 import {Message} from "@arco-design/web-vue";
 
 interface Props {
@@ -13,13 +19,20 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const params = reactive<commentTreeRequest>({
+  limit: 10,
+  page: 1,
+  id: 0,
+})
+
 const data = reactive<listResponse<commentTreeType>>({
   list: [],
   count: 0
 })
 
 async function getData() {
-  const res = await commentTreeApi(props.articleId)
+  params.id = props.articleId
+  const res = await commentTreeApi(params)
   if (res.code) {
     Message.error(res.msg)
     return
@@ -75,7 +88,12 @@ defineExpose({focus})
     </div>
     <div class="comment_list">
       <comment_tree :line="1" @ok="getData" :list="data.list"></comment_tree>
+      <div class="page" v-if="data.list.length">
+        <a-pagination @change="getData" :page-size="params.limit" :total="data.count" show-total
+                      v-model:current="params.page"></a-pagination>
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -123,6 +141,10 @@ defineExpose({focus})
         padding-top: 2px;
       }
     }
+  }
+  .page{
+    display: flex;
+    justify-content: center;
   }
 }
 </style>

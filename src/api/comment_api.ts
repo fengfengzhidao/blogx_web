@@ -56,9 +56,12 @@ export interface commentTreeType {
     isApply?: boolean
     applyContent?: string
 }
+export interface commentTreeRequest extends paramsType{
+    id: number
+}
 
-export function commentTreeApi(id: number): Promise<baseResponse<listResponse<commentTreeType>>> {
-    return useAxios.get("/api/comment/tree/" + id.toString())
+export function commentTreeApi(params: commentTreeRequest): Promise<baseResponse<listResponse<commentTreeType>>> {
+    return useAxios.get("/api/comment/tree/" + params.id.toString(), {params})
 }
 
 export function commentDiggApi(id: number): Promise<baseResponse<string>> {

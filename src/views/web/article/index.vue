@@ -14,6 +14,7 @@ import {dateTimeFormat} from "@/utils/date";
 import {theme} from "@/components/common/f_theme";
 import F_article_collect_modal from "@/components/web/article/f_article_collect_modal.vue";
 import Article_comment from "@/components/web/comment/article_comment.vue";
+import {goUser} from "@/utils/go_router";
 
 const route = useRoute()
 const data = reactive<articleDetailType>({
@@ -142,16 +143,15 @@ function goComment() {
           </div>
         </div>
 
-        <article_comment ref="articleCommentRef" :article-id="Number(route.params.id)"></article_comment>
-
-
+        <article_comment v-if="data.openComment" ref="articleCommentRef" :article-id="Number(route.params.id)"></article_comment>
+        <div v-else class="no_comment">作者已关闭文章评论</div>
       </div>
       <div class="article_info">
         <div class="user_info">
           <div class="user">
-            <a-avatar :size="60" :image-url="data.userAvatar"></a-avatar>
+            <a-avatar @click="goUser(data.userID)" :size="60" :image-url="data.userAvatar"></a-avatar>
           </div>
-          <div class="nick">{{ data.nickname }}</div>
+          <div class="nick" @click="goUser(data.userID)">{{ data.nickname }}</div>
           <div class="data">
             <div class="item">
               <span>{{ data.lookCount }}</span>
@@ -201,6 +201,7 @@ function goComment() {
     justify-content: space-between;
     margin-top: 20px;
     margin-bottom: 20px;
+    min-height: calc(100vh - 100px);
   }
 
   .article_container {
@@ -250,6 +251,14 @@ function goComment() {
     }
 
 
+    .no_comment{
+      margin-top: 20px;
+      padding: 20px;
+      text-align: center;
+      background-color: var(--color-bg-1);
+      border-radius: 5px;
+      color: var(--color-text-2);
+    }
   }
 
   .article_info {
