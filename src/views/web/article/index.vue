@@ -3,9 +3,11 @@ import F_nav from "@/components/web/f_nav.vue";
 import F_main from "@/components/web/f_main.vue";
 import {MdPreview, MdCatalog} from "md-editor-v3";
 import "md-editor-v3/lib/preview.css"
-import {articleDetailApi, type articleDetailType, articleDiggApi} from "@/api/article_api";
+import {articleDetailApi, type articleDetailType, articleDiggApi, articleLookApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import {type articleCollectRequest, articleCollectApi} from "@/api/article_api";
+import {onUnmounted} from "vue";
+import {IconEdit} from "@arco-design/web-vue/es/icon";
 
 const scrollElement = document.documentElement;
 import {useRoute} from "vue-router";
@@ -14,7 +16,7 @@ import {dateTimeFormat} from "@/utils/date";
 import {theme} from "@/components/common/f_theme";
 import F_article_collect_modal from "@/components/web/article/f_article_collect_modal.vue";
 import Article_comment from "@/components/web/comment/article_comment.vue";
-import {goUser} from "@/utils/go_router";
+import {goArticleEdit, goUser} from "@/utils/go_router";
 import {userStorei} from "@/stores/user_store";
 import {showLogin} from "@/components/web/f_login";
 
@@ -52,6 +54,16 @@ async function getData() {
     return
   }
   Object.assign(data, res.data)
+
+  setTimeout(look, 2000)
+}
+
+async function look() {
+  const res = await articleLookApi(data.id)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
 }
 
 watch(() => route.params.id, () => {
@@ -63,6 +75,7 @@ const isFixed = ref(false)
 
 function scroll() {
   const top = document.documentElement.scrollTop
+  console.log(top)
   if (top >= 210) {
     isFixed.value = true
   } else {
@@ -72,6 +85,9 @@ function scroll() {
 
 window.addEventListener("scroll", scroll)
 
+onUnmounted(() => {
+  window.removeEventListener("scroll", scroll)
+})
 
 async function digg() {
   if (!store.isLogin) {
@@ -146,7 +162,10 @@ function goComment() {
       <div class="article_container">
         <div class="article_content">
           <div class="head">
-            <div class="title">{{ data.title }}</div>
+            <div class="title">
+              <span>{{ data.title }}</span>
+              <IconEdit style="margin-left: 10px; cursor: pointer" title="去编辑" @click="goArticleEdit(data.id)" v-if="data.userID === store.userInfo.userID"></IconEdit>
+            </div>
             <div class="date">{{ dateTimeFormat(data.createdAt) }}</div>
             <div class="tags">
               <a-tag v-for="item in data.tagList">{{ item }}</a-tag>
@@ -189,7 +208,7 @@ function goComment() {
         <div class="catalog_action" :class="{isFixed: isFixed}">
           <div class="catalog">
             <div class="head">文章目录</div>
-            <div class="body">
+            <div class="body scrollbar">
               <MdCatalog :offsetTop="61" :scrollElementOffsetTop="60" :editorId="`md_${data.id}`"
                          :scrollElement="scrollElement"
                          :theme="theme"></MdCatalog>
@@ -353,6 +372,8 @@ function goComment() {
 
       .body {
         padding: 10px 20px 20px 20px;
+        max-height: calc(100vh - 240px);
+        overflow-y: auto;
 
         .md-editor-catalog-active > span {
           color: rgb(var(--arcoblue-6));

@@ -8,6 +8,13 @@ export function goArticle(id: number) {
     })
 }
 
+export function goArticleEdit(id: number) {
+    router.push({
+        name: "platformArticleEdit",
+        params: {id}
+    })
+}
+
 
 export function goUser(id: number) {
     router.push({

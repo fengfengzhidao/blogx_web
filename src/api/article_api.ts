@@ -28,7 +28,7 @@ export interface articleListRequest extends paramsType {
     userID?: number
     collectID?: number
     status?: number
-    categoryID?:number
+    categoryID?: number
 }
 
 export function articleListApi(params: articleListRequest): Promise<baseResponse<listResponse<articleListType>>> {
@@ -120,24 +120,34 @@ export function articleCategoryOptionsApi(): Promise<baseResponse<optionsType[]>
 export function articleTagOptionsApi(): Promise<baseResponse<optionsType[]>> {
     return useAxios.get("/api/article/tag/options")
 }
+
 export interface articleEditType extends articleAddType {
     id: number
 }
-export function articleUpdateApi(data: articleEditType):Promise<baseResponse<string>>{
-    return  useAxios.put("/api/article", data)
+
+export function articleUpdateApi(data: articleEditType): Promise<baseResponse<string>> {
+    return useAxios.put("/api/article", data)
 }
-export function articleRemoveApi(id: number):Promise<baseResponse<string>>{
+
+export function articleRemoveApi(id: number): Promise<baseResponse<string>> {
     return useAxios.delete("/api/article/" + id.toString())
 }
 
 
-export function articleDiggApi(id: number):Promise<baseResponse<string>>{
-    return  useAxios.get("/api/article/digg/" + id.toString())
+export function articleDiggApi(id: number): Promise<baseResponse<string>> {
+    return useAxios.get("/api/article/digg/" + id.toString())
 }
-export interface articleCollectRequest{
+
+export interface articleCollectRequest {
     "articleID": number
     "collectID"?: number
 }
-export function articleCollectApi(data: articleCollectRequest):Promise<baseResponse<string>>{
+
+export function articleCollectApi(data: articleCollectRequest): Promise<baseResponse<string>> {
     return useAxios.post("/api/article/collect", data)
+}
+
+
+export function articleLookApi(articleID: number):Promise<baseResponse<string>>{
+    return useAxios.post("/api/article/history", {articleID})
 }
