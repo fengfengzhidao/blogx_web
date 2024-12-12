@@ -98,7 +98,7 @@ defineExpose({focus})
   }
 
   .comment_list {
-    padding: 0 20px;
+    padding: 0 20px 20px 20px;
 
     .arco-comment-inner-comment {
       margin-top: 10px;
@@ -115,7 +115,6 @@ defineExpose({focus})
       align-items: center;
 
       i {
-        cursor: pointer;
         margin-right: 5px;
       }
 

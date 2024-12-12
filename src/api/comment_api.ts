@@ -51,6 +51,7 @@ export interface commentTreeType {
     "diggCount":number
     "applyCount": number
     "subComments": commentTreeType[]
+    isApply?: boolean
 }
 
 export function commentTreeApi(id: number):Promise<baseResponse<listResponse<commentTreeType>>>{
