@@ -3,18 +3,44 @@
 import F_nav from "@/components/web/f_nav.vue";
 import F_footer from "@/components/web/f_footer.vue";
 import F_main from "@/components/web/f_main.vue";
+import Banner_list from "@/components/web/index/banner_list.vue";
 </script>
 
 <template>
   <div class="web_home_view">
     <f_nav no-scroll></f_nav>
     <f_main>
-      首页
+      <div class="left">
+        <banner_list></banner_list>
+        <div class="article_list">
+
+        </div>
+      </div>
+      <div class="right">
+
+      </div>
     </f_main>
     <f_footer></f_footer>
   </div>
 </template>
 
-<style scoped lang="less">
-
+<style  lang="less">
+.web_home_view{
+  .f_container{
+    display: flex;
+    justify-content: space-between;
+    .left{
+      width: calc(100% - 280px);
+      .f_banner_com{
+        margin-top: 20px;
+      }
+      .article_list{
+        margin-top: 20px;
+      }
+    }
+    .right{
+      width: 260px;
+    }
+  }
+}
 </style>
