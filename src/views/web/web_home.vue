@@ -10,6 +10,7 @@ import Auth_recommend from "@/components/web/index/auth_recommend.vue";
 import Article_recommend from "@/components/web/index/article_recommend.vue";
 import About from "@/components/web/index/about.vue";
 import Extension from "@/components/web/index/extension.vue";
+import Feedback from "@/components/web/index/feedback.vue";
 </script>
 
 <template>
@@ -26,9 +27,9 @@ import Extension from "@/components/web/index/extension.vue";
         <article_recommend></article_recommend>
         <about></about>
         <extension></extension>
+        <feedback></feedback>
       </div>
     </f_main>
-    <f_footer></f_footer>
   </div>
 </template>
 
