@@ -38,6 +38,7 @@ import Article_search_list from "@/components/web/index/article_search_list.vue"
 
       .article_search_list_com {
         margin-top: 20px;
+        margin-bottom: 20px;
       }
     }
 

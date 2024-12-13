@@ -11,7 +11,11 @@ const data = reactive<listResponse<articleSearchType>>({
   count: 0
 })
 
-const params = reactive<articleSearchRequest>({})
+const params = reactive<articleSearchRequest>({
+  page: 1,
+  limit: 10,
+  type: 0,
+})
 
 async function getData() {
   const res = await articleSearchApi(params)
@@ -23,6 +27,11 @@ async function getData() {
   data.count = res.data.count
 }
 
+async function setType(t: number) {
+  params.type = t
+  getData()
+}
+
 getData()
 </script>
 
@@ -30,13 +39,14 @@ getData()
   <div class="article_search_list_com">
     <div class="head">
       <div class="left">
-        <span>猜你喜欢</span>
-        <span>最新发布</span>
-        <span>最多回复</span>
-        <span>最多点赞</span>
-        <span>最多收藏</span>
+        <span :class="{active: params.type === 0}" @click="setType(0)">猜你喜欢</span>
+        <span :class="{active: params.type === 1}" @click="setType(1)">最新发布</span>
+        <span :class="{active: params.type === 2 }" @click="setType(2)">最多回复</span>
+        <span :class="{active: params.type === 3}" @click="setType(3)">最多点赞</span>
+        <span :class="{active: params.type === 4}" @click="setType(4)">最多收藏</span>
       </div>
-      <a-input-search placeholder="搜索你感兴趣的文章"></a-input-search>
+      <a-input-search @search="getData" @keydown.enter="getData" v-model="params.key"
+                      placeholder="搜索你感兴趣的文章"></a-input-search>
     </div>
     <div class="list">
       <div class="item" v-for="item in data.list">
@@ -76,12 +86,18 @@ getData()
               </div>
 
               <div class="tags">
-                <a-tag v-for="tag in item.tagList">{{ tag }}</a-tag>
+                <a-overflow-list>
+                  <a-tag v-for="tag in item.tagList">{{ tag }}</a-tag>
+                </a-overflow-list>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="page" v-if="data.list.length">
+      <a-pagination show-total :total="data.count" :page-size="params.limit" v-model:current="params.page"
+                    @change="getData"></a-pagination>
     </div>
   </div>
 </template>
@@ -101,25 +117,33 @@ getData()
     .arco-input-wrapper {
       width: 200px;
       border-radius: 100px;
-      margin-right: 0;
     }
 
-    span {
-      cursor: pointer;
-      margin-right: 20px;
-      color: var(--color-text-1);
+    .left {
+      span {
+        cursor: pointer;
+        margin-right: 20px;
+        color: var(--color-text-1);
 
-      &.active {
-        color: rgb(var(--arcoblue-6));
+        &.active {
+          color: rgb(var(--arcoblue-6));
+        }
+
       }
-
     }
+
+
   }
 
   .list {
+    padding: 10px 20px;
     .item {
-      padding: 10px 20px;
+      padding: 10px 0;
       border-bottom: @f_border;
+
+      em {
+        color: red;
+      }
 
       .top_info {
         display: flex;
@@ -196,6 +220,12 @@ getData()
         }
       }
     }
+  }
+
+  .page {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 20px 0;
   }
 }
 </style>

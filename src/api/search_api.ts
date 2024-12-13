@@ -24,6 +24,7 @@ export interface articleSearchType {
 
 export interface articleSearchRequest extends paramsType {
     tag?: string
+    type: number // 0 猜你喜欢  1 最新发布  2最多回复 3最多点赞 4最多收藏
 }
 
 export function articleSearchApi(params: articleSearchRequest): Promise<baseResponse<listResponse<articleSearchType>>> {
