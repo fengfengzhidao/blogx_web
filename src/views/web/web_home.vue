@@ -11,6 +11,19 @@ import Article_recommend from "@/components/web/index/article_recommend.vue";
 import About from "@/components/web/index/about.vue";
 import Extension from "@/components/web/index/extension.vue";
 import Feedback from "@/components/web/index/feedback.vue";
+
+import {userStorei} from "@/stores/user_store";
+
+const store = userStorei()
+
+const map = {
+  "标签云": Tag_list,
+  "作者推荐": Auth_recommend,
+  "文章推荐": Article_recommend,
+  "关于我们": About,
+  "独家推广": Extension,
+  "用户反馈": Feedback,
+}
 </script>
 
 <template>
@@ -22,12 +35,9 @@ import Feedback from "@/components/web/index/feedback.vue";
         <article_search_list></article_search_list>
       </div>
       <div class="right">
-        <tag_list></tag_list>
-        <auth_recommend></auth_recommend>
-        <article_recommend></article_recommend>
-        <about></about>
-        <extension></extension>
-        <feedback></feedback>
+        <template v-for="item in store.siteInfo.indexRight.list">
+          <component v-if="item.enable" :is="map[item.title]"></component>
+        </template>
       </div>
     </f_main>
   </div>
