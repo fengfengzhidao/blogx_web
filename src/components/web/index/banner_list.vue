@@ -9,7 +9,7 @@ const data = reactive<listResponse<bannerListType>>({
 })
 
 async function getData() {
-  const res = await bannerListApi()
+  const res = await bannerListApi({type: 1})
   const list: bannerListType[] = []
   res.data.list.forEach((item) => {
     if (item.show) {
@@ -32,7 +32,7 @@ getData()
 </script>
 
 <template>
-  <a-carousel class="f_banner_com" v-if="data.list.length">
+  <a-carousel auto-play  show-arrow="hover" class="f_banner_com" v-if="data.list.length">
     <a-carousel-item v-for="item in data.list">
       <img
           @click="goItem(item)"

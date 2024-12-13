@@ -9,7 +9,11 @@ export interface bannerListType {
     "href": string
 }
 
-export function bannerListApi(params?: paramsType): Promise<baseResponse<listResponse<bannerListType>>> {
+export interface bannerListParams extends paramsType {
+    type?: 1 | 2
+}
+
+export function bannerListApi(params?: bannerListParams): Promise<baseResponse<listResponse<bannerListType>>> {
     return useAxios.get("/api/banner", {params})
 }
 
