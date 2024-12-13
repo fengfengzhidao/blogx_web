@@ -50,7 +50,10 @@ getData()
     </div>
     <div class="list">
       <div class="item" v-for="item in data.list">
-        <div class="admin_top" v-if="item.adminTop"></div>
+        <div class="admin_top" v-if="item.adminTop">
+          <i class="iconfont icon-zhiding"></i>
+          管理员置顶
+        </div>
         <div class="top_info">
           <a-avatar @click="goUser(item.userID)" :size="30" :image-url="item.userAvatar"></a-avatar>
           <span @click="goUser(item.userID)" class="nick">{{ item.userNickname }}</span>
@@ -61,11 +64,16 @@ getData()
             <img @click="goArticle(item.id)" :src="item.cover" alt="">
           </div>
           <div class="info">
-            <div class="title" @click="goArticle(item.id)">{{ item.title }}</div>
+            <div class="title" v-html="item.title" @click="goArticle(item.id)"></div>
             <div class="abs">
-              <a-typography-text :ellipsis="{rows: 2, css: true}">{{ item.abstract }}</a-typography-text>
+              <a-typography-text :ellipsis="{rows: 2, css: true}">
+                <div v-html="item.abstract"></div>
+              </a-typography-text>
             </div>
             <div class="data">
+              <div class="catalog" v-if="item.categoryTitle">
+                {{ item.categoryTitle }}
+              </div>
               <div class="data_list">
                   <span>
                 <i class="iconfont icon-liulan"></i>
@@ -136,10 +144,25 @@ getData()
   }
 
   .list {
-    padding: 10px 20px;
+    padding: 0 20px 10px 20px;
+
     .item {
       padding: 10px 0;
       border-bottom: @f_border;
+      position: relative;
+
+      .admin_top {
+        position: absolute;
+        right: 0;
+        top: 10px;
+        color: rgb(var(--arcoblue-6));
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        i{
+          margin-right: 5px;
+        }
+      }
 
       em {
         color: red;
@@ -196,6 +219,10 @@ getData()
           .data {
             display: flex;
             align-items: center;
+            .catalog{
+              margin-right: 10px;
+              color: var(--color-text-2);
+            }
 
             .data_list {
               display: flex;
