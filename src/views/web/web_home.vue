@@ -5,6 +5,7 @@ import F_footer from "@/components/web/f_footer.vue";
 import F_main from "@/components/web/f_main.vue";
 import Banner_list from "@/components/web/index/banner_list.vue";
 import Article_search_list from "@/components/web/index/article_search_list.vue";
+import Tag_list from "@/components/web/index/tag_list.vue";
 </script>
 
 <template>
@@ -16,7 +17,7 @@ import Article_search_list from "@/components/web/index/article_search_list.vue"
         <article_search_list></article_search_list>
       </div>
       <div class="right">
-
+        <tag_list></tag_list>
       </div>
     </f_main>
     <f_footer></f_footer>
@@ -29,7 +30,7 @@ import Article_search_list from "@/components/web/index/article_search_list.vue"
     display: flex;
     justify-content: space-between;
 
-   > .left {
+    > .left {
       width: calc(100% - 280px);
 
       .f_banner_com {
@@ -42,8 +43,14 @@ import Article_search_list from "@/components/web/index/article_search_list.vue"
       }
     }
 
-  >  .right {
+    > .right {
       width: 260px;
+      padding: 20px 0;
+      display: grid;
+      grid-column-gap: 20px;
+      >div{
+        height: fit-content;
+      }
     }
   }
 }

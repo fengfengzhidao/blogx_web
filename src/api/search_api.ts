@@ -30,3 +30,14 @@ export interface articleSearchRequest extends paramsType {
 export function articleSearchApi(params: articleSearchRequest): Promise<baseResponse<listResponse<articleSearchType>>> {
     return useAxios.get("/api/search/article", {params})
 }
+
+export interface tagListType{
+    "tag": string,
+    "articleCount": number
+}
+export interface tagListRequest extends paramsType{
+
+}
+export function tagListApi(params: tagListRequest):Promise<baseResponse<listResponse<tagListType>>>{
+    return useAxios.get("/api/search/tags", {params})
+}
