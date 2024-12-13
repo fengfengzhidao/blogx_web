@@ -6,6 +6,7 @@ import F_main from "@/components/web/f_main.vue";
 import Banner_list from "@/components/web/index/banner_list.vue";
 import Article_search_list from "@/components/web/index/article_search_list.vue";
 import Tag_list from "@/components/web/index/tag_list.vue";
+import Auth_recommend from "@/components/web/index/auth_recommend.vue";
 </script>
 
 <template>
@@ -18,6 +19,7 @@ import Tag_list from "@/components/web/index/tag_list.vue";
       </div>
       <div class="right">
         <tag_list></tag_list>
+        <auth_recommend></auth_recommend>
       </div>
     </f_main>
     <f_footer></f_footer>
@@ -47,10 +49,9 @@ import Tag_list from "@/components/web/index/tag_list.vue";
       width: 260px;
       padding: 20px 0;
       display: grid;
-      grid-column-gap: 20px;
-      >div{
-        height: fit-content;
-      }
+      grid-row-gap: 20px;
+      align-content: start;
+
     }
   }
 }
