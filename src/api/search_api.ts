@@ -1,0 +1,31 @@
+import {type baseResponse, type listResponse, type paramsType, useAxios} from "@/api/index";
+
+export interface articleSearchType {
+    "id": number
+    "createdAt": string
+    "updatedAt": string
+    "title": string,
+    "abstract": string
+    "categoryID": number
+    "tagList": string[]
+    "cover": string
+    "userID": number
+    "lookCount": number
+    "diggCount": number
+    "commentCount": number
+    "collectCount": number
+    "openComment": boolean
+    "status": number
+    "adminTop": boolean
+    "categoryTitle": string
+    "userNickname": string
+    "userAvatar": string
+}
+
+export interface articleSearchRequest extends paramsType {
+    tag?: string
+}
+
+export function articleSearchApi(params: articleSearchRequest): Promise<baseResponse<listResponse<articleSearchType>>> {
+    return useAxios.get("/api/search/article", {params})
+}
