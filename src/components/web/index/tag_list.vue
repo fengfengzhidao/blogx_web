@@ -41,7 +41,9 @@ getData()
   <f_card title="标签云" class="f_tag_list_com">
     <div class="tag_list">
       <div class="item" @click="goTag(item)" :class="{active: item.tag === route.query.tag}" v-for="item in data.list">
-        <span>{{ item.tag }}</span>
+        <span>
+          <a-typography-text :ellipsis="{rows: 1, css: true}">{{ item.tag }}</a-typography-text>
+        </span>
         <span>{{ item.articleCount }}</span>
       </div>
     </div>
@@ -109,6 +111,9 @@ getData()
         color: var(--color-text-1);
         &.active{
          color: rgb(var(--arcoblue-6));
+          .arco-typography{
+            color: rgb(var(--arcoblue-6));
+          }
         }
 
         &:nth-child(4n+3), &:nth-child(4n+4) {
@@ -116,6 +121,13 @@ getData()
         }
         &:nth-child(4n+1), &:nth-child(4n+2) {
           background-color: var(--color-fill-2);
+        }
+        span:nth-child(1){
+          max-width: 4rem;
+        }
+        span:nth-child(2){
+          font-size: 12px;
+          margin-left: 12px;
         }
       }
     }
