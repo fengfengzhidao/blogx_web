@@ -41,3 +41,14 @@ export interface tagListRequest extends paramsType{
 export function tagListApi(params: tagListRequest):Promise<baseResponse<listResponse<tagListType>>>{
     return useAxios.get("/api/search/tags", {params})
 }
+
+
+export interface textSearchType         {
+    "articleID": number
+    "head": string
+    "body":string
+}
+
+export function textSearchApi(params: paramsType):Promise<baseResponse<listResponse<textSearchType>>>{
+    return useAxios.get("/api/search/text", {params})
+}
