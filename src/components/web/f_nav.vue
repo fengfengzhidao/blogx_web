@@ -5,6 +5,7 @@ import F_nav_avatar from "@/components/web/f_nav_avatar.vue";
 import type {listResponse, paramsType} from "@/api";
 import {textSearchApi, type textSearchType} from "@/api/search_api";
 import {Message} from "@arco-design/web-vue";
+import F_text_search_modal from "@/components/web/f_text_search_modal.vue";
 
 interface Props {
   noScroll?: boolean
@@ -26,22 +27,14 @@ if (!noScroll) {
     }
   }
 }
-const visible = ref(true)
-const data = reactive<listResponse<textSearchType>>({
-  list: [],
-  count: 0
-})
-const form = reactive<paramsType>({
-  key: "",
-})
-
-async function search() {
-  const res = await textSearchApi(form)
-  if (res.code) {
-    Message.error(res.msg)
-    return
+const visible = ref(false)
+const key = ref("")
+const textSearchRef = ref()
+function search(){
+  visible.value = true
+  if (key.value){
+    textSearchRef.value.setSearch(key.value)
   }
-  Object.assign(data, res.data)
 }
 
 
@@ -56,27 +49,10 @@ async function search() {
           <span class="n2">社区版</span>
         </a>
       </div>
-      <a-modal title="全文搜索" :footer="false" body-class="f_article_search_modal_body scrollbar"
-               v-model:visible="visible">
-        <div class="head">
-          <a-input v-model="form.key" placeholder="请输入搜索内容"></a-input>
-          <a-button @click="search" type="primary">搜索</a-button>
-        </div>
-        <div class="body">
-          <div class="list">
-            <div class="item" v-for="item in data.list">
-              <div class="title" v-html="item.head"></div>
-              <div class="abs" v-html="item.body"></div>
-            </div>
-          </div>
-          <div class="page">
-            共搜索到结果条
-          </div>
-        </div>
-      </a-modal>
+     <f_text_search_modal ref="textSearchRef" v-model:visible="visible"></f_text_search_modal>
       <div class="center">
         <i class="iconfont icon-dengpao"></i>
-        <a-input-search v-model="form.key" placeholder="搜索你喜欢的文章"></a-input-search>
+        <a-input-search v-model="key" @search="search" @keydown.enter="search" placeholder="搜索你喜欢的文章"></a-input-search>
       </div>
       <div class="right">
         <f_nav_avatar></f_nav_avatar>
@@ -203,48 +179,5 @@ async function search() {
 }
 
 
-.f_article_search_modal_body {
-  padding: 0;
-  max-height: 70vh;
-  overflow-y: auto;
 
-  .head {
-    padding: 10px 20px;
-    display: flex;
-
-    .arco-btn {
-      margin-left: 10px;
-    }
-  }
-
-  .body {
-    .item {
-      padding: 10px 20px;
-      cursor: pointer;
-
-      .title {
-        font-size: 16px;
-      }
-
-      .abs {
-        margin-top: 5px;
-        font-size: 12px;
-      }
-
-      em {
-        color: red;
-      }
-
-      &:hover {
-        background-color: var(--color-fill-1);
-      }
-    }
-
-    .page {
-      padding: 10px 20px;
-      text-align: center;
-      color: var(--color-text-2);
-    }
-  }
-}
 </style>
