@@ -8,6 +8,7 @@ import {Message} from "@arco-design/web-vue";
 import {type articleCollectRequest, articleCollectApi} from "@/api/article_api";
 import {onUnmounted} from "vue";
 import {IconEdit} from "@arco-design/web-vue/es/icon";
+import {onMounted} from "vue";
 
 const scrollElement = document.documentElement;
 import {useRoute} from "vue-router";
@@ -70,12 +71,23 @@ watch(() => route.params.id, () => {
   getData()
 }, {immediate: true})
 
+onMounted(() => {
+  const id = route.query.id
+  setTimeout(() => {
+    if (id) {
+      const div = document.getElementById(id) as HTMLDivElement
+      if (div) {
+        document.documentElement.scrollTo({top: div.offsetTop, behavior: "smooth"})
+      }
+
+    }
+  }, 500)
+})
 
 const isFixed = ref(false)
 
 function scroll() {
   const top = document.documentElement.scrollTop
-  console.log(top)
   if (top >= 210) {
     isFixed.value = true
   } else {
@@ -164,7 +176,8 @@ function goComment() {
           <div class="head">
             <div class="title">
               <span>{{ data.title }}</span>
-              <IconEdit style="margin-left: 10px; cursor: pointer" title="去编辑" @click="goArticleEdit(data.id)" v-if="data.userID === store.userInfo.userID"></IconEdit>
+              <IconEdit style="margin-left: 10px; cursor: pointer" title="去编辑" @click="goArticleEdit(data.id)"
+                        v-if="data.userID === store.userInfo.userID"></IconEdit>
             </div>
             <div class="date">{{ dateTimeFormat(data.createdAt) }}</div>
             <div class="tags">

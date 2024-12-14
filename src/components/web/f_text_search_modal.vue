@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import {nextTick, reactive, ref} from "vue";
 import type {listResponse, paramsType} from "@/api";
 import {textSearchApi, type textSearchType} from "@/api/search_api";
 import {Message} from "@arco-design/web-vue";
+import router from "@/router";
 
 interface Props {
   visible: boolean
@@ -26,28 +27,39 @@ const data = reactive<listResponse<textSearchType>>({
   list: [],
   count: 0
 })
+const isSearch = ref(false)
 
 async function search() {
+  isSearch.value = false
   const res = await textSearchApi(form)
   if (res.code) {
     Message.error(res.msg)
     return
   }
   Object.assign(data, res.data)
+  isSearch.value = true
 }
 
 function setSearch(key: string) {
   form.key = key
   search()
 }
+
 const textRef = ref()
+
 function beforeOpen() {
-  console.log(1, textRef.value, form.key ==="")
-  if (form.key ===""){
-    textRef.value.focus()
+  if (form.key === "") {
+    nextTick(() => {
+      textRef.value.focus()
+    })
   }
 
 }
+
+function goItem(item: textSearchType) {
+  window.open(`/article/${item.articleID}?id=${item.head}`, "_blank")
+}
+
 defineExpose({
   setSearch
 })
@@ -64,13 +76,13 @@ defineExpose({
     </div>
     <div class="body">
       <div class="list scrollbar">
-        <div class="item" v-for="item in data.list">
+        <div class="item" @click="goItem(item)" v-for="item in data.list">
           <div class="title" v-html="item.head"></div>
           <div class="abs" v-html="item.body"></div>
         </div>
       </div>
-      <div class="page">
-        共搜索到结果{{data.list.length}}条
+      <div class="page" v-if="isSearch">
+        共搜索到结果{{ data.list.length }}条
       </div>
     </div>
   </a-modal>
